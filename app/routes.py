@@ -149,3 +149,42 @@ def get_batch_detail(batch_id):
 
 # Day 6 will add:  GET /api/kpis,  GET /api/charts/<type>
 # Day 9 (conditional) will add:  POST /api/predict
+
+
+@main_bp.route("/api/pipeline/summary")
+def pipeline_summary_route():
+    """
+    Run the full cleaning pipeline and return a summary.
+    Shows data quality, score stats, AI adoption rate, pass rate.
+    Used by the dashboard header cards (Day 7).
+    """
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline, pipeline_summary
+
+    raw_df = get_all_records_df()
+    clean_df = run_pipeline(raw_df)
+    return jsonify(pipeline_summary(clean_df))
+
+
+@main_bp.route("/api/pipeline/preview")
+def pipeline_preview_route():
+    """
+    Return first 20 rows of the cleaned+enriched DataFrame.
+    Useful for verifying the pipeline output during development.
+    """
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+
+    raw_df = get_all_records_df()
+    clean_df = run_pipeline(raw_df)
+
+    if clean_df.empty:
+        return jsonify({"error": "No data available. Upload a file first."})
+
+    # Serialize dates for JSON
+    preview = clean_df.head(20).copy()
+    preview["record_date"] = preview["record_date"].astype(str)
+    return jsonify({
+        "columns": list(preview.columns),
+        "rows": preview.to_dict(orient="records"),
+    })
