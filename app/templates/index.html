@@ -2,45 +2,367 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>EduTech Impact on AI - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduTech Impact on AI</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 700px; margin: 60px auto; color: #222; }
-    h1 { color: #2F5496; }
-    code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f0f4f8; color: #222; }
+
+    header {
+      background: #2F5496; color: white; padding: 18px 32px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    header h1 { font-size: 1.4rem; }
+    header span { font-size: 0.85rem; opacity: 0.8; }
+
+    .container { max-width: 1100px; margin: 32px auto; padding: 0 24px; }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .stat-card {
+      background: white; border-radius: 8px; padding: 18px 24px;
+      flex: 1; min-width: 160px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-left: 4px solid #2F5496;
+    }
+    .stat-card .value { font-size: 2rem; font-weight: bold; color: #2F5496; }
+    .stat-card .label { font-size: 0.82rem; color: #666; margin-top: 4px; }
+
+    /* Cards */
+    .card {
+      background: white; border-radius: 8px; padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 24px;
+    }
+    .card h2 { font-size: 1.1rem; color: #2F5496; margin-bottom: 16px;
+      padding-bottom: 10px; border-bottom: 1px solid #e8edf3; }
+
+    /* Upload */
+    .upload-area {
+      border: 2px dashed #2F5496; border-radius: 8px; padding: 28px;
+      text-align: center; background: #f7f9fc; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .upload-area:hover { background: #eef2fa; }
+    .upload-area input[type=file] { display: none; }
+    .upload-area label { cursor: pointer; color: #2F5496; font-weight: bold; }
+    .upload-area p { color: #888; font-size: 0.85rem; margin-top: 8px; }
+    #selectedFile { margin-top: 10px; font-size: 0.9rem; color: #444; }
+
+    button {
+      background: #2F5496; color: white; border: none; padding: 10px 22px;
+      border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin-top: 12px;
+    }
+    button:hover { background: #1e3a6e; }
+    button.danger { background: #c0392b; }
+    button.danger:hover { background: #962d22; }
+    button.secondary { background: #6c757d; }
+    button.secondary:hover { background: #545b62; }
+
+    /* Upload result */
+    .result-box {
+      margin-top: 16px; padding: 14px; border-radius: 6px;
+      font-size: 0.88rem; display: none;
+    }
+    .result-box.success { background: #e8f5e9; border-left: 4px solid #27ae60; color: #1a5c2e; }
+    .result-box.error { background: #fdecea; border-left: 4px solid #c0392b; color: #7b1f1f; }
+    .result-box.partial { background: #fff8e1; border-left: 4px solid #f39c12; color: #7a5c00; }
+
+    /* Batch table */
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: #2F5496; color: white; padding: 10px 12px; text-align: left; }
+    td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+    tr:hover td { background: #f7f9fc; }
+    .badge {
+      display: inline-block; padding: 2px 10px; border-radius: 12px;
+      font-size: 0.78rem; font-weight: bold;
+    }
+    .badge.success { background: #e8f5e9; color: #27ae60; }
+    .badge.partial { background: #fff8e1; color: #f39c12; }
+    .badge.failed { background: #fdecea; color: #c0392b; }
+
+    /* Records preview */
+    .records-table-wrap { overflow-x: auto; }
+    .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; align-items: flex-end; }
+    .filter-bar select, .filter-bar input {
+      padding: 7px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.85rem;
+    }
+    .filter-bar label { font-size: 0.8rem; color: #555; display: block; margin-bottom: 3px; }
+
+    .empty-state { text-align: center; padding: 40px; color: #999; font-size: 0.95rem; }
+
+    /* Progress bar for uploads */
+    #uploadProgress { display: none; margin-top: 12px; }
+    progress { width: 100%; height: 8px; border-radius: 4px; }
   </style>
 </head>
 <body>
-  <h1>EduTech Impact on AI</h1>
-  <p>Backend is running. This page will become the live dashboard (Day 7-8).</p>
-  <p>Check the API health route: <code>/api/health</code></p>
 
-  <h2>Test upload (Day 2)</h2>
-  <form id="uploadForm">
-    <input type="file" name="file" accept=".csv,.xlsx,.xls" required>
-    <button type="submit">Upload</button>
-  </form>
-  <pre id="result" style="background:#f4f4f4; padding:12px; white-space:pre-wrap;"></pre>
+<header>
+  <div>
+    <h1>EduTech Impact on AI</h1>
+    <span>Student Performance Analytics Dashboard</span>
+  </div>
+</header>
 
-  <h2>Upload history</h2>
-  <button onclick="loadBatches()">Refresh batch list</button>
-  <pre id="batches" style="background:#f4f4f4; padding:12px; white-space:pre-wrap;"></pre>
+<div class="container">
 
-  <script>
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="value" id="statRecords">—</div>
+      <div class="label">Total Records</div>
+    </div>
+    <div class="stat-card">
+      <div class="value" id="statBatches">—</div>
+      <div class="label">Upload Batches</div>
+    </div>
+    <div class="stat-card">
+      <div class="value" id="statSubjects">—</div>
+      <div class="label">Subjects</div>
+    </div>
+    <div class="stat-card">
+      <div class="value" id="statClasses">—</div>
+      <div class="label">Classes</div>
+    </div>
+  </div>
+
+  <!-- Upload Card -->
+  <div class="card">
+    <h2>📤 Upload Student Data</h2>
+    <div class="upload-area" id="dropZone">
+      <input type="file" id="fileInput" accept=".csv,.xlsx,.xls">
+      <label for="fileInput">Click to choose a file</label>
+      <p>Supports CSV and Excel (.xlsx, .xls) · Max 10MB</p>
+      <p>Required columns: student_id, class_name, subject, score, ai_tool_used, study_hours, record_date</p>
+      <div id="selectedFile"></div>
+    </div>
+    <div id="uploadProgress"><progress></progress> Uploading...</div>
+    <button onclick="uploadFile()">Upload File</button>
+    <div class="result-box" id="uploadResult"></div>
+  </div>
+
+  <!-- Batch Management Card -->
+  <div class="card">
+    <h2>📦 Upload Batches</h2>
+    <button class="secondary" onclick="loadBatches()" style="margin-top:0; margin-bottom:14px;">↻ Refresh</button>
+    <div id="batchesContainer"><div class="empty-state">Loading batches...</div></div>
+  </div>
+
+  <!-- Records Preview Card -->
+  <div class="card">
+    <h2>🔍 Records Preview</h2>
+    <div class="filter-bar">
+      <div>
+        <label>Subject</label>
+        <select id="filterSubject" onchange="loadRecords()">
+          <option value="">All Subjects</option>
+        </select>
+      </div>
+      <div>
+        <label>Class</label>
+        <select id="filterClass" onchange="loadRecords()">
+          <option value="">All Classes</option>
+        </select>
+      </div>
+      <div>
+        <label>AI Tool Used</label>
+        <select id="filterAI" onchange="loadRecords()">
+          <option value="">All</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+      <div>
+        <label>From Date</label>
+        <input type="date" id="filterFrom" onchange="loadRecords()">
+      </div>
+      <div>
+        <label>To Date</label>
+        <input type="date" id="filterTo" onchange="loadRecords()">
+      </div>
+      <button class="secondary" onclick="clearFilters()" style="margin-top:18px;">Clear</button>
+    </div>
+    <div id="recordsMeta" style="font-size:0.82rem; color:#666; margin-bottom:8px;"></div>
+    <div class="records-table-wrap">
+      <div id="recordsContainer"><div class="empty-state">Upload data to see records here.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ---- File selection display ----
+  document.getElementById('fileInput').addEventListener('change', (e) => {
+    const f = e.target.files[0];
+    document.getElementById('selectedFile').textContent = f ? `Selected: ${f.name}` : '';
+  });
+
+  // ---- Upload ----
+  async function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    if (!fileInput.files[0]) { alert('Please select a file first.'); return; }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    document.getElementById('uploadProgress').style.display = 'block';
+    const resultBox = document.getElementById('uploadResult');
+    resultBox.style.display = 'none';
+
+    try {
       const res = await fetch('/api/upload', { method: 'POST', body: formData });
       const data = await res.json();
-      document.getElementById('result').textContent = JSON.stringify(data, null, 2);
-      loadBatches();
+      document.getElementById('uploadProgress').style.display = 'none';
+
+      if (res.ok) {
+        const cls = data.summary.error_rows > 0 ? 'partial' : 'success';
+        resultBox.className = `result-box ${cls}`;
+        resultBox.innerHTML = `<strong>${data.message}</strong>
+          ${data.summary.error_rows > 0
+            ? `<br><br>Skipped rows:<ul>${data.summary.errors.map(e => `<li>Row ${e.row}: ${e.reason}</li>`).join('')}</ul>`
+            : ''}`;
+      } else {
+        resultBox.className = 'result-box error';
+        resultBox.innerHTML = `<strong>Error:</strong> ${data.error}`;
+      }
+      resultBox.style.display = 'block';
+      fileInput.value = '';
+      document.getElementById('selectedFile').textContent = '';
+      loadAll();
+    } catch (err) {
+      document.getElementById('uploadProgress').style.display = 'none';
+      resultBox.className = 'result-box error';
+      resultBox.innerHTML = `<strong>Network error:</strong> ${err.message}`;
+      resultBox.style.display = 'block';
+    }
+  }
+
+  // ---- Batches ----
+  async function loadBatches() {
+    const container = document.getElementById('batchesContainer');
+    const res = await fetch('/api/batches');
+    const batches = await res.json();
+
+    document.getElementById('statBatches').textContent = batches.length;
+
+    if (!batches.length) {
+      container.innerHTML = '<div class="empty-state">No uploads yet. Upload a file above to get started.</div>';
+      return;
+    }
+
+    container.innerHTML = `
+      <table>
+        <thead><tr>
+          <th>ID</th><th>Filename</th><th>Rows Stored</th>
+          <th>Status</th><th>Uploaded At</th><th>Action</th>
+        </tr></thead>
+        <tbody>
+          ${batches.map(b => `
+            <tr>
+              <td>#${b.id}</td>
+              <td>${b.filename}</td>
+              <td>${b.row_count}</td>
+              <td><span class="badge ${b.status}">${b.status}</span></td>
+              <td>${new Date(b.uploaded_at).toLocaleString()}</td>
+              <td><button class="danger" onclick="deleteBatch(${b.id})">Delete</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  async function deleteBatch(id) {
+    if (!confirm(`Delete batch #${id} and all its records? This cannot be undone.`)) return;
+    const res = await fetch(`/api/batches/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    alert(data.message);
+    loadAll();
+  }
+
+  // ---- Records ----
+  async function loadFilterOptions() {
+    const res = await fetch('/api/filter-options');
+    const data = await res.json();
+
+    document.getElementById('statRecords').textContent = data.total_records.toLocaleString();
+    document.getElementById('statSubjects').textContent = data.subjects.length;
+    document.getElementById('statClasses').textContent = data.classes.length;
+
+    const subjectSel = document.getElementById('filterSubject');
+    const classSel = document.getElementById('filterClass');
+
+    data.subjects.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s; opt.textContent = s;
+      subjectSel.appendChild(opt);
+    });
+    data.classes.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c; opt.textContent = c;
+      classSel.appendChild(opt);
+    });
+  }
+
+  async function loadRecords() {
+    const params = new URLSearchParams({
+      subject: document.getElementById('filterSubject').value,
+      class_name: document.getElementById('filterClass').value,
+      ai_tool_used: document.getElementById('filterAI').value,
+      date_from: document.getElementById('filterFrom').value,
+      date_to: document.getElementById('filterTo').value,
+      limit: 50,
     });
 
-    async function loadBatches() {
-      const res = await fetch('/api/batches');
-      const data = await res.json();
-      document.getElementById('batches').textContent = JSON.stringify(data, null, 2);
+    const res = await fetch(`/api/records?${params}`);
+    const data = await res.json();
+    const container = document.getElementById('recordsContainer');
+    const meta = document.getElementById('recordsMeta');
+
+    if (!data.total) {
+      meta.textContent = '';
+      container.innerHTML = '<div class="empty-state">No records match the current filters.</div>';
+      return;
     }
-    loadBatches();
-  </script>
+
+    meta.textContent = `Showing ${data.showing} of ${data.total} records`;
+    container.innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Student ID</th><th>Class</th><th>Subject</th>
+          <th>Score</th><th>AI Tool</th><th>Study Hours</th><th>Date</th>
+        </tr></thead>
+        <tbody>
+          ${data.records.map(r => `
+            <tr>
+              <td>${r.student_id}</td>
+              <td>${r.class_name || '—'}</td>
+              <td>${r.subject}</td>
+              <td><strong>${r.score}</strong></td>
+              <td>${r.ai_tool_used
+                ? '<span style="color:#27ae60">✓ Yes</span>'
+                : '<span style="color:#999">No</span>'}</td>
+              <td>${r.study_hours ?? '—'}</td>
+              <td>${r.record_date}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function clearFilters() {
+    document.getElementById('filterSubject').value = '';
+    document.getElementById('filterClass').value = '';
+    document.getElementById('filterAI').value = '';
+    document.getElementById('filterFrom').value = '';
+    document.getElementById('filterTo').value = '';
+    loadRecords();
+  }
+
+  async function loadAll() {
+    await Promise.all([loadBatches(), loadFilterOptions()]);
+    await loadRecords();
+  }
+
+  loadAll();
+</script>
 </body>
 </html>

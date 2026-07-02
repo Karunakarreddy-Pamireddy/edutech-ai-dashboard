@@ -91,3 +91,61 @@ def delete_batch(batch_id):
 #   GET  /api/filters
 # Day 9 (conditional) will add:
 #   POST /api/predict
+
+
+@main_bp.route("/api/records")
+def get_records():
+    """
+    Preview stored records with optional filters.
+    Query params: subject, class_name, ai_tool_used, date_from, date_to, limit (default 50)
+    """
+    from app.data_access import get_all_records_df
+
+    filters = {
+        "subject": request.args.get("subject"),
+        "class_name": request.args.get("class_name"),
+        "ai_tool_used": (
+            True if request.args.get("ai_tool_used") == "true"
+            else False if request.args.get("ai_tool_used") == "false"
+            else None
+        ),
+        "date_from": request.args.get("date_from"),
+        "date_to": request.args.get("date_to"),
+    }
+    limit = int(request.args.get("limit", 50))
+    df = get_all_records_df(filters)
+
+    if df.empty:
+        return jsonify({"total": 0, "records": []})
+
+    if "record_date" in df.columns:
+        df["record_date"] = df["record_date"].astype(str)
+
+    return jsonify({
+        "total": len(df),
+        "showing": min(limit, len(df)),
+        "records": df.head(limit).to_dict(orient="records"),
+    })
+
+
+@main_bp.route("/api/filter-options")
+def get_filter_options():
+    """Return unique subjects and classes for dropdown filters."""
+    from app.data_access import get_filter_options, get_record_count
+    options = get_filter_options()
+    options["total_records"] = get_record_count()
+    return jsonify(options)
+
+
+@main_bp.route("/api/batches/<int:batch_id>/detail")
+def get_batch_detail(batch_id):
+    """Return a batch plus a 10-row preview of its records."""
+    from app.data_access import get_batch_with_preview
+    batch, preview = get_batch_with_preview(batch_id)
+    if not batch:
+        return jsonify({"error": f"Batch {batch_id} not found"}), 404
+    return jsonify({"batch": batch.to_dict(), "preview": preview})
+
+
+# Day 6 will add:  GET /api/kpis,  GET /api/charts/<type>
+# Day 9 (conditional) will add:  POST /api/predict
