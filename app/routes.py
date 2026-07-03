@@ -188,3 +188,36 @@ def pipeline_preview_route():
         "columns": list(preview.columns),
         "rows": preview.to_dict(orient="records"),
     })
+
+
+@main_bp.route("/api/kpis")
+def get_kpis():
+    """
+    Master KPI endpoint — runs the full pipeline and returns all
+    chart data and KPI cards in one bundle. Called by the dashboard (Day 7).
+    Supports same filters as /api/records:
+      ?subject=Math&class_name=Class+5A&ai_tool_used=true&date_from=2025-01&date_to=2025-04
+    """
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+    from app.kpis import compute_all_kpis
+
+    filters = {
+        "subject":      request.args.get("subject"),
+        "class_name":   request.args.get("class_name"),
+        "ai_tool_used": (
+            True  if request.args.get("ai_tool_used") == "true"
+            else False if request.args.get("ai_tool_used") == "false"
+            else None
+        ),
+        "date_from": request.args.get("date_from"),
+        "date_to":   request.args.get("date_to"),
+    }
+
+    raw_df   = get_all_records_df(filters)
+    clean_df = run_pipeline(raw_df)
+
+    if clean_df.empty:
+        return jsonify({"error": "No data available. Upload a file first."}), 404
+
+    return jsonify(compute_all_kpis(clean_df))
