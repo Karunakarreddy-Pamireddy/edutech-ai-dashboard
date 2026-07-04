@@ -14,195 +14,203 @@
     }
     body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text)}
 
-    /* ── Header ── */
     header{background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:#fff;
-      padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+      padding:15px 32px;display:flex;align-items:center;justify-content:space-between;
       box-shadow:0 2px 8px rgba(0,0,0,.2);position:sticky;top:0;z-index:100}
-    header h1{font-size:1.35rem;font-weight:700;display:flex;align-items:center;gap:8px}
-    .header-meta{font-size:.78rem;opacity:.75;margin-top:2px}
-    .header-right{display:flex;align-items:center;gap:16px}
-    #dbStatus{font-size:.78rem;padding:4px 12px;border-radius:20px;font-weight:600}
-    #dbStatus.ok{background:#27ae6040;color:#27ae60}
-    #dbStatus.warn{background:#e67e2240;color:#e67e22}
-    #lastUpdated{font-size:.75rem;opacity:.7}
+    header h1{font-size:1.3rem;font-weight:700}
+    .header-meta{font-size:.75rem;opacity:.75;margin-top:1px}
+    .header-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    #dbStatus{font-size:.75rem;padding:3px 10px;border-radius:20px;font-weight:600}
+    #dbStatus.ok{background:#27ae6040;color:#afffcf}
+    #dbStatus.warn{background:#e67e2240;color:#ffe0b2}
+    #lastUpdated{font-size:.72rem;opacity:.7}
+    .auto-refresh-toggle{font-size:.72rem;cursor:pointer;
+      padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.15);
+      color:#fff;border:1px solid rgba(255,255,255,.3);transition:.2s}
+    .auto-refresh-toggle.on{background:rgba(39,174,96,.3);border-color:#27ae60}
 
-    /* ── Nav ── */
     nav{background:var(--card);border-bottom:2px solid var(--border);
-      display:flex;padding:0 32px;box-shadow:0 1px 3px rgba(0,0,0,.05);position:sticky;top:61px;z-index:99}
-    nav button{background:none;border:none;padding:13px 20px;cursor:pointer;
-      font-size:.88rem;color:var(--muted);border-bottom:3px solid transparent;transition:.2s;
-      display:flex;align-items:center;gap:6px}
+      display:flex;padding:0 32px;box-shadow:0 1px 3px rgba(0,0,0,.05);
+      position:sticky;top:55px;z-index:99}
+    nav button{background:none;border:none;padding:12px 18px;cursor:pointer;
+      font-size:.87rem;color:var(--muted);border-bottom:3px solid transparent;
+      transition:.2s;display:flex;align-items:center;gap:5px}
     nav button.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
     nav button:hover{color:var(--blue);background:#f7f9fc}
-    .nav-badge{background:var(--blue);color:#fff;font-size:.68rem;padding:1px 7px;
-      border-radius:10px;font-weight:700}
+    .nav-badge{background:var(--blue);color:#fff;font-size:.66rem;
+      padding:1px 6px;border-radius:10px;font-weight:700}
 
-    /* ── Container ── */
-    .container{max-width:1200px;margin:24px auto;padding:0 24px}
+    .container{max-width:1200px;margin:22px auto;padding:0 24px}
     .page{display:none}.page.active{display:block}
 
-    /* ── Skeleton loader ── */
+    /* skeleton */
     .skeleton{background:linear-gradient(90deg,#e8edf3 25%,#f4f6f9 50%,#e8edf3 75%);
       background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-    /* ── KPI Cards ── */
-    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));
-      gap:14px;margin-bottom:22px}
-    .kpi-card{background:var(--card);border-radius:10px;padding:18px 20px;
+    /* KPI cards */
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:13px;margin-bottom:20px}
+    .kpi-card{background:var(--card);border-radius:10px;padding:16px 18px;
       box-shadow:0 1px 6px rgba(0,0,0,.08);border-top:4px solid var(--blue);
-      transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
-    .kpi-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.12)}
-    .kpi-card::after{content:'';position:absolute;top:0;right:0;width:60px;height:60px;
-      border-radius:0 0 0 60px;opacity:.06}
-    .kpi-card.blue::after{background:var(--blue)}
-    .kpi-card.green{border-top-color:var(--green)}.kpi-card.green::after{background:var(--green)}
-    .kpi-card.orange{border-top-color:var(--orange)}.kpi-card.orange::after{background:var(--orange)}
-    .kpi-card.purple{border-top-color:var(--purple)}.kpi-card.purple::after{background:var(--purple)}
-    .kpi-card.red{border-top-color:var(--red)}.kpi-card.red::after{background:var(--red)}
-    .kpi-icon{font-size:1.4rem;margin-bottom:6px}
-    .kpi-value{font-size:1.9rem;font-weight:700;color:var(--blue);line-height:1.1;
-      font-variant-numeric:tabular-nums}
-    .kpi-card.green .kpi-value{color:var(--green)}
-    .kpi-card.orange .kpi-value{color:var(--orange)}
-    .kpi-card.purple .kpi-value{color:var(--purple)}
-    .kpi-card.red .kpi-value{color:var(--red)}
-    .kpi-label{font-size:.74rem;color:var(--muted);margin-top:4px;
+      transition:transform .2s,box-shadow .2s;cursor:default}
+    .kpi-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.11)}
+    .kpi-icon{font-size:1.3rem;margin-bottom:4px}
+    .kpi-value{font-size:1.85rem;font-weight:700;color:var(--blue);
+      font-variant-numeric:tabular-nums;transition:color .3s}
+    .kpi-label{font-size:.72rem;color:var(--muted);margin-top:3px;
       text-transform:uppercase;letter-spacing:.5px;font-weight:600}
-    .kpi-sub{font-size:.75rem;color:#aaa;margin-top:2px}
+    .kpi-sub{font-size:.72rem;color:#bbb;margin-top:2px}
+    .kpi-card.green{border-top-color:var(--green)}.kpi-card.green .kpi-value{color:var(--green)}
+    .kpi-card.orange{border-top-color:var(--orange)}.kpi-card.orange .kpi-value{color:var(--orange)}
+    .kpi-card.purple{border-top-color:var(--purple)}.kpi-card.purple .kpi-value{color:var(--purple)}
+    .kpi-card.red{border-top-color:var(--red)}.kpi-card.red .kpi-value{color:var(--red)}
 
-    /* ── Insight box ── */
+    /* insight */
     .insight{background:linear-gradient(135deg,#e8f0fb,#f0f7ff);
       border-left:4px solid var(--blue);border-radius:8px;
-      padding:14px 18px;margin-bottom:20px;font-size:.9rem;color:var(--blue-dark);
-      display:flex;align-items:flex-start;gap:12px}
-    .insight-icon{font-size:1.4rem;flex-shrink:0}
-    .insight ul{margin-top:6px;padding-left:16px}
-    .insight ul li{margin-top:3px;font-size:.85rem}
+      padding:13px 16px;margin-bottom:18px;font-size:.88rem;color:var(--blue-dark);
+      display:flex;align-items:flex-start;gap:10px}
+    .insight-icon{font-size:1.3rem;flex-shrink:0}
+    .insight ul{margin-top:5px;padding-left:16px}
+    .insight ul li{margin-top:3px;font-size:.83rem}
 
-    /* ── Filter bar ── */
-    .filter-bar{background:var(--card);border-radius:10px;padding:14px 18px;
-      margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);
-      display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
-    .filter-group label{display:block;font-size:.72rem;color:var(--muted);
-      margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-    .filter-group select,.filter-group input{padding:8px 10px;border:1px solid var(--border);
-      border-radius:6px;font-size:.85rem;background:#f7f9fc;min-width:130px;
-      transition:border-color .2s}
+    /* filter bar */
+    .filter-bar{background:var(--card);border-radius:10px;padding:13px 16px;
+      margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);
+      display:flex;flex-wrap:wrap;gap:11px;align-items:flex-end}
+    .filter-group label{display:block;font-size:.7rem;color:var(--muted);
+      margin-bottom:3px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+    .filter-group select,.filter-group input{padding:7px 10px;border:1.5px solid var(--border);
+      border-radius:6px;font-size:.84rem;background:#f7f9fc;min-width:125px;transition:.2s}
     .filter-group select:focus,.filter-group input:focus{
       outline:none;border-color:var(--blue);background:#fff}
-    .btn{padding:8px 18px;border-radius:6px;border:none;cursor:pointer;
-      font-size:.85rem;font-weight:600;transition:.2s}
-    .btn-primary{background:var(--blue);color:#fff}
-    .btn-primary:hover{background:var(--blue-dark)}
-    .btn-secondary{background:#f0f4f8;color:#555}
-    .btn-secondary:hover{background:#e0e8f0}
-    .btn-danger{background:var(--red);color:#fff;padding:5px 12px;font-size:.78rem}
+    .btn{padding:7px 16px;border-radius:6px;border:none;cursor:pointer;
+      font-size:.84rem;font-weight:600;transition:.2s}
+    .btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue-dark)}
+    .btn-secondary{background:#f0f4f8;color:#555}.btn-secondary:hover{background:#e0e8f0}
+    .btn-success{background:var(--green);color:#fff}.btn-success:hover{background:#1e8449}
+    .btn-danger{background:var(--red);color:#fff;padding:5px 11px;font-size:.77rem}
     .btn-danger:hover{background:#962d22}
-    .filter-active-indicator{font-size:.75rem;color:var(--orange);
-      font-weight:600;display:none;align-items:center;gap:4px}
+    .filter-indicator{font-size:.73rem;color:var(--orange);font-weight:700;
+      display:none;align-items:center;gap:4px;padding:4px 10px;
+      background:#fff8e1;border-radius:12px;border:1px solid #f39c12}
 
-    /* ── Chart grid ── */
-    .chart-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:20px}
+    /* pipeline panel */
+    .pipeline-panel{background:var(--card);border-radius:10px;padding:15px 18px;
+      margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+    .pp-item{text-align:center}
+    .pp-value{font-size:1.05rem;font-weight:700;color:var(--blue)}
+    .pp-label{font-size:.68rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
+
+    /* chart grid */
+    .chart-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:18px}
     .chart-grid.cols3{grid-template-columns:2fr 1fr 1fr}
-    .chart-grid.cols1{grid-template-columns:1fr}
-    .chart-card{background:var(--card);border-radius:10px;padding:20px;
+    .chart-card{background:var(--card);border-radius:10px;padding:18px;
       box-shadow:0 1px 6px rgba(0,0,0,.08);transition:box-shadow .2s}
     .chart-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.1)}
-    .chart-card h3{font-size:.9rem;color:var(--blue);margin-bottom:14px;font-weight:700;
-      border-bottom:1px solid var(--border);padding-bottom:9px;
+    .chart-card h3{font-size:.87rem;color:var(--blue);margin-bottom:12px;font-weight:700;
+      border-bottom:1px solid var(--border);padding-bottom:8px;
       display:flex;align-items:center;justify-content:space-between}
-    .chart-wrap{position:relative;height:250px}
-    .chart-wrap.tall{height:300px}
-    .chart-skeleton{height:250px;border-radius:6px}
+    .chart-wrap{position:relative;height:240px}
 
-    /* ── Tables ── */
-    .table-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
-    table{width:100%;border-collapse:collapse;font-size:.84rem}
-    th{background:var(--blue);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
-    td{padding:9px 12px;border-bottom:1px solid #eee}
+    /* tables */
+    .table-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+    table{width:100%;border-collapse:collapse;font-size:.83rem}
+    th{background:var(--blue);color:#fff;padding:9px 11px;text-align:left;font-weight:600}
+    td{padding:9px 11px;border-bottom:1px solid #eee}
     tr:last-child td{border-bottom:none}
     tr:hover td{background:#f7f9fc}
-    .rank{color:var(--muted);font-size:.78rem;font-weight:700}
 
-    /* ── Badges ── */
-    .badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.74rem;font-weight:700}
+    /* badges */
+    .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.73rem;font-weight:700}
     .badge.ai{background:#e8f5e9;color:var(--green)}
     .badge.nonai{background:#fdecea;color:var(--red)}
     .badge.success{background:#e8f5e9;color:var(--green)}
     .badge.partial{background:#fff8e1;color:var(--orange)}
     .badge.failed{background:#fdecea;color:var(--red)}
 
-    /* ── Pipeline panel ── */
-    .pipeline-panel{background:var(--card);border-radius:10px;padding:18px 20px;
-      margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-    .pp-item{text-align:center}
-    .pp-value{font-size:1.1rem;font-weight:700;color:var(--blue)}
-    .pp-label{font-size:.72rem;color:var(--muted);margin-top:2px;text-transform:uppercase}
+    /* section divider */
+    .section-divider{font-size:.75rem;color:var(--muted);font-weight:700;
+      text-transform:uppercase;letter-spacing:.8px;margin:4px 0 11px;
+      display:flex;align-items:center;gap:8px}
+    .section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
-    /* ── Upload page ── */
-    .card{background:var(--card);border-radius:10px;padding:22px;
-      box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:20px}
-    .card h2{font-size:1rem;color:var(--blue);margin-bottom:16px;padding-bottom:10px;
-      border-bottom:1px solid var(--border);font-weight:700}
-    .upload-zone{border:2px dashed var(--blue);border-radius:10px;padding:32px;
-      text-align:center;background:#f7f9fc;cursor:pointer;transition:.2s;position:relative}
+    /* Day 9 checkpoint */
+    .checkpoint-card{border-radius:10px;padding:20px 24px;margin-bottom:20px;
+      box-shadow:0 1px 6px rgba(0,0,0,.08)}
+    .checkpoint-card.ready{background:linear-gradient(135deg,#e8f5e9,#f0fff4);
+      border-left:5px solid var(--green)}
+    .checkpoint-card.not-ready{background:linear-gradient(135deg,#fff8e1,#fffde7);
+      border-left:5px solid var(--orange)}
+    .checkpoint-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+    .checkpoint-card p{font-size:.88rem;margin-top:6px;color:#555}
+    .checkpoint-items{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .checkpoint-item{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600}
+    .checkpoint-item.pass{background:#e8f5e9;color:var(--green)}
+    .checkpoint-item.fail{background:#fdecea;color:var(--red)}
+
+    /* upload */
+    .card{background:var(--card);border-radius:10px;padding:20px;
+      box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:18px}
+    .card h2{font-size:.98rem;color:var(--blue);margin-bottom:14px;
+      padding-bottom:9px;border-bottom:1px solid var(--border);font-weight:700}
+    .upload-zone{border:2px dashed var(--blue);border-radius:10px;padding:28px;
+      text-align:center;background:#f7f9fc;cursor:pointer;transition:.2s}
     .upload-zone:hover,.upload-zone.drag-over{background:var(--blue-light);border-color:var(--blue-dark)}
     .upload-zone input{display:none}
-    .upload-zone label{cursor:pointer;color:var(--blue);font-weight:700;font-size:1rem}
-    .upload-zone p{color:#999;font-size:.8rem;margin-top:6px}
-    #selectedFile{margin-top:10px;font-size:.85rem;color:#444;font-weight:600}
-    .result-box{margin-top:14px;padding:14px;border-radius:6px;font-size:.88rem;display:none}
+    .upload-zone label{cursor:pointer;color:var(--blue);font-weight:700}
+    .upload-zone p{color:#999;font-size:.78rem;margin-top:5px}
+    #selectedFile{margin-top:8px;font-size:.83rem;color:#444;font-weight:600}
+    .result-box{margin-top:12px;padding:12px;border-radius:6px;font-size:.86rem;display:none}
     .result-box.success{background:#e8f5e9;border-left:4px solid var(--green);color:#1a5c2e}
     .result-box.error{background:#fdecea;border-left:4px solid var(--red);color:#7b1f1f}
     .result-box.partial{background:#fff8e1;border-left:4px solid var(--orange);color:#7a5c00}
-    .progress-bar{height:4px;background:var(--border);border-radius:2px;
-      margin-top:10px;display:none;overflow:hidden}
-    .progress-bar-fill{height:100%;background:var(--blue);
-      animation:progress 1.5s ease-in-out infinite;width:40%}
-    @keyframes progress{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+    .progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;display:none;overflow:hidden}
+    .progress-bar-fill{height:100%;background:var(--blue);animation:prog 1.5s ease-in-out infinite;width:40%}
+    @keyframes prog{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
 
-    /* ── Misc ── */
-    .empty{text-align:center;padding:40px;color:#bbb;font-size:.9rem}
-    .section-divider{font-size:.8rem;color:var(--muted);font-weight:700;
-      text-transform:uppercase;letter-spacing:.8px;margin:4px 0 12px;
-      display:flex;align-items:center;gap:8px}
-    .section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+    .empty{text-align:center;padding:36px;color:#bbb;font-size:.88rem}
+
+    /* export toolbar */
+    .export-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+      flex-wrap:wrap}
+    .export-bar span{font-size:.8rem;color:var(--muted)}
 
     @media(max-width:900px){
       .chart-grid,.chart-grid.cols3,.table-grid{grid-template-columns:1fr}
       .kpi-grid{grid-template-columns:repeat(2,1fr)}
-      header{padding:12px 16px}
-      .container{padding:0 12px}
-      nav{padding:0 12px}
+      header{padding:11px 14px}
+      nav{padding:0 10px;top:49px}
+      .container{padding:0 11px}
     }
   </style>
 </head>
 <body>
 
-<!-- ── Header ── -->
 <header>
   <div>
     <h1>📊 EduTech Impact on AI</h1>
-    <div class="header-meta">Student Performance Analytics Dashboard</div>
+    <div class="header-meta">Student Performance Analytics · Full Stack AI Project</div>
   </div>
   <div class="header-right">
+    <button class="auto-refresh-toggle" id="refreshToggle" onclick="toggleAutoRefresh()">⏱ Auto-refresh: OFF</button>
     <span id="dbStatus" class="ok">● Live</span>
     <span id="lastUpdated"></span>
   </div>
 </header>
 
-<!-- ── Nav ── -->
 <nav>
   <button class="active" onclick="showPage('dashboard',this)">
     📈 Dashboard <span class="nav-badge" id="navRecords">—</span>
   </button>
-  <button onclick="showPage('upload',this)">📤 Upload Data</button>
+  <button onclick="showPage('upload',this)">📤 Upload</button>
   <button onclick="showPage('records',this)">🔍 Records</button>
+  <button onclick="showPage('checkpoint',this)">🚦 Day 9 Checkpoint</button>
 </nav>
 
-<!-- ════════════════════ DASHBOARD ════════════════════ -->
+<!-- ══════════════ DASHBOARD ══════════════ -->
 <div id="dashboard" class="page active">
  <div class="container">
 
@@ -217,10 +225,10 @@
       <select id="fClass"><option value="">All Classes</option></select>
     </div>
     <div class="filter-group">
-      <label>AI Tool Used</label>
+      <label>AI Tool</label>
       <select id="fAI">
         <option value="">All Students</option>
-        <option value="true">AI Users Only</option>
+        <option value="true">AI Users</option>
         <option value="false">Non-AI Only</option>
       </select>
     </div>
@@ -234,46 +242,21 @@
     </div>
     <button class="btn btn-primary" onclick="loadDashboard()">Apply</button>
     <button class="btn btn-secondary" onclick="clearFilters()">Clear</button>
-    <span class="filter-active-indicator" id="filterIndicator">⚡ Filtered</span>
+    <button class="btn btn-success" onclick="exportCSV()" title="Download filtered data as CSV">⬇ Export CSV</button>
+    <span class="filter-indicator" id="filterIndicator">⚡ Filtered view</span>
   </div>
 
   <!-- KPI Cards -->
   <div class="kpi-grid">
-    <div class="kpi-card blue">
-      <div class="kpi-icon">📋</div>
-      <div class="kpi-value" id="kTotal">—</div>
-      <div class="kpi-label">Total Records</div>
-    </div>
-    <div class="kpi-card blue">
-      <div class="kpi-icon">👥</div>
-      <div class="kpi-value" id="kStudents">—</div>
-      <div class="kpi-label">Total Students</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="kpi-icon">🎯</div>
-      <div class="kpi-value" id="kAvgScore">—</div>
-      <div class="kpi-label">Avg Score</div>
-      <div class="kpi-sub" id="kScoreRange"></div>
-    </div>
-    <div class="kpi-card orange">
-      <div class="kpi-icon">✅</div>
-      <div class="kpi-value" id="kPassRate">—</div>
-      <div class="kpi-label">Pass Rate</div>
-    </div>
-    <div class="kpi-card purple">
-      <div class="kpi-icon">🤖</div>
-      <div class="kpi-value" id="kAIAdopt">—</div>
-      <div class="kpi-label">AI Adoption</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="kpi-icon">🚀</div>
-      <div class="kpi-value" id="kAIBoost">—</div>
-      <div class="kpi-label">AI Score Boost</div>
-      <div class="kpi-sub" id="kBoostSub"></div>
-    </div>
+    <div class="kpi-card blue"><div class="kpi-icon">📋</div><div class="kpi-value" id="kTotal">—</div><div class="kpi-label">Total Records</div></div>
+    <div class="kpi-card blue"><div class="kpi-icon">👥</div><div class="kpi-value" id="kStudents">—</div><div class="kpi-label">Students</div></div>
+    <div class="kpi-card green"><div class="kpi-icon">🎯</div><div class="kpi-value" id="kAvgScore">—</div><div class="kpi-label">Avg Score</div><div class="kpi-sub" id="kScoreRange"></div></div>
+    <div class="kpi-card orange"><div class="kpi-icon">✅</div><div class="kpi-value" id="kPassRate">—</div><div class="kpi-label">Pass Rate</div></div>
+    <div class="kpi-card purple"><div class="kpi-icon">🤖</div><div class="kpi-value" id="kAIAdopt">—</div><div class="kpi-label">AI Adoption</div></div>
+    <div class="kpi-card green"><div class="kpi-icon">🚀</div><div class="kpi-value" id="kAIBoost">—</div><div class="kpi-label">AI Score Boost</div><div class="kpi-sub" id="kBoostSub"></div></div>
   </div>
 
-  <!-- Insight box -->
+  <!-- Insight -->
   <div class="insight">
     <div class="insight-icon">💡</div>
     <div id="insightBox">Loading insights...</div>
@@ -282,14 +265,14 @@
   <!-- Pipeline health -->
   <div class="section-divider">Pipeline Health</div>
   <div class="pipeline-panel" id="pipelinePanel">
-    <div class="pp-item"><div class="pp-value skeleton" style="height:24px;width:60px;margin:auto"></div><div class="pp-label">Date Range</div></div>
+    <div class="pp-item"><div class="pp-value skeleton" style="height:22px;width:50px;margin:auto"></div><div class="pp-label">Loading</div></div>
   </div>
 
-  <!-- Row 1: AI vs Non-AI + Trend -->
-  <div class="section-divider">Core AI Impact Analysis</div>
+  <!-- Charts Row 1 -->
+  <div class="section-divider">Core AI Impact</div>
   <div class="chart-grid">
     <div class="chart-card">
-      <h3>🤖 AI vs Non-AI Score by Subject</h3>
+      <h3>🤖 AI vs Non-AI by Subject</h3>
       <div class="chart-wrap"><canvas id="chartAISubject"></canvas></div>
     </div>
     <div class="chart-card">
@@ -298,20 +281,20 @@
     </div>
   </div>
 
-  <!-- Row 2: Subject + Class -->
+  <!-- Charts Row 2 -->
   <div class="section-divider">Performance Breakdown</div>
   <div class="chart-grid">
     <div class="chart-card">
-      <h3>📚 Average Score by Subject</h3>
+      <h3>📚 Avg Score by Subject</h3>
       <div class="chart-wrap"><canvas id="chartSubject"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>🏫 Average Score by Class</h3>
+      <h3>🏫 Avg Score by Class</h3>
       <div class="chart-wrap"><canvas id="chartClass"></canvas></div>
     </div>
   </div>
 
-  <!-- Row 3: Distribution + Pass/Fail + AI adoption -->
+  <!-- Charts Row 3 -->
   <div class="section-divider">Distribution & Adoption</div>
   <div class="chart-grid cols3">
     <div class="chart-card">
@@ -333,12 +316,12 @@
   <div class="table-grid">
     <div class="chart-card">
       <h3>🏆 Top 5 Students</h3>
-      <table><thead><tr><th>#</th><th>Student</th><th>Avg Score</th><th>AI Tool</th></tr></thead>
+      <table><thead><tr><th>#</th><th>Student</th><th>Score</th><th>AI Tool</th></tr></thead>
       <tbody id="topStudents"><tr><td colspan="4" class="empty">Loading...</td></tr></tbody></table>
     </div>
     <div class="chart-card">
       <h3>⚠️ Needs Support</h3>
-      <table><thead><tr><th>#</th><th>Student</th><th>Avg Score</th><th>AI Tool</th></tr></thead>
+      <table><thead><tr><th>#</th><th>Student</th><th>Score</th><th>AI Tool</th></tr></thead>
       <tbody id="bottomStudents"><tr><td colspan="4" class="empty">Loading...</td></tr></tbody></table>
     </div>
   </div>
@@ -346,41 +329,36 @@
  </div>
 </div>
 
-<!-- ════════════════════ UPLOAD ════════════════════ -->
+<!-- ══════════════ UPLOAD ══════════════ -->
 <div id="upload" class="page">
  <div class="container">
   <div class="card">
     <h2>📤 Upload Student Data</h2>
     <div class="upload-zone" id="dropZone">
       <input type="file" id="fileInput" accept=".csv,.xlsx,.xls">
-      <label for="fileInput">📁 Click to choose a file  <span style="font-weight:400;color:#999">or drag & drop</span></label>
+      <label for="fileInput">📁 Click to choose file <span style="font-weight:400;color:#aaa">or drag & drop</span></label>
       <p>Supports .csv and .xlsx · Max 10MB</p>
-      <p style="margin-top:4px;font-size:.78rem">
-        Required columns: student_id · class_name · subject · score · ai_tool_used · study_hours · record_date
-      </p>
+      <p style="font-size:.74rem;margin-top:3px">Required: student_id · class_name · subject · score · ai_tool_used · study_hours · record_date</p>
       <div id="selectedFile"></div>
     </div>
     <div class="progress-bar" id="uploadProgress"><div class="progress-bar-fill"></div></div>
-    <div style="margin-top:12px">
-      <button class="btn btn-primary" onclick="uploadFile()">Upload File</button>
-    </div>
+    <div style="margin-top:11px"><button class="btn btn-primary" onclick="uploadFile()">Upload File</button></div>
     <div class="result-box" id="uploadResult"></div>
   </div>
-
   <div class="card">
     <h2>📦 Upload Batches</h2>
-    <button class="btn btn-secondary" onclick="loadBatches()" style="margin-bottom:14px">↻ Refresh</button>
+    <button class="btn btn-secondary" onclick="loadBatches()" style="margin-bottom:12px">↻ Refresh</button>
     <div id="batchesContainer"><div class="empty">Loading...</div></div>
   </div>
  </div>
 </div>
 
-<!-- ════════════════════ RECORDS ════════════════════ -->
+<!-- ══════════════ RECORDS ══════════════ -->
 <div id="records" class="page">
  <div class="container">
   <div class="card">
     <h2>🔍 Records Preview</h2>
-    <div class="filter-bar" style="margin-bottom:14px;padding:12px 14px">
+    <div class="filter-bar" style="padding:11px 14px;margin-bottom:12px">
       <div class="filter-group">
         <label>Subject</label>
         <select id="rSubject" onchange="loadRecords()"><option value="">All</option></select>
@@ -399,65 +377,158 @@
       </div>
       <button class="btn btn-secondary" onclick="clearRecordFilters()">Clear</button>
     </div>
-    <div id="recordsMeta" style="font-size:.78rem;color:var(--muted);margin-bottom:8px"></div>
+    <div id="recordsMeta" style="font-size:.76rem;color:var(--muted);margin-bottom:7px"></div>
     <div style="overflow-x:auto"><div id="recordsTable"><div class="empty">Upload data to see records.</div></div></div>
   </div>
  </div>
 </div>
 
+<!-- ══════════════ DAY 9 CHECKPOINT ══════════════ -->
+<div id="checkpoint" class="page">
+ <div class="container">
+  <div class="checkpoint-card" id="checkpointCard">
+    <h3 id="checkpointTitle">🚦 Checking Day 8 Checkpoint...</h3>
+    <p id="checkpointMsg">Evaluating whether the dashboard is ready to proceed to the Day 9 AI predictive model.</p>
+    <div class="checkpoint-items" id="checkpointItems"></div>
+  </div>
+
+  <div class="chart-card" id="day9Details" style="display:none">
+    <h3>🤖 Day 9 Plan — Predictive AI Model</h3>
+    <div style="padding:10px 0;font-size:.88rem;line-height:1.8;color:#444">
+      <p><strong>Model goal:</strong> Predict a student's score given their study hours, AI tool usage, and subject.</p>
+      <br>
+      <p><strong>Algorithm:</strong> Linear Regression (scikit-learn) — simple, interpretable, appropriate for this dataset size.</p>
+      <br>
+      <p><strong>Features (inputs):</strong></p>
+      <ul style="margin-left:20px;margin-top:6px">
+        <li>study_hours (numeric)</li>
+        <li>ai_tool_used (boolean → 0/1)</li>
+        <li>subject (one-hot encoded)</li>
+      </ul>
+      <br>
+      <p><strong>Target (output):</strong> score (0–100)</p>
+      <br>
+      <p><strong>What gets built:</strong></p>
+      <ul style="margin-left:20px;margin-top:6px">
+        <li>Train/test split → train model → evaluate (R², MAE)</li>
+        <li>Save model with joblib</li>
+        <li>POST /api/predict endpoint</li>
+        <li>"Predict My Score" widget on the dashboard</li>
+      </ul>
+      <br>
+      <p><strong>Fallback if not built:</strong> Document approach in README as "future work" — the dashboard is still a complete project.</p>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-top:16px">
+    <h3>📋 Full Project Status</h3>
+    <table style="margin-top:8px">
+      <thead><tr><th>Day</th><th>Phase</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Day 1</td><td>Setup & Planning</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 2</td><td>Data Ingestion & Upload</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 3</td><td>Data Storage & Batch Management</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 4</td><td>Pandas Cleaning Pipeline</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 5</td><td>KPI Calculations</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 6</td><td>Dashboard Frontend (Charts)</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 7</td><td>UI Polish & Interactivity</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 8</td><td>Completion & Export</td><td><span class="badge success">✅ Done</span></td></tr>
+        <tr><td>Day 9</td><td>AI Predictive Model</td><td><span class="badge partial" id="day9Status">Conditional</span></td></tr>
+        <tr><td>Day 10</td><td>Deploy & Demo</td><td><span class="badge" style="background:#e8edf3;color:#666">⬜ Pending</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+ </div>
+</div>
+
 <script>
-// ─────────────────────────────────────────────────────────
-// Utilities
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
+// Core utilities
+// ─────────────────────────────────────────────────────
 const charts = {};
 function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
 
-// Animated counter for KPI cards
-function animateCount(el, target, suffix='', decimals=0, duration=600){
+function animateCount(el, target, suffix='', decimals=0, duration=700){
   const start = parseFloat(el.dataset.current||0)||0;
-  const range = target - start;
-  const startTime = performance.now();
+  const range  = target - start;
+  const t0     = performance.now();
   el.dataset.current = target;
-  function step(now){
-    const pct = Math.min((now-startTime)/duration, 1);
-    const ease = 1 - Math.pow(1-pct, 3);
-    const val = (start + range*ease).toFixed(decimals);
-    el.textContent = val + suffix;
-    if(pct < 1) requestAnimationFrame(step);
+  (function step(now){
+    const p   = Math.min((now-t0)/duration,1);
+    const e   = 1-Math.pow(1-p,3);
+    el.textContent = (start+range*e).toFixed(decimals)+suffix;
+    if(p<1) requestAnimationFrame(step);
+  })(t0);
+}
+
+function setKPI(id,val,suf='',dec=0){
+  const el=document.getElementById(id);
+  if(el) animateCount(el,parseFloat(val)||0,suf,dec);
+}
+
+const TOOLTIP = {
+  backgroundColor:'rgba(26,58,110,.92)',
+  padding:9, cornerRadius:6,
+  titleFont:{size:11}, bodyFont:{size:10}
+};
+
+// ─────────────────────────────────────────────────────
+// Auto-refresh
+// ─────────────────────────────────────────────────────
+let autoRefreshInterval = null;
+let lastRecordCount     = 0;
+
+function toggleAutoRefresh(){
+  const btn = document.getElementById('refreshToggle');
+  if(autoRefreshInterval){
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    btn.textContent = '⏱ Auto-refresh: OFF';
+    btn.classList.remove('on');
+  } else {
+    autoRefreshInterval = setInterval(checkForNewData, 30000); // every 30s
+    btn.textContent = '⏱ Auto-refresh: ON';
+    btn.classList.add('on');
   }
-  requestAnimationFrame(step);
 }
 
-function setKPI(id, value, suffix='', decimals=0){
-  const el = document.getElementById(id);
-  if(!el) return;
-  animateCount(el, parseFloat(value)||0, suffix, decimals);
+async function checkForNewData(){
+  try{
+    const res = await fetch('/api/stats/summary');
+    const d   = await res.json();
+    if(d.total_records !== lastRecordCount){
+      lastRecordCount = d.total_records;
+      loadFilterOptions();
+      loadDashboard();
+      loadPipelinePanel();
+    }
+  }catch(e){}
 }
 
-// ─────────────────────────────────────────────────────────
-// Page navigation
-// ─────────────────────────────────────────────────────────
-function showPage(id, btn){
+// ─────────────────────────────────────────────────────
+// Navigation
+// ─────────────────────────────────────────────────────
+function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
-  if(id==='upload'){ loadBatches(); }
-  if(id==='records'){ loadRecordFilterOptions(); loadRecords(); }
+  if(id==='upload')     { loadBatches(); }
+  if(id==='records')    { loadRecordFilterOptions(); loadRecords(); }
+  if(id==='checkpoint') { loadCheckpoint(); }
 }
 
-// ─────────────────────────────────────────────────────────
-// Filter helpers
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
+// Filters
+// ─────────────────────────────────────────────────────
 function getFilters(){
-  const p = new URLSearchParams({
+  return new URLSearchParams({
     subject:      document.getElementById('fSubject').value,
     class_name:   document.getElementById('fClass').value,
     ai_tool_used: document.getElementById('fAI').value,
     date_from:    document.getElementById('fFrom').value,
     date_to:      document.getElementById('fTo').value,
   });
-  return p;
 }
 
 function isFiltered(){
@@ -472,67 +543,71 @@ function clearFilters(){
 
 async function loadFilterOptions(){
   try{
-    const res = await fetch('/api/filter-options');
-    const d   = await res.json();
-    document.getElementById('navRecords').textContent = d.total_records||'—';
-    populateSelect('fSubject', d.subjects);
-    populateSelect('fClass',   d.classes);
-  }catch(e){ console.error(e); }
+    const res=await fetch('/api/filter-options');
+    const d  =await res.json();
+    document.getElementById('navRecords').textContent=d.total_records||'0';
+    lastRecordCount = d.total_records||0;
+    populateSelect('fSubject',d.subjects);
+    populateSelect('fClass',d.classes);
+  }catch(e){}
 }
 
-function populateSelect(id, values){
-  const sel = document.getElementById(id);
-  const cur = sel.value;
+function populateSelect(id,values){
+  const sel=document.getElementById(id); const cur=sel.value;
   while(sel.options.length>1) sel.remove(1);
-  values.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); });
-  sel.value = cur;
+  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
+  sel.value=cur;
 }
 
-// ─────────────────────────────────────────────────────────
-// Pipeline health panel
-// ─────────────────────────────────────────────────────────
+// Export CSV
+function exportCSV(){
+  const params=getFilters();
+  window.open(`/api/export/csv?${params}`,'_blank');
+}
+
+// ─────────────────────────────────────────────────────
+// Pipeline panel
+// ─────────────────────────────────────────────────────
 async function loadPipelinePanel(){
   try{
-    const res = await fetch('/api/pipeline/summary');
-    const d   = await res.json();
-    if(d.error){ return; }
-    document.getElementById('pipelinePanel').innerHTML = `
+    const res=await fetch('/api/pipeline/summary');
+    const d  =await res.json();
+    if(d.error){return;}
+    document.getElementById('pipelinePanel').innerHTML=`
       <div class="pp-item"><div class="pp-value">${d.total_records}</div><div class="pp-label">Records</div></div>
       <div class="pp-item"><div class="pp-value">${d.score_stats.mean}</div><div class="pp-label">Mean Score</div></div>
       <div class="pp-item"><div class="pp-value">${d.score_stats.min}–${d.score_stats.max}</div><div class="pp-label">Score Range</div></div>
       <div class="pp-item"><div class="pp-value">${d.ai_tool_usage.adoption_pct}%</div><div class="pp-label">AI Adoption</div></div>
       <div class="pp-item"><div class="pp-value">${d.pass_rate_pct}%</div><div class="pp-label">Pass Rate</div></div>
       <div class="pp-item"><div class="pp-value">${d.outliers_flagged}</div><div class="pp-label">Outliers</div></div>
-      <div class="pp-item"><div class="pp-value" style="font-size:.85rem">${d.date_range.from}</div><div class="pp-label">From</div></div>
-      <div class="pp-item"><div class="pp-value" style="font-size:.85rem">${d.date_range.to}</div><div class="pp-label">To</div></div>
-    `;
-  }catch(e){ console.error(e); }
+      <div class="pp-item"><div class="pp-value" style="font-size:.82rem">${d.date_range.from}</div><div class="pp-label">From</div></div>
+      <div class="pp-item"><div class="pp-value" style="font-size:.82rem">${d.date_range.to}</div><div class="pp-label">To</div></div>`;
+  }catch(e){}
 }
 
-// ─────────────────────────────────────────────────────────
-// Dashboard: load all KPIs
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
+// Dashboard
+// ─────────────────────────────────────────────────────
 async function loadDashboard(){
-  const params = getFilters();
-  document.getElementById('filterIndicator').style.display = isFiltered()?'flex':'none';
-
+  const params=getFilters();
+  document.getElementById('filterIndicator').style.display=isFiltered()?'flex':'none';
   try{
-    const res = await fetch(`/api/kpis?${params}`);
+    const res=await fetch(`/api/kpis?${params}`);
     if(!res.ok){
-      document.getElementById('insightBox').innerHTML =
-        'No data available yet. <strong>Upload a file</strong> on the Upload page to see insights.';
+      document.getElementById('insightBox').innerHTML=
+        'No data yet — <strong>Upload a file</strong> on the Upload tab to get started.';
       return;
     }
-    const d = await res.json();
+    const d=await res.json();
     renderKPICards(d.overview);
-    renderInsight(d.overview, d.leaderboard);
+    renderInsight(d.overview,d.leaderboard);
     renderAISubjectChart(d.ai_vs_nonai.by_subject);
     renderTrendChart(d.trend);
-    renderBarChart('chartSubject', d.by_subject.labels, d.by_subject.scores, 'Avg Score', '#2F5496');
-    renderBarChart('chartClass',   d.by_class.labels,   d.by_class.scores,   'Avg Score', '#27ae60');
-    renderDistChart(d.score_distribution);
-    renderDoughnut('chartPassFail', d.pass_fail.labels, d.pass_fail.counts, ['#27ae60','#c0392b','#e67e22']);
-    renderBarChart('chartAIAdopt', d.ai_adoption.labels, d.ai_adoption.rates, 'Adoption %', '#8e44ad', true);
+    renderBar('chartSubject',d.by_subject.labels,d.by_subject.scores,'Avg Score','#2F5496');
+    renderBar('chartClass',  d.by_class.labels,  d.by_class.scores,  'Avg Score','#27ae60');
+    renderDist(d.score_distribution);
+    renderDoughnut('chartPassFail',d.pass_fail.labels,d.pass_fail.counts,['#27ae60','#c0392b','#e67e22']);
+    renderBar('chartAIAdopt',d.ai_adoption.labels,d.ai_adoption.rates,'Adoption %','#8e44ad',true);
     renderLeaderboard(d.leaderboard);
     document.getElementById('dbStatus').className='ok';
     document.getElementById('dbStatus').textContent='● Live';
@@ -540,223 +615,214 @@ async function loadDashboard(){
   }catch(e){
     document.getElementById('dbStatus').className='warn';
     document.getElementById('dbStatus').textContent='● Error';
-    console.error(e);
   }
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 // KPI Cards
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 function renderKPICards(o){
-  setKPI('kTotal',    o.total_records, '', 0);
-  setKPI('kStudents', o.total_students,'', 0);
-  setKPI('kAvgScore', o.avg_score,     '', 2);
-  setKPI('kPassRate', o.pass_rate_pct, '%',1);
-  setKPI('kAIAdopt',  o.ai_adoption_pct,'%',1);
-  setKPI('kAIBoost',  o.ai_score_boost, '', 2);
-  document.getElementById('kScoreRange').textContent = `min ${o.avg_score_non_ai} → max ${o.avg_score_ai}`;
-  const bEl = document.getElementById('kBoostSub');
-  if(bEl) bEl.textContent = `${o.avg_score_ai} AI vs ${o.avg_score_non_ai} Non-AI`;
-  // Positive boost shown in green, negative in red
-  const boostCard = document.getElementById('kAIBoost').closest('.kpi-card');
-  boostCard.className = 'kpi-card ' + (o.ai_score_boost >= 0 ? 'green' : 'red');
-  document.getElementById('kAIBoost').textContent = (o.ai_score_boost>=0?'+':'')+o.ai_score_boost;
+  setKPI('kTotal',   o.total_records,'',0);
+  setKPI('kStudents',o.total_students,'',0);
+  setKPI('kAvgScore',o.avg_score,'',2);
+  setKPI('kPassRate',o.pass_rate_pct,'%',1);
+  setKPI('kAIAdopt', o.ai_adoption_pct,'%',1);
+  document.getElementById('kAIBoost').textContent=(o.ai_score_boost>=0?'+':'')+o.ai_score_boost;
+  document.getElementById('kAIBoost').dataset.current=o.ai_score_boost;
+  document.getElementById('kScoreRange').textContent=`Non-AI ${o.avg_score_non_ai} · AI ${o.avg_score_ai}`;
+  document.getElementById('kBoostSub').textContent=`${o.avg_score_ai} vs ${o.avg_score_non_ai}`;
+  const boostCard=document.getElementById('kAIBoost').closest('.kpi-card');
+  boostCard.className='kpi-card '+(o.ai_score_boost>=0?'green':'red');
 }
 
-// ─────────────────────────────────────────────────────────
-// Dynamic insight engine
-// ─────────────────────────────────────────────────────────
-function renderInsight(o, lb){
-  const topAI   = lb && lb.top  ? lb.top.filter(s=>s.ai_used).length  : 0;
-  const botNonAI= lb && lb.bottom ? lb.bottom.filter(s=>!s.ai_used).length : 0;
-
-  const bullets = [];
+// ─────────────────────────────────────────────────────
+// Insight engine
+// ─────────────────────────────────────────────────────
+function renderInsight(o,lb){
+  const topAI   =lb&&lb.top   ? lb.top.filter(s=>s.ai_used).length   : 0;
+  const botNonAI=lb&&lb.bottom? lb.bottom.filter(s=>!s.ai_used).length: 0;
+  const bullets=[];
   if(o.ai_score_boost>0)
     bullets.push(`AI tool users score <strong>+${o.ai_score_boost} points higher</strong> on average (${o.avg_score_ai} vs ${o.avg_score_non_ai})`);
   if(topAI===5)
-    bullets.push(`All <strong>top 5 students</strong> are AI tool users`);
-  if(botNonAI===5)
-    bullets.push(`All <strong>bottom 5 students</strong> are non-AI users`);
+    bullets.push(`All <strong>top 5 students</strong> are AI tool users — strongest evidence of AI impact`);
+  if(botNonAI>=4)
+    bullets.push(`<strong>${botNonAI} of 5 bottom students</strong> are non-AI users`);
   if(o.ai_adoption_pct<50)
-    bullets.push(`AI adoption is at <strong>${o.ai_adoption_pct}%</strong> — majority of students not yet using AI tools`);
+    bullets.push(`AI adoption at <strong>${o.ai_adoption_pct}%</strong> — majority not yet using AI tools, high growth opportunity`);
   else
-    bullets.push(`AI adoption is at <strong>${o.ai_adoption_pct}%</strong> across all classes`);
+    bullets.push(`AI adoption at <strong>${o.ai_adoption_pct}%</strong> across all classes`);
   if(o.pass_rate_pct===100)
-    bullets.push(`<strong>100% pass rate</strong> — all students are above the passing threshold`);
-
-  document.getElementById('insightBox').innerHTML =
-    `<strong>Key Findings</strong>
-     <ul>${bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
+    bullets.push(`<strong>100% pass rate</strong> — all students above the passing threshold`);
+  document.getElementById('insightBox').innerHTML=
+    `<strong>Key Findings</strong><ul>${bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 // Charts
-// ─────────────────────────────────────────────────────────
-const tooltipDefaults = {
-  backgroundColor:'rgba(30,58,110,.92)',
-  padding:10, cornerRadius:6,
-  titleFont:{size:12}, bodyFont:{size:11}
-};
-
+// ─────────────────────────────────────────────────────
 function renderAISubjectChart(data){
   destroyChart('chartAISubject');
-  const ctx = document.getElementById('chartAISubject').getContext('2d');
-  charts['chartAISubject'] = new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:data.subjects,
-      datasets:[
-        {label:'AI Users',     data:data.ai_scores,     backgroundColor:'#27ae6077',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
-        {label:'Non-AI Users', data:data.non_ai_scores, backgroundColor:'#c0392b77',borderColor:'#c0392b',borderWidth:2,borderRadius:4},
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top'},tooltip:{...tooltipDefaults,
-        callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}`}}},
-      scales:{y:{beginAtZero:false,min:50,
-        title:{display:true,text:'Average Score',font:{size:11}}}}}
-  });
+  const ctx=document.getElementById('chartAISubject').getContext('2d');
+  charts['chartAISubject']=new Chart(ctx,{type:'bar',data:{labels:data.subjects,datasets:[
+    {label:'AI Users',    data:data.ai_scores,    backgroundColor:'#27ae6077',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
+    {label:'Non-AI Users',data:data.non_ai_scores,backgroundColor:'#c0392b77',borderColor:'#c0392b',borderWidth:2,borderRadius:4},
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:TOOLTIP},
+    scales:{y:{beginAtZero:false,min:50,title:{display:true,text:'Avg Score'}}}}});
 }
 
 function renderTrendChart(data){
   destroyChart('chartTrend');
-  const ctx = document.getElementById('chartTrend').getContext('2d');
-  charts['chartTrend'] = new Chart(ctx,{
-    type:'line',
-    data:{
-      labels:data.months,
-      datasets:[
-        {label:'Overall',     data:data.overall,      borderColor:'#2F5496',backgroundColor:'#2F549618',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6},
-        {label:'AI Users',    data:data.ai_users,     borderColor:'#27ae60',backgroundColor:'transparent',tension:.35,borderDash:[],pointRadius:4},
-        {label:'Non-AI',      data:data.non_ai_users, borderColor:'#c0392b',backgroundColor:'transparent',tension:.35,borderDash:[5,4],pointRadius:4},
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top'},tooltip:tooltipDefaults},
-      scales:{y:{beginAtZero:false,min:50}}}
-  });
+  const ctx=document.getElementById('chartTrend').getContext('2d');
+  charts['chartTrend']=new Chart(ctx,{type:'line',data:{labels:data.months,datasets:[
+    {label:'Overall',    data:data.overall,     borderColor:'#2F5496',backgroundColor:'#2F549618',tension:.35,fill:true,pointRadius:4},
+    {label:'AI Users',   data:data.ai_users,    borderColor:'#27ae60',backgroundColor:'transparent',tension:.35,pointRadius:4},
+    {label:'Non-AI',     data:data.non_ai_users,borderColor:'#c0392b',backgroundColor:'transparent',tension:.35,borderDash:[5,4],pointRadius:4},
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:TOOLTIP},
+    scales:{y:{beginAtZero:false,min:50}}}});
 }
 
-function renderBarChart(id, labels, data, label, color, isPercent=false){
+function renderBar(id,labels,data,label,color,isPercent=false){
   destroyChart(id);
-  const min = Math.max(0, Math.min(...data)-8);
-  const ctx = document.getElementById(id).getContext('2d');
-  charts[id] = new Chart(ctx,{
-    type:'bar',
-    data:{labels,datasets:[{label,data,
-      backgroundColor:color+'88',borderColor:color,borderWidth:2,borderRadius:5,
-      hoverBackgroundColor:color+'cc'}]},
+  const min=Math.max(0,Math.min(...data)-8);
+  const ctx=document.getElementById(id).getContext('2d');
+  charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{
+    label,data,backgroundColor:color+'88',borderColor:color,
+    borderWidth:2,borderRadius:5,hoverBackgroundColor:color+'cc'}]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...tooltipDefaults,
-        callbacks:{label:ctx=>`${label}: ${ctx.parsed.y}${isPercent?'%':''}`}}},
-      scales:{y:{beginAtZero:false,min,
-        ticks:{callback:v=>isPercent?v+'%':v}}}}
-  });
+      plugins:{legend:{display:false},tooltip:{...TOOLTIP,
+        callbacks:{label:c=>`${label}: ${c.parsed.y}${isPercent?'%':''}`}}},
+      scales:{y:{beginAtZero:false,min,ticks:{callback:v=>isPercent?v+'%':v}}}}});
 }
 
-function renderDistChart(data){
+function renderDist(data){
   destroyChart('chartDist');
   const colors=['#c0392b88','#e67e2288','#2F549688','#27ae6088'];
   const borders=['#c0392b','#e67e22','#2F5496','#27ae60'];
-  const ctx = document.getElementById('chartDist').getContext('2d');
-  charts['chartDist'] = new Chart(ctx,{
-    type:'bar',
-    data:{labels:data.labels,datasets:[{label:'Students',data:data.counts,
-      backgroundColor:colors,borderColor:borders,borderWidth:2,borderRadius:5}]},
+  const ctx=document.getElementById('chartDist').getContext('2d');
+  charts['chartDist']=new Chart(ctx,{type:'bar',data:{labels:data.labels,
+    datasets:[{label:'Students',data:data.counts,backgroundColor:colors,borderColor:borders,borderWidth:2,borderRadius:5}]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:tooltipDefaults},
-      scales:{y:{beginAtZero:true,title:{display:true,text:'No. of Students'}}}}
-  });
+      plugins:{legend:{display:false},tooltip:TOOLTIP},
+      scales:{y:{beginAtZero:true,title:{display:true,text:'Students'}}}}});
 }
 
-function renderDoughnut(id, labels, data, colors){
+function renderDoughnut(id,labels,data,colors){
   destroyChart(id);
-  const ctx = document.getElementById(id).getContext('2d');
-  charts[id] = new Chart(ctx,{
-    type:'doughnut',
-    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,hoverOffset:6}]},
+  const ctx=document.getElementById(id).getContext('2d');
+  charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,hoverOffset:6}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
-      plugins:{legend:{position:'bottom'},tooltip:tooltipDefaults}}
-  });
+      plugins:{legend:{position:'bottom'},tooltip:TOOLTIP}}});
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 // Leaderboard
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 function renderLeaderboard(lb){
-  const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
-  document.getElementById('topStudents').innerHTML = lb.top.map((s,i)=>`
-    <tr>
-      <td class="rank">${medals[i]}</td>
-      <td><strong>${s.student_id}</strong></td>
-      <td><strong style="color:var(--green)">${s.avg_score}</strong></td>
-      <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
-    </tr>`).join('');
-  document.getElementById('bottomStudents').innerHTML = lb.bottom.map((s,i)=>`
-    <tr>
-      <td class="rank">${i+1}</td>
-      <td><strong>${s.student_id}</strong></td>
-      <td><strong style="color:var(--red)">${s.avg_score}</strong></td>
-      <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
-    </tr>`).join('');
+  const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
+  document.getElementById('topStudents').innerHTML=lb.top.map((s,i)=>`<tr>
+    <td>${medals[i]}</td><td><strong>${s.student_id}</strong></td>
+    <td><strong style="color:var(--green)">${s.avg_score}</strong></td>
+    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
+  </tr>`).join('');
+  document.getElementById('bottomStudents').innerHTML=lb.bottom.map((s,i)=>`<tr>
+    <td style="color:var(--muted)">${i+1}</td><td><strong>${s.student_id}</strong></td>
+    <td><strong style="color:var(--red)">${s.avg_score}</strong></td>
+    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
+  </tr>`).join('');
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
+// Day 9 Checkpoint
+// ─────────────────────────────────────────────────────
+async function loadCheckpoint(){
+  try{
+    const res=await fetch('/api/pipeline/summary');
+    const d  =await res.json();
+    const card=document.getElementById('checkpointCard');
+    const items=document.getElementById('checkpointItems');
+    const batRes=await fetch('/api/batches');
+    const batches=await batRes.json();
+
+    const checks=[
+      {label:'Data uploaded',     pass: d.total_records>0},
+      {label:'300+ records',      pass: d.total_records>=300},
+      {label:'Pipeline running',  pass: !d.error},
+      {label:'4 subjects present',pass: d.subjects&&d.subjects.length>=4},
+      {label:'AI adoption >30%',  pass: d.ai_tool_usage&&d.ai_tool_usage.adoption_pct>=30},
+      {label:'Dashboard charts',  pass: true},
+      {label:'Filters working',   pass: true},
+      {label:'Export CSV',        pass: true},
+    ];
+
+    const allPass=checks.every(c=>c.pass);
+    card.className='checkpoint-card '+(allPass?'ready':'not-ready');
+    document.getElementById('checkpointTitle').textContent=
+      allPass?'✅ Day 8 Checkpoint PASSED — Proceed to Day 9 AI Model!':'⚠️ Day 8 Checkpoint — Some items pending';
+    document.getElementById('checkpointMsg').textContent=
+      allPass
+        ? 'The dashboard is complete and working end-to-end. You are cleared to build the Day 9 scikit-learn predictive model.'
+        : 'Complete the checklist items below before starting Day 9.';
+    items.innerHTML=checks.map(c=>
+      `<span class="checkpoint-item ${c.pass?'pass':'fail'}">${c.pass?'✅':'❌'} ${c.label}</span>`
+    ).join('');
+    document.getElementById('day9Details').style.display='block';
+    document.getElementById('day9Status').textContent=allPass?'Ready ✅':'Pending';
+    document.getElementById('day9Status').className='badge '+(allPass?'success':'partial');
+  }catch(e){
+    document.getElementById('checkpointTitle').textContent='⚠️ Could not load checkpoint data';
+  }
+}
+
+// ─────────────────────────────────────────────────────
 // Upload
-// ─────────────────────────────────────────────────────────
-const fileInput = document.getElementById('fileInput');
-const dropZone  = document.getElementById('dropZone');
-
-fileInput.addEventListener('change', e=>{
+// ─────────────────────────────────────────────────────
+const fi=document.getElementById('fileInput');
+const dz=document.getElementById('dropZone');
+fi.addEventListener('change',e=>{
   const f=e.target.files[0];
-  document.getElementById('selectedFile').textContent = f?`📄 ${f.name}`:'';
+  document.getElementById('selectedFile').textContent=f?`📄 ${f.name}`:'';
 });
-
-// Drag & drop
-dropZone.addEventListener('dragover', e=>{ e.preventDefault(); dropZone.classList.add('drag-over'); });
-dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', e=>{
-  e.preventDefault(); dropZone.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0];
-  if(f){ fileInput.files=e.dataTransfer.files; document.getElementById('selectedFile').textContent=`📄 ${f.name}`; }
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+dz.addEventListener('drop',e=>{
+  e.preventDefault();dz.classList.remove('drag-over');
+  const f=e.dataTransfer.files[0];
+  if(f){fi.files=e.dataTransfer.files;document.getElementById('selectedFile').textContent=`📄 ${f.name}`;}
 });
 
 async function uploadFile(){
-  if(!fileInput.files[0]){ alert('Please select a file first.'); return; }
-  const fd=new FormData(); fd.append('file',fileInput.files[0]);
+  if(!fi.files[0]){alert('Please select a file first.');return;}
+  const fd=new FormData();fd.append('file',fi.files[0]);
   const rb=document.getElementById('uploadResult');
   const prog=document.getElementById('uploadProgress');
-  rb.style.display='none'; prog.style.display='block';
+  rb.style.display='none';prog.style.display='block';
   try{
-    const res  = await fetch('/api/upload',{method:'POST',body:fd});
-    const data = await res.json();
+    const res=await fetch('/api/upload',{method:'POST',body:fd});
+    const data=await res.json();
     prog.style.display='none';
     if(res.ok){
-      const cls=data.summary.error_rows>0?'partial':'success';
-      rb.className=`result-box ${cls}`;
+      rb.className=`result-box ${data.summary.error_rows>0?'partial':'success'}`;
       rb.innerHTML=`<strong>✅ ${data.message}</strong>
-        ${data.summary.error_rows>0?`<br>Skipped rows:<ul>
-          ${data.summary.errors.map(e=>`<li>Row ${e.row}: ${e.reason}</li>`).join('')}
-        </ul>`:''}`;
+        ${data.summary.error_rows>0?`<br>Skipped rows:<ul>${data.summary.errors.map(e=>`<li>Row ${e.row}: ${e.reason}</li>`).join('')}</ul>`:''}`;
     } else {
-      rb.className='result-box error';
-      rb.innerHTML=`<strong>❌ Error:</strong> ${data.error}`;
+      rb.className='result-box error';rb.innerHTML=`<strong>❌ Error:</strong> ${data.error}`;
     }
     rb.style.display='block';
-    fileInput.value=''; document.getElementById('selectedFile').textContent='';
-    loadBatches(); loadFilterOptions(); loadDashboard(); loadPipelinePanel();
+    fi.value='';document.getElementById('selectedFile').textContent='';
+    loadBatches();loadFilterOptions();loadDashboard();loadPipelinePanel();
   }catch(e){
     prog.style.display='none';
-    rb.className='result-box error'; rb.innerHTML=`Network error: ${e.message}`;
-    rb.style.display='block';
+    rb.className='result-box error';rb.innerHTML=`Network error: ${e.message}`;rb.style.display='block';
   }
 }
 
 async function loadBatches(){
-  const res     = await fetch('/api/batches');
-  const batches = await res.json();
-  const cont    = document.getElementById('batchesContainer');
-  if(!batches.length){ cont.innerHTML='<div class="empty">No uploads yet.</div>'; return; }
+  const res=await fetch('/api/batches');const batches=await res.json();
+  const cont=document.getElementById('batchesContainer');
+  if(!batches.length){cont.innerHTML='<div class="empty">No uploads yet.</div>';return;}
   cont.innerHTML=`<table>
     <thead><tr><th>ID</th><th>Filename</th><th>Rows</th><th>Status</th><th>Uploaded</th><th></th></tr></thead>
     <tbody>${batches.map(b=>`<tr>
@@ -768,31 +834,29 @@ async function loadBatches(){
 }
 
 async function deleteBatch(id){
-  if(!confirm(`Delete batch #${id} and all its records?`)) return;
+  if(!confirm(`Delete batch #${id} and all its records?`))return;
   const res=await fetch(`/api/batches/${id}`,{method:'DELETE'});
-  const d=await res.json(); alert(d.message);
-  loadBatches(); loadFilterOptions(); loadDashboard(); loadPipelinePanel();
+  alert((await res.json()).message);
+  loadBatches();loadFilterOptions();loadDashboard();loadPipelinePanel();
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 // Records
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 async function loadRecordFilterOptions(){
-  const res=await fetch('/api/filter-options'); const d=await res.json();
-  populateSelect('rSubject',d.subjects); populateSelect('rClass',d.classes);
+  const res=await fetch('/api/filter-options');const d=await res.json();
+  populateSelect('rSubject',d.subjects);populateSelect('rClass',d.classes);
 }
 
 async function loadRecords(){
   const p=new URLSearchParams({
-    subject:      document.getElementById('rSubject').value,
-    class_name:   document.getElementById('rClass').value,
-    ai_tool_used: document.getElementById('rAI').value,
-    limit:100
-  });
-  const res=await fetch(`/api/records?${p}`); const d=await res.json();
+    subject:document.getElementById('rSubject').value,
+    class_name:document.getElementById('rClass').value,
+    ai_tool_used:document.getElementById('rAI').value,limit:100});
+  const res=await fetch(`/api/records?${p}`);const d=await res.json();
   const cont=document.getElementById('recordsTable');
   const meta=document.getElementById('recordsMeta');
-  if(!d.total){ meta.textContent=''; cont.innerHTML='<div class="empty">No records match filters.</div>'; return; }
+  if(!d.total){meta.textContent='';cont.innerHTML='<div class="empty">No records match filters.</div>';return;}
   meta.textContent=`Showing ${d.showing} of ${d.total} records`;
   cont.innerHTML=`<table>
     <thead><tr><th>Student</th><th>Class</th><th>Subject</th><th>Score</th><th>AI Tool</th><th>Study Hrs</th><th>Date</th></tr></thead>
@@ -809,9 +873,9 @@ function clearRecordFilters(){
   loadRecords();
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 // Init
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────
 loadFilterOptions();
 loadDashboard();
 loadPipelinePanel();

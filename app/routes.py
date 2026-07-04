@@ -221,3 +221,64 @@ def get_kpis():
         return jsonify({"error": "No data available. Upload a file first."}), 404
 
     return jsonify(compute_all_kpis(clean_df))
+
+
+@main_bp.route("/api/export/csv")
+def export_csv():
+    """Export filtered records as a downloadable CSV."""
+    import io
+    import csv
+    from flask import Response
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+
+    filters = {
+        "subject":      request.args.get("subject"),
+        "class_name":   request.args.get("class_name"),
+        "ai_tool_used": (
+            True  if request.args.get("ai_tool_used") == "true"
+            else False if request.args.get("ai_tool_used") == "false"
+            else None
+        ),
+        "date_from": request.args.get("date_from"),
+        "date_to":   request.args.get("date_to"),
+    }
+
+    raw_df   = get_all_records_df(filters)
+    clean_df = run_pipeline(raw_df)
+
+    if clean_df.empty:
+        return jsonify({"error": "No data to export"}), 404
+
+    clean_df["record_date"] = clean_df["record_date"].astype(str)
+    export_cols = [
+        "student_id","class_name","subject","score",
+        "ai_tool_used","study_hours","record_date",
+        "pass_fail","score_band","ai_group","year_month"
+    ]
+    export_df = clean_df[[c for c in export_cols if c in clean_df.columns]]
+
+    output = io.StringIO()
+    export_df.to_csv(output, index=False)
+    output.seek(0)
+
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=edutech_export.csv"}
+    )
+
+
+@main_bp.route("/api/stats/summary")
+def stats_summary():
+    """
+    Quick stats for the dashboard header — total records, batches,
+    last upload time. Used by auto-refresh to detect new data.
+    """
+    from app.data_access import get_record_count
+    last_batch = UploadBatch.query.order_by(UploadBatch.uploaded_at.desc()).first()
+    return jsonify({
+        "total_records": get_record_count(),
+        "total_batches": UploadBatch.query.count(),
+        "last_upload":   last_batch.uploaded_at.isoformat() if last_batch else None,
+    })
