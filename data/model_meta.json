@@ -1,0 +1,28 @@
+{
+  "trained_on": 300,
+  "train_size": 240,
+  "test_size": 60,
+  "r2": 0.643,
+  "mae": 4.3,
+  "rmse": 5.03,
+  "intercept": 56.2348,
+  "coefficients": {
+    "study_hours": 2.3444,
+    "ai_tool_used": 9.1705,
+    "History": -0.1325,
+    "Math": -0.2995,
+    "Science": 1.0587
+  },
+  "subjects": [
+    "English",
+    "History",
+    "Math",
+    "Science"
+  ],
+  "interpretation": {
+    "r2": "Proportion of score variance explained by the model (1.0 = perfect)",
+    "mae": "Average prediction error in score points",
+    "rmse": "Root mean squared error \u2014 penalises large errors more"
+  },
+  "disclaimer": "This model is for demonstration purposes only. Predictions are based on synthetic data and should not be used for real academic assessment or decision-making."
+}

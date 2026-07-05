@@ -282,3 +282,67 @@ def stats_summary():
         "total_batches": UploadBatch.query.count(),
         "last_upload":   last_batch.uploaded_at.isoformat() if last_batch else None,
     })
+
+
+# ── Day 9: AI Predictive Model endpoints ─────────────────────────────────────
+
+@main_bp.route("/api/model/train", methods=["POST"])
+def train_model_route():
+    """Train the predictive model on all current data in the DB."""
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+    from app.ml_model import train_model
+
+    raw_df   = get_all_records_df()
+    clean_df = run_pipeline(raw_df)
+
+    if clean_df.empty:
+        return jsonify({"error": "No data available. Upload a file first."}), 400
+
+    result = train_model(clean_df)
+    if "error" in result:
+        return jsonify(result), 400
+
+    return jsonify(result), 200
+
+
+@main_bp.route("/api/model/status")
+def model_status_route():
+    """Return current model status and metrics."""
+    from app.ml_model import model_status
+    return jsonify(model_status())
+
+
+@main_bp.route("/api/predict", methods=["POST"])
+def predict_route():
+    """
+    Predict a student's score.
+    Expects JSON: { study_hours: float, ai_tool_used: bool, subject: str }
+    Returns: { predicted_score, confidence_band, inputs, disclaimer }
+    """
+    from app.ml_model import predict_score
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Send JSON body: {study_hours, ai_tool_used, subject}"}), 400
+
+    study_hours   = data.get("study_hours")
+    ai_tool_used  = data.get("ai_tool_used")
+    subject       = data.get("subject")
+
+    if study_hours is None or ai_tool_used is None or not subject:
+        return jsonify({"error": "Required fields: study_hours (number), ai_tool_used (bool), subject (string)"}), 400
+
+    try:
+        study_hours = float(study_hours)
+    except (TypeError, ValueError):
+        return jsonify({"error": "study_hours must be a number"}), 400
+
+    if study_hours < 0 or study_hours > 24:
+        return jsonify({"error": "study_hours must be between 0 and 24"}), 400
+
+    result = predict_score(study_hours, bool(ai_tool_used), subject)
+    if "error" in result:
+        return jsonify(result), 400
+
+    return jsonify(result), 200

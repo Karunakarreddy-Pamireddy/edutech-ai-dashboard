@@ -208,6 +208,7 @@
   <button onclick="showPage('upload',this)">📤 Upload</button>
   <button onclick="showPage('records',this)">🔍 Records</button>
   <button onclick="showPage('checkpoint',this)">🚦 Day 9 Checkpoint</button>
+  <button onclick="showPage('predict',this)">🤖 AI Predictor</button>
 </nav>
 
 <!-- ══════════════ DASHBOARD ══════════════ -->
@@ -441,6 +442,102 @@
  </div>
 </div>
 
+
+<!-- ══════════════ AI PREDICTOR ══════════════ -->
+<div id="predict" class="page">
+ <div class="container">
+
+  <!-- Model status card -->
+  <div class="card" id="modelStatusCard">
+    <h2>🤖 AI Predictive Model — Predict Student Score</h2>
+    <div id="modelStatus" style="padding:10px 0;font-size:.88rem;color:#666">Checking model status...</div>
+    <div style="margin-top:12px">
+      <button class="btn btn-primary" onclick="trainModel()" id="trainBtn">🔄 Train Model on Current Data</button>
+    </div>
+    <div id="trainResult" style="margin-top:12px"></div>
+  </div>
+
+  <!-- Metrics card -->
+  <div class="card" id="metricsCard" style="display:none">
+    <h2>📊 Model Performance Metrics</h2>
+    <div id="metricsContent"></div>
+    <div style="margin-top:14px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f39c12;border-radius:6px;font-size:.8rem;color:#7a5c00">
+      ⚠️ <strong>Disclaimer:</strong> This model is trained on synthetic data for demonstration purposes only. 
+      Predictions should not be used for real academic assessment or decision-making.
+    </div>
+  </div>
+
+  <!-- Predict widget -->
+  <div class="card" id="predictWidget" style="display:none">
+    <h2>🎯 Predict My Score</h2>
+    <p style="font-size:.85rem;color:#666;margin-bottom:16px">
+      Enter a student profile below to get a predicted score from the trained model.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:18px">
+      <div class="filter-group">
+        <label>Study Hours per Week</label>
+        <input type="number" id="pStudyHours" min="0" max="24" step="0.5" value="5"
+          style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem">
+        <div style="font-size:.72rem;color:#aaa;margin-top:3px">0 – 24 hours</div>
+      </div>
+      <div class="filter-group">
+        <label>Subject</label>
+        <select id="pSubject" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem">
+          <option value="Math">Math</option>
+          <option value="Science">Science</option>
+          <option value="English">English</option>
+          <option value="History">History</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>AI Tool Used?</label>
+        <select id="pAIUsed" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem">
+          <option value="true">Yes — Uses AI study tools</option>
+          <option value="false">No — Does not use AI tools</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="runPrediction()" style="padding:10px 28px;font-size:.95rem">
+      🎯 Predict Score
+    </button>
+
+    <!-- Result -->
+    <div id="predResult" style="display:none;margin-top:20px">
+      <div style="background:linear-gradient(135deg,#e8f0fb,#f0f7ff);border-radius:10px;padding:20px 24px;border-left:5px solid var(--blue)">
+        <div style="font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Predicted Score</div>
+        <div id="predScore" style="font-size:3.5rem;font-weight:700;color:var(--blue);line-height:1.1;margin:8px 0">—</div>
+        <div id="predBand" style="font-size:.85rem;color:#666"></div>
+        <div id="predInputSummary" style="margin-top:12px;font-size:.82rem;color:#888"></div>
+      </div>
+
+      <!-- Comparison: AI vs No AI -->
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="predComparison"></div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="card">
+    <h2>🔬 How the Model Works</h2>
+    <div style="font-size:.86rem;line-height:1.8;color:#555">
+      <p><strong>Algorithm:</strong> Linear Regression (scikit-learn)</p>
+      <p><strong>Features used to predict score:</strong></p>
+      <ul style="margin:6px 0 12px 20px">
+        <li>Study hours per week (numeric)</li>
+        <li>AI tool used (Yes=1, No=0)</li>
+        <li>Subject (one-hot encoded — each subject becomes a separate feature)</li>
+      </ul>
+      <p><strong>Training:</strong> 80% of uploaded records used to train, 20% held out to test accuracy.</p>
+      <p><strong>Metrics explained:</strong></p>
+      <ul style="margin:6px 0 0 20px">
+        <li><strong>R²</strong> — How well the model explains score variation (0 = useless, 1 = perfect)</li>
+        <li><strong>MAE</strong> — Average error in score points (lower = better)</li>
+        <li><strong>RMSE</strong> — Like MAE but penalises large errors more heavily</li>
+      </ul>
+    </div>
+  </div>
+
+ </div>
+</div>
 <script>
 // ─────────────────────────────────────────────────────
 // Core utilities
@@ -516,6 +613,7 @@ function showPage(id,btn){
   if(id==='upload')     { loadBatches(); }
   if(id==='records')    { loadRecordFilterOptions(); loadRecords(); }
   if(id==='checkpoint') { loadCheckpoint(); }
+  if(id==='predict')    { checkModelStatus(); }
 }
 
 // ─────────────────────────────────────────────────────
@@ -872,6 +970,143 @@ function clearRecordFilters(){
   ['rSubject','rClass','rAI'].forEach(id=>document.getElementById(id).value='');
   loadRecords();
 }
+
+
+// ─────────────────────────────────────────────────────
+// AI Predictor
+// ─────────────────────────────────────────────────────
+async function checkModelStatus(){
+  try{
+    const res = await fetch('/api/model/status');
+    const d   = await res.json();
+    const statusEl = document.getElementById('modelStatus');
+    const metrics  = document.getElementById('metricsCard');
+    const widget   = document.getElementById('predictWidget');
+
+    if(!d.trained){
+      statusEl.innerHTML = '<span style="color:#e67e22">⚠️ No trained model yet.</span> Click the button below to train the model on your uploaded data.';
+      metrics.style.display='none';
+      widget.style.display='none';
+    } else {
+      const m = d.meta;
+      statusEl.innerHTML = `<span style="color:#27ae60">✅ Model trained</span> on <strong>${m.trained_on} records</strong> · R² = <strong>${m.r2}</strong> · MAE = <strong>${m.mae} pts</strong>`;
+      renderMetrics(m);
+      metrics.style.display='block';
+      widget.style.display='block';
+      // Populate subject dropdown from model subjects
+      if(m.subjects){
+        const sel = document.getElementById('pSubject');
+        sel.innerHTML = m.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
+      }
+    }
+  }catch(e){ console.error(e); }
+}
+
+function renderMetrics(m){
+  const coefRows = Object.entries(m.coefficients||{})
+    .sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]))
+    .map(([k,v])=>`<tr>
+      <td>${k}</td>
+      <td><strong style="color:${v>=0?'#27ae60':'#c0392b'}">${v>=0?'+':''}${v}</strong></td>
+      <td style="font-size:.78rem">
+        <div style="height:10px;background:${v>=0?'#27ae60':'#c0392b'};width:${Math.min(Math.abs(v)*10,100)}%;border-radius:4px;opacity:.6"></div>
+      </td>
+    </tr>`).join('');
+
+  document.getElementById('metricsContent').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+      <div style="text-align:center;padding:14px;background:#f7f9fc;border-radius:8px">
+        <div style="font-size:1.6rem;font-weight:700;color:#2F5496">${m.r2}</div>
+        <div style="font-size:.72rem;color:#888;text-transform:uppercase;margin-top:2px">R² Score</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:#f7f9fc;border-radius:8px">
+        <div style="font-size:1.6rem;font-weight:700;color:#27ae60">${m.mae}</div>
+        <div style="font-size:.72rem;color:#888;text-transform:uppercase;margin-top:2px">MAE (pts)</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:#f7f9fc;border-radius:8px">
+        <div style="font-size:1.6rem;font-weight:700;color:#e67e22">${m.rmse}</div>
+        <div style="font-size:.72rem;color:#888;text-transform:uppercase;margin-top:2px">RMSE (pts)</div>
+      </div>
+    </div>
+    <div style="font-size:.82rem;font-weight:700;color:#555;margin-bottom:8px">Feature Coefficients (impact on score per unit)</div>
+    <table>
+      <thead><tr><th>Feature</th><th>Coefficient</th><th>Impact</th></tr></thead>
+      <tbody>${coefRows}</tbody>
+    </table>
+    <div style="margin-top:10px;font-size:.78rem;color:#aaa">
+      Trained on ${m.train_size} records · Tested on ${m.test_size} records · Intercept: ${m.intercept}
+    </div>`;
+}
+
+async function trainModel(){
+  const btn = document.getElementById('trainBtn');
+  const res_el = document.getElementById('trainResult');
+  btn.disabled=true; btn.textContent='⏳ Training...';
+  res_el.innerHTML='';
+  try{
+    const res  = await fetch('/api/model/train',{method:'POST'});
+    const data = await res.json();
+    if(res.ok){
+      res_el.innerHTML=`<div style="padding:10px;background:#e8f5e9;border-left:3px solid #27ae60;border-radius:5px;font-size:.85rem;color:#1a5c2e">
+        ✅ Model trained successfully! R²=${data.metrics.r2} · MAE=${data.metrics.mae}pts on ${data.metrics.trained_on} records.
+      </div>`;
+      checkModelStatus();
+    } else {
+      res_el.innerHTML=`<div style="padding:10px;background:#fdecea;border-left:3px solid #c0392b;border-radius:5px;font-size:.85rem;color:#7b1f1f">❌ ${data.error}</div>`;
+    }
+  }catch(e){
+    res_el.innerHTML=`<div style="padding:10px;background:#fdecea;border-radius:5px;font-size:.85rem;color:#c0392b">Network error: ${e.message}</div>`;
+  }
+  btn.disabled=false; btn.textContent='🔄 Train Model on Current Data';
+}
+
+async function runPrediction(){
+  const hours   = parseFloat(document.getElementById('pStudyHours').value)||0;
+  const subject = document.getElementById('pSubject').value;
+  const aiUsed  = document.getElementById('pAIUsed').value==='true';
+  const resEl   = document.getElementById('predResult');
+  resEl.style.display='none';
+  try{
+    const res  = await fetch('/api/predict',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({study_hours:hours,ai_tool_used:aiUsed,subject})
+    });
+    const d = await res.json();
+    if(!res.ok){ alert(d.error||'Prediction failed'); return; }
+
+    document.getElementById('predScore').textContent = d.predicted_score;
+    document.getElementById('predBand').textContent  =
+      `Confidence range: ${d.confidence_band.low} – ${d.confidence_band.high} (±MAE)`;
+    document.getElementById('predInputSummary').textContent =
+      `Input: ${hours}h study · Subject: ${subject} · AI tool: ${aiUsed?'Yes':'No'}`;
+
+    // Also show what score would be with/without AI (compare)
+    const altRes = await fetch('/api/predict',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({study_hours:hours,ai_tool_used:!aiUsed,subject})
+    });
+    const altD = await altRes.json();
+    const diff = (d.predicted_score - altD.predicted_score).toFixed(1);
+    const better = aiUsed ? 'with AI tool' : 'without AI tool';
+    const diffSign = diff>=0 ? '+' : '';
+    document.getElementById('predComparison').innerHTML=`
+      <div style="padding:14px;background:#e8f5e9;border-radius:8px;text-align:center">
+        <div style="font-size:.72rem;color:#888;text-transform:uppercase;font-weight:700">With AI Tool</div>
+        <div style="font-size:1.6rem;font-weight:700;color:#27ae60">${aiUsed?d.predicted_score:altD.predicted_score}</div>
+      </div>
+      <div style="padding:14px;background:#fdecea;border-radius:8px;text-align:center">
+        <div style="font-size:.72rem;color:#888;text-transform:uppercase;font-weight:700">Without AI Tool</div>
+        <div style="font-size:1.6rem;font-weight:700;color:#c0392b">${aiUsed?altD.predicted_score:d.predicted_score}</div>
+      </div>`;
+
+    resEl.style.display='block';
+    resEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(e){ alert('Network error: '+e.message); }
+}
+
+// Patch showPage to check model status when opening predict tab
+const _origShowPage = showPage;
+// Already patched via inline call in showPage function
 
 // ─────────────────────────────────────────────────────
 // Init
