@@ -1,2 +1,8 @@
 .venv/
 .venv/
+data/model.pkl
+data/model_meta.json
+data/*.db
+data/model.pkl
+data/model_meta.json
+data/*.db
