@@ -1,0 +1,1001 @@
+student_id,class_name,subject,score,ai_tool_used,study_hours,record_date
+S0001,UG Year 1,English,76.8,True,5.4,2024-10-07
+S0002,UG Year 1,Economics,72.7,False,8.3,2025-01-02
+S0003,PG Year 1,Statistics,92.4,True,15.0,2024-09-17
+S0004,Class 9A,English,74.7,False,7.1,2025-02-26
+S0005,PG Year 2,Deep Learning,75.3,True,10.8,2024-09-13
+S0006,Class 11B,English,73.6,True,6.6,2024-06-27
+S0007,Class 11B,Physics,85.4,True,9.4,2024-08-30
+S0008,UG Year 3,Machine Learning,79.5,True,5.2,2024-07-12
+S0009,UG Year 1,Mathematics,74.5,True,8.9,2024-12-25
+S0010,Class 9B,Math,68.5,False,4.7,2024-08-04
+S0011,Class 11B,Computer Science,64.6,False,3.9,2024-08-17
+S0012,PG Year 1,AI Ethics,85.3,True,7.2,2024-12-27
+S0013,Class 9A,Physics,55.8,False,3.9,2024-10-10
+S0014,Class 6B,English,65.2,True,1.4,2024-06-25
+S0015,Class 11B,Physics,75.1,True,5.4,2024-12-07
+S0016,UG Year 3,Data Analysis,79.4,True,5.3,2025-01-14
+S0017,Class 9B,Chemistry,53.7,False,3.4,2024-11-08
+S0018,Class 9B,Physics,71.8,False,4.6,2025-01-02
+S0019,Class 11A,Math,80.1,False,9.4,2025-03-01
+S0020,Class 9A,Chemistry,68.8,False,3.7,2024-08-21
+S0021,Class 11A,Computer Science,73.8,False,7.2,2025-01-12
+S0022,Class 9B,English,62.5,True,3.2,2024-10-30
+S0023,Class 9B,Physics,64.0,False,3.6,2024-09-27
+S0024,UG Year 1,Computer Science,55.5,False,4.0,2025-02-23
+S0025,Class 11A,Physics,69.3,False,8.6,2024-12-31
+S0026,UG Year 2,Research Methods,88.3,True,9.0,2024-10-26
+S0027,Class 9B,Math,56.0,False,6.8,2024-06-30
+S0028,UG Year 1,Computer Science,86.8,True,8.5,2024-10-30
+S0029,Class 9B,Math,60.5,False,6.8,2025-01-22
+S0030,Class 11B,Physics,78.2,False,9.3,2024-12-17
+S0031,UG Year 1,Economics,58.3,False,5.4,2025-03-21
+S0032,UG Year 1,Statistics,84.2,False,11.5,2025-01-30
+S0033,PG Year 2,Data Science,82.7,False,12.4,2024-07-29
+S0034,Class 11B,Computer Science,78.0,True,7.6,2024-10-19
+S0035,PG Year 2,Deep Learning,85.3,True,11.0,2024-06-25
+S0036,UG Year 1,Mathematics,77.1,True,8.1,2025-01-11
+S0037,Class 6A,History,62.5,True,1.9,2024-12-04
+S0038,Class 6B,Geography,58.2,False,4.9,2025-03-01
+S0039,Class 6B,Math,53.7,False,5.1,2025-02-18
+S0040,PG Year 2,AI Ethics,100,True,16.5,2024-08-22
+S0041,Class 11B,Math,67.3,False,8.7,2024-07-27
+S0042,Class 9A,English,61.0,False,5.1,2024-07-20
+S0043,Class 9B,Biology,61.6,False,6.8,2024-08-22
+S0044,Class 9A,English,65.1,True,3.9,2024-11-01
+S0045,Class 9A,Physics,66.2,False,7.3,2024-08-03
+S0046,UG Year 2,Economics,62.7,False,4.3,2024-11-19
+S0047,PG Year 2,Thesis,85.9,False,17.6,2024-09-25
+S0048,UG Year 3,Machine Learning,61.8,False,5.2,2024-12-22
+S0049,UG Year 1,Economics,70.8,False,10.2,2024-06-28
+S0050,Class 9B,Physics,57.8,False,3.0,2025-03-17
+S0051,Class 6A,Science,68.5,True,5.8,2024-10-09
+S0052,Class 9A,Biology,52.6,False,2.9,2024-12-20
+S0053,UG Year 2,Statistics,74.5,True,5.9,2024-07-17
+S0054,Class 11B,English,84.1,True,8.1,2024-07-22
+S0055,UG Year 1,Economics,86.4,True,10.4,2024-10-06
+S0056,Class 9A,Chemistry,83.9,True,5.1,2025-03-06
+S0057,Class 6B,Science,67.1,True,2.1,2025-03-15
+S0058,Class 6B,Science,66.0,True,4.8,2024-06-16
+S0059,Class 6A,History,58.9,True,1.9,2024-10-16
+S0060,PG Year 2,Thesis,84.6,True,12.4,2024-08-21
+S0061,Class 11B,Computer Science,70.7,True,5.1,2024-06-14
+S0062,Class 11B,Physics,64.8,True,3.5,2024-11-10
+S0063,UG Year 1,Statistics,74.8,True,10.2,2024-09-22
+S0064,Class 11B,English,83.7,True,9.6,2025-01-10
+S0065,Class 6B,English,60.7,False,3.8,2024-10-13
+S0066,Class 11B,Chemistry,69.0,False,4.9,2024-09-21
+S0067,Class 11A,Chemistry,63.9,False,4.9,2024-09-17
+S0068,UG Year 2,Economics,84.7,True,8.8,2024-08-02
+S0069,Class 6A,English,65.3,False,5.7,2024-11-12
+S0070,UG Year 3,Machine Learning,80.3,True,9.8,2024-10-25
+S0071,UG Year 1,Statistics,87.0,True,11.4,2024-07-14
+S0072,Class 6A,Math,57.9,False,4.2,2025-03-28
+S0073,PG Year 1,Machine Learning,93.8,True,14.0,2024-07-25
+S0074,Class 6A,History,55.4,False,5.4,2024-10-25
+S0075,Class 9A,English,78.3,True,7.1,2024-07-20
+S0076,Class 6B,English,63.7,False,2.5,2024-10-19
+S0077,Class 6B,Math,59.8,False,5.1,2024-10-27
+S0078,PG Year 1,AI Ethics,96.6,True,16.0,2025-01-16
+S0079,Class 11A,English,64.4,True,4.3,2025-02-17
+S0080,Class 9A,Biology,66.7,True,4.1,2025-01-09
+S0081,Class 9A,Biology,79.9,True,6.3,2024-07-13
+S0082,Class 6A,History,60.5,True,3.3,2024-07-16
+S0083,Class 9B,Chemistry,63.3,True,2.9,2025-03-12
+S0084,PG Year 2,Data Science,80.4,True,7.3,2024-10-31
+S0085,UG Year 1,Computer Science,82.8,True,7.5,2024-11-26
+S0086,Class 9B,Chemistry,78.9,True,6.2,2024-09-27
+S0087,Class 9B,Biology,70.5,False,6.3,2025-03-13
+S0088,Class 9A,Biology,62.5,False,5.2,2024-11-24
+S0089,Class 9A,Physics,59.3,False,2.4,2024-10-28
+S0090,Class 11B,Physics,63.8,False,7.9,2025-03-09
+S0091,Class 11A,Math,55.9,False,5.4,2024-08-29
+S0092,PG Year 2,Deep Learning,85.1,True,11.1,2024-12-11
+S0093,Class 11A,Math,65.0,False,9.9,2024-07-21
+S0094,Class 6A,English,63.2,False,4.0,2024-10-27
+S0095,Class 11A,Computer Science,69.0,False,3.9,2024-10-26
+S0096,PG Year 2,Deep Learning,85.0,True,12.4,2025-03-10
+S0097,Class 9A,Chemistry,81.5,True,6.5,2024-06-16
+S0098,UG Year 2,Computer Science,71.2,True,4.5,2025-02-15
+S0099,Class 6A,Science,66.6,False,5.0,2024-08-06
+S0100,PG Year 2,Thesis,76.9,True,12.4,2024-09-19
+S0101,Class 6A,History,72.5,True,3.6,2024-06-02
+S0102,Class 9B,Math,53.5,False,2.9,2024-08-04
+S0103,UG Year 3,Statistics,92.0,True,10.5,2024-06-17
+S0104,Class 11A,Math,75.8,False,7.8,2025-02-11
+S0105,Class 9A,Chemistry,71.1,False,6.2,2024-11-16
+S0106,PG Year 1,Research Methods,82.5,True,8.0,2024-08-30
+S0107,UG Year 3,Research Methods,80.9,True,5.7,2024-10-12
+S0108,PG Year 1,Research Methods,82.0,True,11.6,2024-10-07
+S0109,Class 9B,Physics,60.7,False,7.3,2025-02-26
+S0110,Class 9B,Chemistry,78.2,True,4.4,2024-12-09
+S0111,Class 9A,Math,77.2,True,4.8,2024-11-11
+S0112,PG Year 2,Data Science,80.6,True,7.7,2025-03-12
+S0113,PG Year 2,Advanced Statistics,91.5,True,17.5,2024-12-21
+S0114,Class 11B,Computer Science,54.1,False,5.3,2024-09-23
+S0115,PG Year 2,Data Science,93.9,True,10.6,2024-09-26
+S0116,Class 11B,Math,76.1,True,8.1,2024-09-19
+S0117,Class 11A,Computer Science,67.3,True,3.0,2025-01-06
+S0118,PG Year 1,AI Ethics,96.6,True,13.4,2025-02-02
+S0119,PG Year 1,Research Methods,77.6,True,7.4,2024-09-02
+S0120,UG Year 2,Research Methods,84.2,True,8.8,2024-07-21
+S0121,UG Year 2,Statistics,69.6,False,11.2,2025-02-06
+S0122,Class 6A,History,70.6,False,5.7,2024-08-04
+S0123,Class 6B,Geography,68.3,False,3.7,2024-07-28
+S0124,Class 9A,Biology,61.3,False,2.8,2024-06-11
+S0125,Class 11B,Math,62.7,False,8.4,2024-09-14
+S0126,Class 9B,Biology,54.8,False,3.1,2024-12-05
+S0127,Class 11B,Chemistry,62.9,True,3.1,2024-06-22
+S0128,Class 9B,English,59.7,False,3.7,2024-09-04
+S0129,PG Year 2,AI Ethics,87.6,True,9.6,2024-06-08
+S0130,UG Year 2,Statistics,89.0,True,8.8,2024-06-15
+S0131,UG Year 1,Computer Science,71.8,False,11.4,2024-12-05
+S0132,PG Year 1,Research Methods,100,True,15.6,2024-10-14
+S0133,UG Year 1,Statistics,71.0,False,5.8,2025-03-03
+S0134,Class 6B,Math,47.2,False,1.4,2024-11-24
+S0135,UG Year 1,Computer Science,66.7,False,10.9,2024-10-07
+S0136,UG Year 3,Statistics,86.5,True,10.9,2024-12-11
+S0137,Class 11A,Computer Science,65.2,False,4.3,2024-06-12
+S0138,PG Year 2,Deep Learning,76.1,True,9.7,2024-08-10
+S0139,Class 11A,Chemistry,57.0,False,4.7,2024-10-08
+S0140,UG Year 1,Mathematics,53.7,False,4.7,2024-09-07
+S0141,Class 11B,Computer Science,81.0,True,4.0,2024-09-28
+S0142,Class 9B,English,68.4,False,4.7,2024-09-09
+S0143,UG Year 2,Computer Science,58.0,False,6.3,2024-11-22
+S0144,UG Year 2,Computer Science,71.0,True,9.6,2024-09-10
+S0145,Class 11A,Computer Science,58.6,True,3.6,2024-07-09
+S0146,Class 6B,Math,78.8,True,5.3,2024-12-08
+S0147,Class 11B,Physics,77.1,True,7.2,2025-02-18
+S0148,UG Year 2,Data Analysis,71.0,False,6.8,2024-11-05
+S0149,PG Year 1,Machine Learning,87.3,True,12.7,2024-09-29
+S0150,PG Year 1,AI Ethics,88.7,True,14.6,2024-06-18
+S0151,Class 9A,English,58.4,False,6.8,2025-01-05
+S0152,Class 6B,Geography,56.5,False,5.3,2025-02-20
+S0153,UG Year 3,Data Analysis,74.6,False,9.0,2025-03-23
+S0154,Class 11A,English,79.3,True,6.9,2024-11-24
+S0155,UG Year 2,Computer Science,62.7,False,8.9,2024-07-06
+S0156,Class 9A,Biology,76.5,True,7.2,2024-10-28
+S0157,Class 6A,English,65.7,False,4.4,2024-07-07
+S0158,PG Year 1,Data Science,89.0,False,13.5,2025-02-02
+S0159,Class 11B,English,75.5,False,9.7,2024-09-16
+S0160,PG Year 2,Thesis,96.8,True,13.3,2025-02-03
+S0161,PG Year 1,Data Science,96.2,True,12.5,2024-08-28
+S0162,Class 9B,Biology,58.3,True,2.2,2024-12-04
+S0163,Class 6A,History,52.3,False,4.1,2024-12-17
+S0164,UG Year 3,Project Work,87.2,True,9.8,2025-02-18
+S0165,Class 6B,History,72.7,True,5.4,2024-12-22
+S0166,PG Year 1,Statistics,97.7,True,15.9,2025-03-28
+S0167,PG Year 1,Research Methods,75.9,True,9.2,2024-08-01
+S0168,Class 9A,Physics,61.7,False,7.4,2025-01-31
+S0169,Class 6A,English,69.0,True,5.1,2024-06-30
+S0170,Class 9A,Physics,54.5,False,2.5,2024-08-15
+S0171,Class 9B,Biology,65.0,False,3.8,2024-11-17
+S0172,UG Year 2,Computer Science,74.5,True,8.0,2025-02-18
+S0173,Class 11A,Computer Science,81.3,True,6.9,2024-11-14
+S0174,Class 9A,English,68.8,True,3.4,2024-12-09
+S0175,UG Year 1,Computer Science,78.1,True,8.1,2025-03-01
+S0176,Class 6A,History,51.1,False,3.1,2024-07-18
+S0177,UG Year 2,Research Methods,60.2,False,7.3,2024-10-06
+S0178,UG Year 3,Statistics,87.3,True,10.8,2024-11-30
+S0179,Class 6B,Geography,53.0,False,4.2,2025-03-12
+S0180,UG Year 1,Statistics,71.0,True,6.5,2024-08-02
+S0181,Class 9B,English,82.0,True,4.2,2024-08-20
+S0182,Class 6A,Math,65.2,False,5.8,2024-11-10
+S0183,UG Year 3,Research Methods,92.1,True,12.7,2024-08-20
+S0184,Class 11A,Computer Science,69.7,True,4.4,2025-03-24
+S0185,PG Year 1,AI Ethics,85.7,True,12.0,2024-09-19
+S0186,Class 9A,English,78.5,True,4.8,2024-08-14
+S0187,Class 6A,Geography,71.8,True,2.1,2024-08-09
+S0188,PG Year 2,Data Science,77.5,True,9.4,2025-01-13
+S0189,PG Year 1,Research Methods,91.9,True,11.0,2024-06-27
+S0190,PG Year 2,Thesis,86.4,True,15.7,2024-08-07
+S0191,UG Year 1,Economics,90.1,True,8.2,2024-12-12
+S0192,Class 11B,Physics,54.1,False,3.5,2024-08-12
+S0193,Class 6B,Math,65.4,False,3.0,2024-10-10
+S0194,Class 9A,Math,56.4,True,2.3,2025-01-10
+S0195,UG Year 3,Data Analysis,73.8,True,5.9,2024-08-09
+S0196,Class 11B,Math,79.2,True,6.6,2024-09-18
+S0197,PG Year 1,AI Ethics,86.6,True,9.4,2025-02-04
+S0198,PG Year 2,Deep Learning,82.5,True,7.9,2024-11-24
+S0199,UG Year 3,Statistics,98.2,True,13.0,2025-01-15
+S0200,Class 9A,Physics,61.8,False,4.0,2024-08-02
+S0201,Class 6A,Geography,69.0,True,3.0,2024-07-17
+S0202,Class 9A,Biology,72.2,True,4.0,2024-09-08
+S0203,Class 9A,Physics,68.7,False,7.7,2024-06-02
+S0204,Class 11B,Math,61.1,False,6.1,2024-09-23
+S0205,UG Year 1,Statistics,68.5,False,8.6,2024-07-25
+S0206,Class 11B,Math,73.3,True,3.6,2024-12-21
+S0207,Class 9A,Physics,75.0,False,7.8,2024-10-06
+S0208,Class 11B,Computer Science,58.2,False,5.9,2024-11-05
+S0209,UG Year 1,English,73.4,False,6.1,2025-02-22
+S0210,Class 9B,English,64.3,False,5.3,2025-03-14
+S0211,UG Year 1,Computer Science,77.2,True,6.4,2024-10-12
+S0212,Class 9A,Chemistry,74.8,True,2.3,2024-09-08
+S0213,UG Year 2,Statistics,84.2,True,7.1,2024-09-27
+S0214,Class 6A,Math,63.6,False,3.9,2024-06-18
+S0215,Class 6B,Math,55.8,False,3.6,2024-10-11
+S0216,Class 11B,English,52.2,False,3.8,2024-09-13
+S0217,UG Year 3,Machine Learning,70.0,False,5.1,2025-02-15
+S0218,Class 9B,Chemistry,80.0,True,3.1,2024-12-05
+S0219,Class 11B,Chemistry,67.2,True,4.4,2024-09-05
+S0220,Class 11B,Chemistry,77.3,True,9.2,2024-07-19
+S0221,Class 11B,English,91.4,True,8.9,2024-08-11
+S0222,Class 9A,English,54.9,False,2.4,2024-11-12
+S0223,UG Year 2,Research Methods,74.5,False,11.2,2024-07-31
+S0224,Class 6B,Geography,54.4,False,1.8,2025-01-14
+S0225,UG Year 3,Statistics,74.7,True,10.4,2024-07-05
+S0226,PG Year 1,Machine Learning,79.2,True,9.8,2024-12-14
+S0227,Class 6B,Geography,55.9,False,3.2,2024-08-07
+S0228,PG Year 2,Deep Learning,82.5,True,6.0,2024-06-25
+S0229,UG Year 1,Statistics,83.3,True,8.6,2024-09-24
+S0230,PG Year 2,Thesis,92.0,True,15.0,2024-10-09
+S0231,Class 6A,Math,62.5,False,4.3,2024-06-04
+S0232,UG Year 2,Economics,73.6,True,8.4,2024-12-18
+S0233,Class 11A,Physics,80.7,False,9.1,2024-12-18
+S0234,Class 9B,Chemistry,56.9,False,2.2,2024-12-17
+S0235,Class 6A,Math,66.3,False,4.0,2025-02-27
+S0236,PG Year 1,Research Methods,86.3,True,11.9,2024-11-02
+S0237,Class 11A,Physics,60.3,False,3.5,2024-10-19
+S0238,Class 9B,Biology,72.9,True,3.7,2024-06-08
+S0239,Class 9A,Biology,67.4,True,3.8,2024-08-28
+S0240,UG Year 3,Statistics,72.8,True,6.7,2024-12-29
+S0241,UG Year 3,Project Work,58.4,False,7.2,2024-10-27
+S0242,Class 9B,Physics,64.3,False,5.6,2025-01-01
+S0243,Class 6A,Geography,67.3,False,5.0,2024-07-29
+S0244,PG Year 2,Data Science,87.2,True,9.8,2024-09-14
+S0245,Class 11A,Computer Science,79.2,True,4.5,2025-01-06
+S0246,Class 6B,Science,56.5,False,2.2,2024-09-30
+S0247,Class 9A,Physics,70.4,False,6.1,2024-10-09
+S0248,Class 6B,Geography,60.2,True,2.3,2024-10-01
+S0249,UG Year 1,Statistics,65.0,False,4.7,2024-08-13
+S0250,Class 6B,Science,67.4,False,3.7,2024-12-10
+S0251,Class 9B,Biology,53.9,False,4.7,2024-11-13
+S0252,Class 6A,History,64.4,False,2.2,2025-01-12
+S0253,UG Year 1,English,74.5,True,10.7,2024-08-12
+S0254,Class 11B,Chemistry,77.0,False,8.3,2024-07-02
+S0255,Class 11B,Math,64.3,True,4.7,2024-12-28
+S0256,Class 9A,English,59.4,False,4.8,2024-10-26
+S0257,Class 6B,Math,55.3,False,2.1,2025-03-22
+S0258,PG Year 1,Research Methods,94.2,True,15.8,2024-11-02
+S0259,Class 11B,Math,61.2,False,6.2,2024-09-04
+S0260,Class 11A,Chemistry,57.1,False,5.8,2025-02-02
+S0261,Class 6B,English,73.0,False,5.5,2025-03-03
+S0262,Class 11B,Chemistry,75.1,False,8.0,2025-03-18
+S0263,Class 11B,Physics,73.3,True,8.6,2024-06-20
+S0264,Class 11A,Physics,62.7,False,4.9,2025-01-16
+S0265,PG Year 1,Statistics,62.4,False,9.0,2024-08-07
+S0266,PG Year 2,Deep Learning,67.8,False,11.9,2024-06-05
+S0267,UG Year 3,Machine Learning,94.6,True,13.6,2024-06-27
+S0268,Class 6B,English,62.2,False,3.8,2024-09-20
+S0269,Class 11A,Physics,72.1,False,7.1,2024-06-16
+S0270,Class 9B,Biology,60.8,False,6.8,2024-12-02
+S0271,Class 6A,Science,66.6,True,1.1,2024-06-13
+S0272,UG Year 2,Statistics,91.2,True,10.6,2025-02-04
+S0273,Class 9B,Physics,50.3,False,3.1,2025-02-22
+S0274,Class 9B,Physics,76.5,False,7.2,2025-01-28
+S0275,UG Year 3,Data Analysis,84.1,True,10.8,2024-09-13
+S0276,Class 9B,Chemistry,62.3,False,7.2,2025-02-19
+S0277,Class 11B,Math,82.1,True,9.0,2025-03-02
+S0278,Class 11B,Chemistry,64.0,False,7.2,2024-06-28
+S0279,PG Year 2,Data Science,98.9,True,14.1,2025-03-09
+S0280,Class 6B,Science,67.5,False,5.1,2024-10-25
+S0281,UG Year 2,Data Analysis,83.9,True,7.5,2024-09-18
+S0282,Class 9B,Chemistry,59.3,False,6.4,2025-01-12
+S0283,Class 6A,Science,57.0,False,3.1,2024-10-09
+S0284,Class 11B,Computer Science,82.5,False,9.7,2024-11-30
+S0285,Class 9A,Physics,77.1,False,7.7,2024-12-12
+S0286,UG Year 3,Statistics,79.8,True,11.2,2024-08-28
+S0287,UG Year 3,Statistics,92.9,True,10.4,2024-12-25
+S0288,PG Year 2,Advanced Statistics,90.5,True,12.3,2025-03-17
+S0289,Class 9A,Chemistry,78.6,True,5.3,2024-11-26
+S0290,Class 9B,Math,69.3,False,8.0,2025-03-23
+S0291,Class 11B,Chemistry,80.1,True,7.0,2024-07-08
+S0292,UG Year 1,English,68.1,True,5.1,2024-10-17
+S0293,Class 11B,Physics,69.3,True,4.2,2024-07-31
+S0294,UG Year 2,Computer Science,65.0,True,4.9,2024-07-15
+S0295,UG Year 2,Statistics,86.7,True,8.2,2024-10-23
+S0296,UG Year 3,Project Work,71.7,False,10.3,2025-01-04
+S0297,Class 9B,Math,70.4,True,6.5,2025-02-17
+S0298,PG Year 1,Data Science,97.2,True,14.6,2024-08-27
+S0299,Class 11A,Physics,77.8,False,8.4,2024-06-19
+S0300,Class 11A,Physics,86.8,True,8.3,2024-08-22
+S0301,UG Year 1,Mathematics,70.9,False,7.7,2024-10-11
+S0302,PG Year 2,Deep Learning,84.7,True,11.7,2025-02-23
+S0303,PG Year 1,Data Science,97.0,True,15.5,2024-06-27
+S0304,UG Year 2,Research Methods,76.1,True,7.6,2024-08-16
+S0305,PG Year 1,Data Science,78.1,False,8.7,2025-02-05
+S0306,PG Year 2,Advanced Statistics,87.7,True,14.2,2025-02-24
+S0307,UG Year 3,Research Methods,74.1,True,7.2,2024-09-10
+S0308,Class 6A,Geography,82.8,True,5.2,2025-01-18
+S0309,Class 9B,English,57.4,False,4.7,2024-07-24
+S0310,Class 6B,History,66.7,False,4.1,2024-11-04
+S0311,Class 11B,Computer Science,65.1,False,7.7,2024-06-21
+S0312,Class 6A,Math,62.8,False,2.4,2024-07-16
+S0313,UG Year 2,Research Methods,60.8,False,8.8,2024-07-07
+S0314,Class 9B,English,60.3,False,5.4,2025-01-30
+S0315,Class 6B,Science,50.9,False,1.7,2025-03-26
+S0316,UG Year 1,Computer Science,73.6,False,10.0,2025-02-26
+S0317,PG Year 2,Advanced Statistics,87.4,True,14.0,2024-09-04
+S0318,Class 6B,Science,56.1,False,1.9,2025-03-07
+S0319,Class 6B,English,54.7,False,4.5,2024-07-20
+S0320,Class 6B,Geography,59.8,False,5.1,2024-09-11
+S0321,Class 6B,Geography,69.6,False,4.4,2024-10-31
+S0322,Class 9A,English,70.6,True,5.7,2024-06-26
+S0323,PG Year 2,Data Science,80.5,False,15.6,2024-09-23
+S0324,Class 11A,Math,69.8,True,7.6,2024-08-27
+S0325,Class 6A,Math,59.6,False,3.8,2024-06-03
+S0326,Class 6B,Math,72.2,False,5.0,2024-06-21
+S0327,PG Year 1,AI Ethics,68.2,True,8.3,2024-12-04
+S0328,PG Year 2,Advanced Statistics,100,True,17.6,2024-12-30
+S0329,Class 9B,Chemistry,73.1,False,7.0,2025-01-19
+S0330,Class 9A,Math,58.6,False,6.2,2024-06-21
+S0331,Class 11A,Physics,54.4,False,5.4,2025-02-24
+S0332,UG Year 1,Economics,67.2,False,9.1,2024-08-02
+S0333,PG Year 2,Deep Learning,94.4,True,14.3,2024-06-04
+S0334,Class 6A,Math,63.5,False,4.8,2025-03-23
+S0335,Class 6B,English,57.7,False,1.7,2025-01-13
+S0336,PG Year 1,Data Science,59.8,False,8.0,2024-10-14
+S0337,Class 9A,Math,67.2,False,3.6,2024-12-31
+S0338,UG Year 3,Research Methods,82.5,False,13.2,2025-02-04
+S0339,PG Year 1,Data Science,85.3,True,9.3,2024-06-22
+S0340,PG Year 2,AI Ethics,83.5,True,8.7,2024-08-31
+S0341,Class 9B,English,63.8,False,3.2,2024-09-07
+S0342,Class 11A,English,81.3,True,9.2,2024-12-12
+S0343,UG Year 3,Statistics,88.2,False,13.4,2024-11-18
+S0344,Class 6B,Geography,63.7,True,2.5,2024-11-08
+S0345,UG Year 3,Data Analysis,88.1,True,12.0,2024-10-29
+S0346,Class 11A,Math,56.4,False,3.1,2025-03-19
+S0347,Class 11B,Math,75.4,True,9.0,2024-07-02
+S0348,UG Year 3,Project Work,60.8,False,6.4,2025-02-10
+S0349,UG Year 1,Mathematics,75.6,True,7.2,2024-07-11
+S0350,Class 11B,Chemistry,72.4,True,3.1,2025-03-06
+S0351,Class 11A,Physics,65.3,False,8.6,2025-02-21
+S0352,Class 9A,Physics,63.3,False,5.1,2025-01-12
+S0353,UG Year 2,Data Analysis,55.2,False,4.0,2024-12-21
+S0354,Class 6B,Math,57.3,False,3.7,2024-09-28
+S0355,PG Year 2,AI Ethics,98.8,True,12.2,2024-09-25
+S0356,Class 9A,Physics,77.7,True,7.1,2024-11-06
+S0357,Class 11B,Physics,80.9,False,9.9,2024-06-11
+S0358,UG Year 2,Economics,60.5,False,7.0,2024-07-04
+S0359,UG Year 1,Computer Science,59.2,False,4.3,2024-11-11
+S0360,UG Year 1,Computer Science,72.7,False,8.7,2024-08-02
+S0361,Class 6A,Math,52.1,False,2.1,2025-02-05
+S0362,UG Year 1,English,77.8,True,7.0,2024-09-29
+S0363,Class 9A,Math,74.8,False,6.7,2024-08-04
+S0364,Class 9A,Biology,72.8,False,7.5,2025-02-28
+S0365,PG Year 1,Research Methods,100,True,15.7,2024-06-04
+S0366,PG Year 2,Thesis,100,True,17.0,2025-01-11
+S0367,UG Year 1,Statistics,72.5,False,6.7,2025-02-27
+S0368,Class 6B,Math,69.6,False,3.1,2024-12-11
+S0369,Class 11A,Chemistry,62.5,False,9.1,2025-03-07
+S0370,Class 6B,Science,61.9,False,1.8,2024-12-23
+S0371,PG Year 1,AI Ethics,93.1,True,11.5,2024-09-10
+S0372,UG Year 3,Project Work,77.7,True,9.7,2024-06-10
+S0373,UG Year 2,Economics,64.4,False,4.4,2024-06-24
+S0374,UG Year 1,Economics,76.3,True,8.7,2025-02-09
+S0375,PG Year 1,Statistics,69.3,True,7.7,2024-06-02
+S0376,Class 11B,English,67.9,True,4.1,2025-02-18
+S0377,Class 9A,Biology,63.4,False,7.8,2024-10-25
+S0378,PG Year 2,Advanced Statistics,75.0,True,7.1,2025-02-16
+S0379,PG Year 2,Data Science,95.3,True,17.5,2025-02-17
+S0380,UG Year 2,Statistics,81.3,True,11.3,2025-03-01
+S0381,Class 6A,History,69.6,False,4.9,2025-03-18
+S0382,Class 6A,Science,49.0,False,2.5,2024-11-11
+S0383,Class 6B,English,72.9,True,4.1,2024-11-23
+S0384,Class 9A,Physics,64.1,False,7.5,2025-03-15
+S0385,UG Year 3,Machine Learning,90.1,True,10.3,2024-12-10
+S0386,UG Year 1,Economics,80.1,True,6.6,2024-09-20
+S0387,PG Year 2,Deep Learning,82.1,True,12.9,2024-06-30
+S0388,UG Year 1,Economics,64.9,True,4.3,2024-12-28
+S0389,UG Year 3,Statistics,87.6,True,9.6,2025-01-11
+S0390,UG Year 3,Research Methods,91.4,True,13.0,2024-07-18
+S0391,PG Year 1,Machine Learning,92.4,True,15.4,2025-03-19
+S0392,Class 11B,Math,78.7,True,7.9,2025-02-12
+S0393,Class 11B,Computer Science,80.0,True,8.1,2024-10-12
+S0394,Class 11B,Computer Science,75.8,False,9.7,2024-09-25
+S0395,UG Year 3,Statistics,64.7,False,5.9,2024-11-26
+S0396,Class 6A,English,61.2,False,4.9,2025-03-01
+S0397,UG Year 1,Mathematics,71.0,True,4.3,2025-01-08
+S0398,UG Year 1,Economics,77.4,False,7.4,2024-10-10
+S0399,UG Year 2,Statistics,85.7,True,10.4,2025-02-04
+S0400,Class 6A,Science,60.1,False,2.7,2025-03-19
+S0401,Class 9B,Math,77.6,True,4.4,2024-10-11
+S0402,Class 9A,Math,62.2,False,6.4,2025-01-19
+S0403,Class 11B,Chemistry,60.1,False,3.9,2025-02-17
+S0404,PG Year 2,Deep Learning,94.7,True,15.0,2024-12-18
+S0405,UG Year 3,Machine Learning,78.7,True,7.8,2024-07-10
+S0406,Class 6B,Geography,68.1,True,5.1,2024-07-11
+S0407,UG Year 3,Project Work,74.2,False,10.4,2024-12-27
+S0408,Class 6A,English,68.4,True,3.4,2024-10-12
+S0409,Class 6B,Science,56.6,False,3.8,2025-02-11
+S0410,Class 6B,Math,52.8,False,4.0,2024-08-25
+S0411,PG Year 2,Advanced Statistics,94.3,True,15.9,2024-07-25
+S0412,Class 11A,Computer Science,70.0,False,7.6,2024-07-02
+S0413,UG Year 3,Statistics,83.2,False,13.6,2025-02-08
+S0414,Class 9B,Biology,70.1,True,5.0,2024-09-05
+S0415,UG Year 2,Data Analysis,68.6,False,9.8,2025-03-15
+S0416,Class 6B,Geography,64.5,False,2.2,2024-09-25
+S0417,Class 9A,Math,69.9,False,2.8,2024-10-24
+S0418,Class 9A,Biology,71.8,False,5.1,2024-09-17
+S0419,UG Year 1,English,59.6,False,4.7,2024-12-16
+S0420,Class 6A,English,68.4,False,3.6,2024-10-08
+S0421,UG Year 2,Statistics,73.2,True,5.7,2025-03-24
+S0422,Class 11B,English,72.5,False,8.4,2024-11-09
+S0423,Class 11B,English,61.0,False,6.4,2025-01-03
+S0424,Class 11A,Chemistry,62.2,True,4.8,2024-11-30
+S0425,PG Year 1,AI Ethics,69.9,True,8.5,2024-09-09
+S0426,Class 9B,English,64.5,False,2.1,2025-02-23
+S0427,UG Year 1,Economics,68.2,True,4.5,2024-08-09
+S0428,PG Year 2,AI Ethics,79.7,True,6.2,2024-07-29
+S0429,Class 6B,Math,60.6,False,3.3,2025-01-15
+S0430,UG Year 1,Computer Science,89.5,True,9.9,2025-01-13
+S0431,PG Year 1,AI Ethics,90.8,True,13.0,2024-10-12
+S0432,UG Year 3,Project Work,88.4,True,8.6,2024-12-12
+S0433,Class 11A,Math,75.0,True,4.8,2025-01-05
+S0434,Class 9B,Biology,75.3,False,7.7,2024-08-01
+S0435,UG Year 3,Machine Learning,93.2,True,9.6,2024-10-12
+S0436,Class 9A,Chemistry,77.6,True,6.9,2024-06-08
+S0437,Class 9A,Biology,72.3,False,7.8,2024-11-03
+S0438,Class 11A,Math,55.6,False,3.5,2024-07-17
+S0439,Class 6A,Science,70.4,False,4.3,2024-09-23
+S0440,UG Year 3,Machine Learning,81.8,True,7.5,2024-12-04
+S0441,Class 11B,Chemistry,69.5,True,5.9,2024-10-03
+S0442,Class 9B,Math,65.1,False,6.4,2024-11-18
+S0443,UG Year 3,Machine Learning,69.1,False,9.4,2024-10-24
+S0444,Class 9B,Biology,78.0,False,7.4,2025-03-18
+S0445,Class 9A,English,59.3,False,4.9,2025-01-15
+S0446,PG Year 2,Advanced Statistics,66.6,False,7.8,2024-07-01
+S0447,PG Year 1,Machine Learning,74.2,False,11.9,2024-09-03
+S0448,PG Year 1,Machine Learning,92.0,True,10.8,2024-08-28
+S0449,Class 11B,Math,75.9,True,9.0,2025-03-25
+S0450,Class 9A,Chemistry,59.1,True,3.6,2024-08-16
+S0451,PG Year 2,Advanced Statistics,92.8,True,12.7,2025-02-22
+S0452,Class 9A,Biology,54.5,False,4.3,2024-07-19
+S0453,PG Year 2,AI Ethics,89.9,True,9.9,2024-09-21
+S0454,Class 11A,Physics,79.6,True,7.2,2025-02-07
+S0455,Class 6B,English,60.5,False,2.3,2024-09-07
+S0456,Class 6B,English,60.2,False,1.0,2024-11-01
+S0457,UG Year 1,Mathematics,78.6,True,5.5,2024-07-21
+S0458,Class 6B,Math,58.6,False,1.4,2024-11-27
+S0459,Class 6B,English,67.2,True,2.6,2024-12-24
+S0460,UG Year 2,Statistics,78.2,True,10.9,2024-07-12
+S0461,Class 11B,English,84.4,True,6.8,2025-01-28
+S0462,Class 11A,Physics,74.8,True,3.3,2024-11-03
+S0463,Class 9A,Math,70.5,False,4.8,2025-01-14
+S0464,Class 9A,Chemistry,72.2,True,7.0,2025-03-04
+S0465,Class 6A,Geography,51.1,False,3.9,2024-07-12
+S0466,PG Year 1,AI Ethics,94.0,True,9.1,2024-12-18
+S0467,PG Year 2,Deep Learning,97.6,True,14.3,2024-11-01
+S0468,Class 6B,Math,72.0,False,4.8,2024-12-18
+S0469,UG Year 3,Statistics,60.6,False,7.2,2024-06-12
+S0470,Class 6B,Science,67.0,False,2.5,2024-11-21
+S0471,Class 11B,English,58.6,False,6.2,2024-10-17
+S0472,Class 9A,Physics,76.1,False,7.9,2024-12-18
+S0473,UG Year 3,Research Methods,63.0,False,8.6,2024-06-08
+S0474,Class 6A,Science,82.6,True,5.7,2024-07-13
+S0475,Class 9A,Physics,61.9,False,2.1,2024-08-16
+S0476,Class 9B,Biology,63.5,False,2.8,2025-01-17
+S0477,Class 6B,Geography,69.8,False,5.3,2024-12-02
+S0478,UG Year 3,Machine Learning,59.1,False,7.6,2024-10-06
+S0479,UG Year 3,Research Methods,83.8,True,12.9,2024-11-19
+S0480,PG Year 2,AI Ethics,97.4,True,16.7,2025-01-30
+S0481,PG Year 2,Data Science,79.9,True,11.2,2024-08-21
+S0482,UG Year 1,Mathematics,72.1,False,11.5,2025-02-07
+S0483,PG Year 1,Statistics,83.0,True,12.5,2024-07-27
+S0484,UG Year 3,Machine Learning,94.7,True,14.0,2025-03-12
+S0485,PG Year 2,AI Ethics,100,True,16.7,2024-11-14
+S0486,Class 11A,Computer Science,63.3,False,4.8,2024-08-30
+S0487,Class 11A,Chemistry,78.9,False,9.6,2025-01-20
+S0488,UG Year 2,Statistics,70.7,True,4.3,2025-02-01
+S0489,PG Year 1,Research Methods,65.6,False,7.6,2024-06-30
+S0490,PG Year 2,Thesis,94.6,True,11.7,2024-06-25
+S0491,PG Year 2,Data Science,74.1,False,9.8,2024-11-01
+S0492,Class 6B,History,82.7,True,5.1,2024-11-13
+S0493,PG Year 1,Research Methods,83.6,True,7.5,2025-02-10
+S0494,UG Year 3,Research Methods,79.3,True,9.9,2024-12-04
+S0495,PG Year 2,Thesis,93.4,True,14.8,2025-01-23
+S0496,UG Year 1,Computer Science,92.1,True,10.3,2024-12-25
+S0497,Class 11A,Physics,67.1,True,5.6,2024-09-13
+S0498,PG Year 1,AI Ethics,56.1,False,6.9,2024-06-28
+S0499,Class 9A,Physics,52.9,False,2.7,2025-02-05
+S0500,UG Year 3,Research Methods,77.4,False,13.3,2024-12-07
+S0501,Class 6A,Science,66.4,True,2.0,2025-03-14
+S0502,PG Year 1,Machine Learning,85.6,True,10.4,2025-01-12
+S0503,Class 9B,Chemistry,70.0,True,5.6,2025-02-20
+S0504,PG Year 1,AI Ethics,80.1,False,9.9,2024-06-09
+S0505,Class 11A,Chemistry,78.4,True,6.5,2024-09-09
+S0506,Class 9B,Chemistry,60.9,False,6.3,2024-11-28
+S0507,UG Year 3,Machine Learning,77.1,True,6.5,2024-11-17
+S0508,Class 9B,Physics,74.7,True,3.7,2024-12-04
+S0509,Class 11A,English,59.0,False,4.4,2025-01-08
+S0510,Class 6B,English,80.5,True,2.9,2024-11-09
+S0511,PG Year 2,Data Science,80.5,True,10.5,2024-10-03
+S0512,Class 6B,English,51.2,False,2.3,2025-01-01
+S0513,UG Year 3,Project Work,97.0,True,13.4,2024-09-25
+S0514,PG Year 1,Research Methods,73.5,True,7.3,2024-08-18
+S0515,Class 9B,Chemistry,56.4,False,2.4,2025-01-08
+S0516,Class 6A,History,51.7,False,4.2,2024-10-13
+S0517,UG Year 2,Statistics,69.0,True,5.6,2025-03-23
+S0518,UG Year 2,Statistics,76.9,True,5.1,2024-08-20
+S0519,Class 9A,Physics,65.0,True,3.1,2024-10-09
+S0520,Class 11B,Physics,62.3,False,5.3,2024-08-30
+S0521,Class 6A,Math,66.8,True,4.2,2024-12-04
+S0522,Class 11B,Chemistry,63.8,True,5.2,2024-12-24
+S0523,Class 11A,Math,61.3,True,4.4,2024-08-09
+S0524,UG Year 3,Research Methods,76.1,False,13.9,2024-11-09
+S0525,Class 6B,Science,64.3,False,3.7,2025-03-17
+S0526,UG Year 2,Data Analysis,68.8,True,5.7,2024-11-03
+S0527,Class 11B,Computer Science,76.2,False,8.9,2024-11-15
+S0528,UG Year 1,English,75.0,False,8.3,2024-10-24
+S0529,Class 9A,English,72.0,True,3.7,2024-09-09
+S0530,Class 11B,Chemistry,85.7,True,8.1,2025-03-05
+S0531,Class 9A,Physics,75.5,True,6.0,2024-08-31
+S0532,UG Year 3,Statistics,99.8,True,13.5,2024-08-26
+S0533,PG Year 1,Statistics,88.5,True,12.1,2024-06-28
+S0534,Class 9B,Chemistry,69.3,False,5.2,2024-11-07
+S0535,Class 6B,History,60.7,False,4.5,2024-11-11
+S0536,PG Year 1,Data Science,100,True,15.6,2024-09-15
+S0537,Class 9B,English,59.7,False,2.5,2025-01-01
+S0538,Class 9A,Physics,68.4,True,6.8,2024-12-29
+S0539,Class 9A,Math,60.0,True,2.7,2024-07-29
+S0540,PG Year 2,AI Ethics,79.4,True,8.1,2024-08-05
+S0541,Class 9A,Biology,59.1,False,4.2,2025-02-27
+S0542,UG Year 1,Computer Science,68.6,False,10.1,2024-11-30
+S0543,Class 11A,English,81.9,True,6.8,2024-07-27
+S0544,UG Year 1,Computer Science,82.3,True,10.5,2024-07-24
+S0545,UG Year 3,Machine Learning,98.6,True,13.4,2024-09-10
+S0546,Class 6A,History,70.6,False,4.8,2025-01-09
+S0547,UG Year 3,Statistics,77.7,True,9.9,2024-10-18
+S0548,Class 9A,English,55.2,False,3.5,2024-12-12
+S0549,UG Year 1,Statistics,61.5,False,4.9,2024-07-06
+S0550,Class 9A,Chemistry,71.3,True,4.1,2024-09-23
+S0551,Class 6A,History,61.4,False,2.8,2024-11-17
+S0552,Class 6A,Science,73.0,True,5.1,2024-12-15
+S0553,Class 11B,Chemistry,92.8,True,8.9,2025-02-06
+S0554,Class 9A,English,68.2,True,5.2,2024-10-10
+S0555,Class 11A,Computer Science,77.4,True,9.2,2024-08-24
+S0556,Class 6B,English,67.5,True,3.3,2025-01-14
+S0557,Class 6B,Geography,67.1,False,3.7,2025-01-17
+S0558,PG Year 1,Research Methods,91.5,True,14.1,2025-03-18
+S0559,UG Year 3,Data Analysis,77.3,True,11.0,2024-12-09
+S0560,Class 9B,Biology,84.0,True,6.4,2024-09-21
+S0561,Class 11A,Physics,76.3,True,7.2,2025-01-22
+S0562,Class 9A,Chemistry,84.2,True,7.5,2025-02-22
+S0563,Class 6B,Math,66.3,False,1.5,2024-10-12
+S0564,Class 6B,Math,51.5,False,3.0,2024-06-18
+S0565,Class 11B,Chemistry,60.5,True,3.9,2024-12-04
+S0566,UG Year 3,Data Analysis,82.7,True,9.6,2024-09-15
+S0567,Class 11B,Math,77.4,True,8.2,2024-07-28
+S0568,PG Year 1,Machine Learning,98.0,True,13.5,2024-09-11
+S0569,Class 11A,Chemistry,67.8,False,9.1,2024-06-13
+S0570,Class 9A,Biology,79.5,True,3.5,2024-06-03
+S0571,Class 11A,Math,65.9,False,6.8,2025-02-20
+S0572,Class 6B,Geography,50.7,False,3.8,2024-08-27
+S0573,UG Year 1,Economics,77.4,False,8.9,2024-12-04
+S0574,PG Year 1,AI Ethics,97.0,True,15.2,2024-08-09
+S0575,UG Year 1,Computer Science,59.0,False,4.6,2024-09-07
+S0576,UG Year 3,Machine Learning,76.0,False,8.3,2024-08-13
+S0577,PG Year 2,Data Science,93.4,True,16.1,2024-09-26
+S0578,Class 6A,History,56.2,False,1.5,2024-11-24
+S0579,Class 9B,Physics,61.5,False,5.4,2025-03-17
+S0580,Class 9B,Biology,70.2,True,4.2,2024-11-07
+S0581,UG Year 3,Machine Learning,84.0,True,12.5,2024-09-14
+S0582,UG Year 1,Statistics,92.3,True,10.2,2024-11-27
+S0583,UG Year 2,Computer Science,64.2,True,4.8,2025-01-05
+S0584,Class 6B,English,57.9,True,1.9,2024-12-05
+S0585,Class 9B,Math,61.1,False,3.8,2024-11-09
+S0586,Class 6B,English,66.5,False,3.2,2024-09-24
+S0587,PG Year 2,Thesis,78.0,False,7.2,2024-09-06
+S0588,PG Year 1,AI Ethics,79.1,True,10.2,2024-12-21
+S0589,Class 6A,Science,54.2,False,4.2,2024-09-17
+S0590,UG Year 3,Statistics,70.1,False,8.3,2024-11-16
+S0591,UG Year 3,Machine Learning,96.6,True,12.7,2024-11-08
+S0592,Class 11B,Computer Science,77.0,True,6.2,2024-08-22
+S0593,UG Year 2,Data Analysis,79.2,False,11.7,2024-12-04
+S0594,Class 6A,Math,74.2,False,4.9,2024-11-11
+S0595,PG Year 1,Research Methods,98.4,True,12.2,2024-11-07
+S0596,UG Year 1,Economics,73.8,False,11.1,2025-01-22
+S0597,Class 6B,Geography,54.3,False,1.3,2025-01-09
+S0598,Class 11B,Math,80.7,True,4.3,2024-11-19
+S0599,Class 9B,Biology,71.7,True,5.4,2024-09-08
+S0600,Class 6B,History,57.7,False,1.8,2025-01-19
+S0601,Class 11A,Physics,64.0,False,8.4,2024-11-18
+S0602,Class 11A,Math,70.2,False,8.6,2024-08-02
+S0603,Class 11A,Chemistry,74.9,True,4.0,2024-11-13
+S0604,PG Year 2,Advanced Statistics,67.6,False,6.3,2024-10-18
+S0605,Class 9A,Biology,64.9,False,6.2,2024-11-20
+S0606,Class 11A,Physics,69.0,False,6.3,2025-03-14
+S0607,UG Year 1,Mathematics,70.5,True,8.5,2024-07-19
+S0608,PG Year 1,AI Ethics,88.5,False,13.6,2024-07-07
+S0609,Class 9B,Math,62.6,False,6.1,2024-10-27
+S0610,UG Year 1,Computer Science,63.9,False,6.0,2025-01-18
+S0611,Class 11A,Physics,80.1,True,6.6,2024-09-28
+S0612,Class 11A,Chemistry,75.1,False,7.7,2024-10-28
+S0613,Class 6A,Math,58.4,False,4.4,2024-10-09
+S0614,Class 11A,Physics,68.3,False,4.3,2024-12-13
+S0615,PG Year 2,AI Ethics,82.0,True,11.2,2024-09-12
+S0616,Class 9A,Chemistry,62.2,False,2.9,2025-02-13
+S0617,Class 11B,Physics,71.1,True,6.6,2025-01-10
+S0618,Class 11A,Math,76.7,False,8.0,2024-06-15
+S0619,Class 9A,English,69.1,True,5.8,2025-01-09
+S0620,PG Year 2,Thesis,94.9,True,13.2,2024-08-19
+S0621,PG Year 2,Deep Learning,89.6,True,11.4,2025-02-23
+S0622,PG Year 1,AI Ethics,97.2,True,14.6,2024-07-04
+S0623,Class 9B,Biology,60.6,False,5.9,2025-02-22
+S0624,Class 9B,Biology,59.6,False,2.7,2025-01-28
+S0625,Class 9A,Physics,70.2,False,4.3,2024-09-16
+S0626,Class 9B,Chemistry,67.3,False,4.9,2024-06-19
+S0627,Class 9B,Biology,86.1,True,6.3,2024-11-13
+S0628,UG Year 3,Machine Learning,66.1,True,5.3,2024-11-22
+S0629,Class 6B,Geography,55.4,False,1.9,2024-07-22
+S0630,Class 9A,Math,82.4,True,7.8,2024-12-04
+S0631,UG Year 2,Research Methods,85.2,True,8.3,2024-10-30
+S0632,Class 9B,English,57.3,False,5.1,2025-02-07
+S0633,Class 6B,English,65.0,False,2.7,2024-11-12
+S0634,Class 6B,Math,68.6,True,1.8,2024-09-17
+S0635,Class 9B,Biology,59.9,False,5.8,2024-06-13
+S0636,UG Year 1,Computer Science,90.8,True,11.8,2024-11-12
+S0637,Class 6A,English,64.8,False,6.0,2025-03-21
+S0638,Class 6B,Geography,59.9,False,5.8,2024-10-30
+S0639,UG Year 1,Statistics,91.3,True,7.9,2025-02-19
+S0640,UG Year 3,Data Analysis,56.0,False,5.1,2025-02-27
+S0641,UG Year 3,Research Methods,85.4,True,8.8,2025-01-24
+S0642,Class 11B,Physics,64.4,False,8.4,2024-07-16
+S0643,PG Year 2,AI Ethics,74.5,False,9.1,2025-03-24
+S0644,Class 6B,Math,51.1,False,2.6,2024-12-29
+S0645,Class 9A,Chemistry,67.9,True,4.7,2024-12-24
+S0646,Class 9A,Chemistry,69.9,False,4.7,2025-02-15
+S0647,PG Year 1,Data Science,95.0,True,13.6,2025-01-01
+S0648,Class 9A,Biology,61.2,False,6.0,2024-12-25
+S0649,Class 9B,Math,71.7,True,4.6,2024-10-13
+S0650,PG Year 1,Statistics,91.9,True,15.5,2025-02-05
+S0651,UG Year 3,Project Work,65.1,False,8.7,2025-02-22
+S0652,Class 6A,English,74.0,True,3.3,2024-10-24
+S0653,Class 9A,English,71.7,False,7.9,2024-07-26
+S0654,Class 11A,Computer Science,74.0,False,7.5,2024-09-05
+S0655,Class 6A,Geography,63.6,False,4.9,2025-03-19
+S0656,PG Year 1,AI Ethics,88.3,True,8.1,2024-06-12
+S0657,Class 11B,Chemistry,54.4,False,4.2,2024-11-26
+S0658,UG Year 3,Project Work,80.9,True,6.0,2024-07-02
+S0659,Class 11B,Chemistry,78.1,False,8.8,2025-01-25
+S0660,Class 9B,English,81.7,True,6.1,2024-09-15
+S0661,Class 11A,English,71.5,False,5.0,2024-11-13
+S0662,Class 6A,English,69.9,True,1.4,2025-02-04
+S0663,Class 11A,Physics,80.5,True,6.9,2024-08-10
+S0664,PG Year 1,AI Ethics,84.8,True,12.7,2024-06-26
+S0665,Class 6A,History,76.1,True,1.8,2024-06-23
+S0666,Class 6A,Geography,46.2,False,1.9,2024-06-18
+S0667,UG Year 1,Computer Science,58.6,False,6.3,2024-09-15
+S0668,Class 11B,Physics,65.3,False,8.3,2024-09-08
+S0669,Class 6B,Math,63.3,False,2.9,2024-12-01
+S0670,UG Year 2,Computer Science,73.3,True,5.0,2024-11-04
+S0671,Class 11A,Math,77.0,False,8.1,2024-09-18
+S0672,Class 9A,Physics,65.8,False,7.4,2024-07-20
+S0673,Class 9B,Physics,58.6,False,5.6,2024-10-25
+S0674,Class 6A,English,62.9,False,4.4,2024-08-23
+S0675,Class 11B,Chemistry,58.3,False,7.4,2025-02-28
+S0676,PG Year 2,AI Ethics,98.0,True,12.3,2025-02-11
+S0677,UG Year 1,Computer Science,60.7,False,6.7,2025-01-21
+S0678,Class 11B,Chemistry,61.9,False,5.3,2025-03-07
+S0679,UG Year 1,Statistics,79.1,False,10.9,2024-06-14
+S0680,Class 11A,Computer Science,76.0,False,7.0,2024-10-18
+S0681,Class 11B,Physics,60.9,False,7.5,2024-10-25
+S0682,UG Year 2,Research Methods,82.9,True,7.7,2024-06-11
+S0683,PG Year 1,Research Methods,80.1,False,13.3,2025-03-02
+S0684,Class 6A,Math,64.3,False,3.8,2024-12-25
+S0685,Class 9B,Physics,73.7,True,4.9,2024-11-11
+S0686,Class 6B,Math,58.7,False,3.3,2024-09-21
+S0687,UG Year 2,Data Analysis,87.8,True,11.0,2025-01-25
+S0688,Class 9B,English,64.9,True,3.3,2024-10-26
+S0689,UG Year 3,Statistics,74.2,True,5.2,2024-08-18
+S0690,Class 9A,Math,70.9,True,4.9,2024-12-22
+S0691,UG Year 1,Computer Science,80.5,True,7.8,2025-01-19
+S0692,UG Year 2,Research Methods,85.2,True,10.6,2024-07-22
+S0693,Class 11B,Physics,59.9,False,6.5,2025-03-16
+S0694,PG Year 1,Machine Learning,69.6,True,6.9,2025-02-20
+S0695,PG Year 1,Research Methods,73.0,True,9.0,2024-10-22
+S0696,Class 11B,English,67.3,False,5.6,2025-01-21
+S0697,PG Year 2,Deep Learning,90.3,True,9.6,2025-02-22
+S0698,Class 6A,History,50.7,False,1.4,2025-02-10
+S0699,UG Year 2,Research Methods,84.6,True,8.0,2024-06-23
+S0700,UG Year 2,Data Analysis,81.1,True,6.2,2024-09-17
+S0701,PG Year 2,Deep Learning,78.7,True,9.8,2025-01-02
+S0702,UG Year 2,Research Methods,86.9,True,8.8,2025-03-10
+S0703,Class 9A,English,89.7,True,7.8,2024-10-17
+S0704,Class 11A,Math,60.4,False,8.0,2024-09-26
+S0705,Class 9A,English,88.1,True,7.7,2024-09-23
+S0706,UG Year 3,Statistics,74.2,False,11.3,2024-07-04
+S0707,PG Year 1,AI Ethics,82.2,False,15.3,2024-07-16
+S0708,Class 11B,Physics,64.7,False,7.3,2024-10-10
+S0709,Class 6B,English,51.9,False,2.0,2025-02-10
+S0710,UG Year 3,Research Methods,81.9,False,12.5,2024-06-05
+S0711,PG Year 2,Advanced Statistics,86.9,True,11.2,2025-01-11
+S0712,Class 6B,English,75.3,True,5.8,2024-09-01
+S0713,Class 9B,Biology,74.2,True,6.1,2024-10-02
+S0714,UG Year 2,Research Methods,69.2,False,5.6,2025-01-18
+S0715,Class 6B,Math,58.8,False,5.7,2024-10-24
+S0716,UG Year 1,Statistics,81.2,False,10.5,2025-03-11
+S0717,UG Year 3,Machine Learning,74.3,False,11.9,2024-06-10
+S0718,Class 9B,Math,68.8,False,5.1,2025-02-18
+S0719,PG Year 1,Data Science,75.6,True,7.3,2024-11-09
+S0720,Class 6B,Science,53.5,False,4.2,2024-10-08
+S0721,UG Year 2,Computer Science,71.6,False,9.2,2024-11-09
+S0722,UG Year 2,Research Methods,81.0,True,8.4,2024-06-28
+S0723,Class 11B,Physics,56.6,False,6.9,2025-02-04
+S0724,Class 9B,Math,70.6,True,2.5,2025-01-23
+S0725,Class 11A,Physics,65.5,True,6.6,2025-03-24
+S0726,Class 6A,Geography,71.0,True,5.7,2024-12-16
+S0727,PG Year 1,AI Ethics,86.7,True,10.4,2024-12-22
+S0728,PG Year 1,Statistics,82.8,False,11.5,2024-10-17
+S0729,UG Year 3,Project Work,78.2,True,6.8,2024-07-17
+S0730,Class 6A,Geography,53.0,False,4.3,2024-08-11
+S0731,Class 6B,Geography,77.8,True,3.4,2024-11-12
+S0732,Class 11A,Math,85.8,True,10.0,2024-09-03
+S0733,Class 6B,Geography,58.1,True,1.2,2024-11-16
+S0734,UG Year 2,Computer Science,82.0,False,11.8,2025-01-31
+S0735,UG Year 1,English,73.1,True,7.9,2025-03-02
+S0736,UG Year 3,Project Work,93.4,True,12.6,2025-02-13
+S0737,PG Year 1,Machine Learning,87.1,True,9.6,2024-06-09
+S0738,Class 6B,Science,52.3,False,1.6,2025-03-18
+S0739,PG Year 2,Advanced Statistics,94.9,True,10.8,2024-12-19
+S0740,UG Year 3,Statistics,66.5,False,10.5,2025-02-02
+S0741,UG Year 1,Statistics,59.5,False,5.3,2024-09-25
+S0742,UG Year 2,Research Methods,68.8,True,5.6,2024-07-18
+S0743,Class 11A,Math,67.1,True,5.0,2025-01-20
+S0744,PG Year 2,AI Ethics,93.8,True,16.2,2024-11-19
+S0745,Class 11A,Math,69.0,False,4.9,2024-11-17
+S0746,PG Year 2,Data Science,97.7,True,13.1,2024-11-14
+S0747,PG Year 1,Machine Learning,80.3,True,9.5,2025-02-01
+S0748,Class 6A,Math,54.2,False,3.1,2024-10-10
+S0749,Class 6B,History,57.8,False,1.2,2024-10-23
+S0750,UG Year 2,Economics,79.8,True,5.3,2024-12-17
+S0751,Class 9B,Biology,79.2,True,6.9,2024-07-25
+S0752,UG Year 3,Data Analysis,84.7,True,6.2,2025-01-18
+S0753,UG Year 3,Machine Learning,91.4,True,13.9,2024-11-23
+S0754,UG Year 3,Machine Learning,75.4,True,7.3,2024-06-30
+S0755,PG Year 1,Machine Learning,84.0,False,12.9,2024-11-11
+S0756,Class 11B,English,81.5,True,6.6,2024-07-31
+S0757,PG Year 2,Thesis,94.3,True,16.9,2025-01-30
+S0758,Class 11A,Math,61.6,False,5.5,2025-03-14
+S0759,Class 9B,English,55.1,False,5.5,2025-02-22
+S0760,Class 11A,Math,71.0,False,8.0,2024-11-07
+S0761,Class 6B,Geography,70.4,True,3.0,2024-11-16
+S0762,UG Year 2,Statistics,72.9,True,8.2,2025-02-13
+S0763,Class 6B,Math,57.8,False,4.3,2024-11-16
+S0764,Class 9B,English,53.5,False,2.4,2024-10-17
+S0765,PG Year 1,Statistics,100,True,15.1,2024-11-04
+S0766,Class 9A,Biology,64.2,False,5.4,2024-07-28
+S0767,Class 6A,Math,65.3,False,4.3,2024-12-06
+S0768,PG Year 2,Data Science,91.0,False,17.5,2025-03-21
+S0769,Class 9B,English,66.0,True,3.6,2024-08-17
+S0770,Class 9B,Chemistry,66.3,False,5.4,2025-02-14
+S0771,Class 6B,English,58.2,False,1.3,2025-03-23
+S0772,Class 9A,Chemistry,61.4,False,4.3,2024-09-21
+S0773,Class 6B,Geography,66.9,False,4.4,2024-06-04
+S0774,UG Year 2,Research Methods,85.9,True,9.5,2024-10-02
+S0775,Class 9B,Physics,67.2,False,6.8,2024-11-29
+S0776,UG Year 2,Statistics,83.3,True,10.1,2025-03-23
+S0777,PG Year 2,Deep Learning,98.1,True,11.7,2024-10-16
+S0778,Class 6B,History,58.6,False,5.4,2024-11-03
+S0779,Class 11B,Math,87.9,True,6.2,2024-07-01
+S0780,PG Year 2,Advanced Statistics,71.4,True,7.0,2025-01-24
+S0781,UG Year 3,Project Work,87.0,True,8.3,2024-11-14
+S0782,Class 11B,Physics,72.7,False,8.3,2024-08-11
+S0783,UG Year 3,Data Analysis,83.7,True,8.0,2024-06-26
+S0784,PG Year 2,Thesis,81.2,True,7.5,2024-12-18
+S0785,Class 9B,Biology,54.3,False,3.5,2024-09-17
+S0786,UG Year 3,Research Methods,67.6,False,7.6,2025-02-06
+S0787,PG Year 2,Deep Learning,82.1,False,16.0,2025-03-13
+S0788,PG Year 1,Machine Learning,77.9,False,9.5,2025-03-10
+S0789,Class 9B,Math,54.1,False,2.2,2024-09-23
+S0790,Class 11B,Math,86.6,True,7.3,2024-11-02
+S0791,PG Year 2,AI Ethics,99.3,True,15.2,2024-12-22
+S0792,UG Year 1,Statistics,60.6,False,6.8,2024-12-05
+S0793,UG Year 3,Statistics,87.5,True,10.4,2024-11-26
+S0794,UG Year 2,Research Methods,74.9,True,7.7,2025-03-14
+S0795,Class 9B,Biology,76.3,False,7.4,2024-11-26
+S0796,Class 6A,Math,69.9,False,6.0,2024-08-14
+S0797,PG Year 1,Data Science,77.4,True,8.9,2024-10-18
+S0798,Class 11B,Physics,65.3,False,4.0,2024-07-15
+S0799,Class 6B,History,50.5,False,2.4,2024-06-17
+S0800,Class 9B,Math,62.5,False,5.1,2024-12-06
+S0801,PG Year 2,AI Ethics,90.6,True,11.3,2024-06-10
+S0802,UG Year 2,Statistics,77.9,True,5.0,2024-11-21
+S0803,Class 9B,Biology,65.1,False,7.0,2024-12-25
+S0804,PG Year 2,Advanced Statistics,85.6,True,12.5,2025-03-19
+S0805,Class 6A,Math,57.5,True,1.5,2024-11-03
+S0806,Class 9B,English,59.4,False,6.4,2025-01-28
+S0807,UG Year 2,Economics,90.4,True,10.4,2025-01-16
+S0808,UG Year 3,Research Methods,83.3,True,7.7,2024-09-15
+S0809,Class 11A,Math,63.2,False,7.4,2024-09-06
+S0810,Class 9B,English,84.3,True,5.9,2024-06-11
+S0811,UG Year 3,Data Analysis,84.5,True,6.6,2024-09-07
+S0812,Class 11A,Physics,65.7,False,4.4,2025-01-06
+S0813,Class 9A,Physics,61.8,True,2.7,2024-09-27
+S0814,Class 11A,Math,81.3,True,7.2,2024-09-24
+S0815,Class 9A,Math,81.7,True,6.9,2024-11-20
+S0816,PG Year 2,Advanced Statistics,93.0,True,13.3,2024-10-20
+S0817,Class 9B,Biology,56.9,False,5.6,2025-03-26
+S0818,Class 6A,Science,64.8,True,1.6,2024-12-27
+S0819,Class 6A,Math,70.9,False,5.8,2025-02-16
+S0820,Class 11B,Computer Science,66.8,True,4.1,2024-08-13
+S0821,Class 9B,Physics,68.7,False,5.4,2024-07-27
+S0822,PG Year 1,AI Ethics,88.7,False,14.5,2024-10-22
+S0823,UG Year 2,Computer Science,72.0,True,4.1,2025-02-03
+S0824,Class 9B,English,68.2,False,3.9,2024-07-20
+S0825,PG Year 1,Statistics,87.7,False,11.9,2025-03-17
+S0826,Class 6B,Geography,54.6,False,1.6,2025-02-20
+S0827,UG Year 2,Statistics,67.2,False,6.4,2025-01-24
+S0828,PG Year 2,Thesis,84.5,True,9.2,2024-06-11
+S0829,Class 6B,Geography,64.3,False,3.7,2025-03-17
+S0830,Class 11B,Computer Science,67.5,False,4.9,2024-06-04
+S0831,Class 11B,Math,79.1,False,7.5,2024-07-11
+S0832,UG Year 1,Economics,79.4,True,8.5,2024-11-08
+S0833,UG Year 1,Statistics,71.3,False,9.3,2024-06-19
+S0834,Class 11A,Physics,68.1,False,7.8,2024-09-05
+S0835,UG Year 2,Data Analysis,79.5,True,7.9,2025-01-01
+S0836,UG Year 2,Computer Science,95.2,True,10.5,2025-02-06
+S0837,Class 6B,History,54.7,False,4.2,2025-03-22
+S0838,UG Year 3,Statistics,96.4,True,12.2,2024-06-27
+S0839,Class 11A,English,57.7,False,4.5,2024-08-19
+S0840,Class 6B,History,64.0,True,3.0,2024-07-15
+S0841,UG Year 1,Computer Science,65.6,False,4.2,2025-01-25
+S0842,Class 6A,Science,52.3,False,2.7,2024-09-26
+S0843,UG Year 2,Economics,73.9,True,9.8,2024-06-06
+S0844,UG Year 1,Economics,57.5,False,4.9,2024-08-29
+S0845,UG Year 1,Computer Science,95.9,True,10.3,2024-11-18
+S0846,PG Year 1,AI Ethics,82.1,True,6.3,2025-03-09
+S0847,Class 6A,Math,65.3,False,5.2,2024-12-21
+S0848,Class 6B,Science,59.0,False,1.5,2024-11-14
+S0849,Class 11B,Physics,68.6,False,6.8,2024-12-21
+S0850,Class 9A,Physics,62.9,True,2.4,2024-06-11
+S0851,UG Year 1,Economics,75.7,True,4.6,2024-07-12
+S0852,Class 11A,Physics,84.1,True,6.9,2024-09-09
+S0853,Class 9B,Physics,69.4,False,7.7,2024-08-04
+S0854,UG Year 3,Machine Learning,92.8,True,9.9,2024-10-06
+S0855,Class 9A,Biology,52.6,False,2.3,2025-02-15
+S0856,UG Year 2,Statistics,78.6,True,5.5,2024-12-06
+S0857,PG Year 1,Machine Learning,90.1,False,14.4,2024-06-23
+S0858,Class 6B,Math,65.9,True,3.2,2024-10-30
+S0859,UG Year 3,Data Analysis,70.4,True,7.6,2024-07-12
+S0860,Class 9B,English,75.4,False,7.5,2024-11-04
+S0861,UG Year 2,Data Analysis,73.5,True,7.0,2025-03-03
+S0862,Class 11B,Chemistry,69.2,True,3.6,2025-03-25
+S0863,UG Year 1,Computer Science,72.0,True,5.3,2025-02-22
+S0864,Class 11A,Chemistry,82.0,True,9.4,2024-06-03
+S0865,UG Year 2,Research Methods,72.0,True,9.6,2024-10-23
+S0866,Class 11B,Computer Science,80.4,True,7.4,2024-12-26
+S0867,Class 11B,Physics,84.2,True,7.1,2024-07-03
+S0868,Class 9A,Physics,73.9,True,7.4,2024-06-18
+S0869,PG Year 1,Research Methods,78.6,True,7.0,2025-01-11
+S0870,Class 9B,Biology,80.7,True,5.4,2024-12-14
+S0871,Class 9A,Biology,79.2,True,5.5,2024-09-25
+S0872,Class 11A,Physics,56.3,False,6.6,2024-08-01
+S0873,Class 11B,Chemistry,82.5,False,8.7,2024-07-06
+S0874,Class 6B,Science,76.2,True,5.4,2025-01-20
+S0875,Class 6A,English,66.4,False,4.8,2024-06-12
+S0876,Class 9B,English,54.3,False,3.1,2025-03-27
+S0877,UG Year 3,Statistics,63.3,False,6.3,2024-08-07
+S0878,Class 9A,Physics,87.9,True,7.9,2025-01-11
+S0879,UG Year 1,Mathematics,63.4,True,4.6,2025-02-14
+S0880,Class 11A,Computer Science,65.1,False,4.9,2024-08-06
+S0881,Class 9A,Physics,61.1,False,7.6,2024-08-25
+S0882,Class 11B,English,81.0,True,8.6,2024-08-19
+S0883,Class 9B,English,58.8,False,2.0,2024-10-11
+S0884,Class 6B,Geography,74.9,True,3.6,2025-03-08
+S0885,Class 6A,History,66.3,False,3.4,2024-10-06
+S0886,Class 11A,Physics,77.3,True,4.2,2025-01-19
+S0887,UG Year 3,Data Analysis,86.5,True,10.7,2024-11-28
+S0888,UG Year 1,Mathematics,82.4,True,5.3,2024-12-13
+S0889,UG Year 3,Statistics,88.1,True,11.3,2025-03-14
+S0890,Class 9A,Math,78.9,True,6.2,2024-10-28
+S0891,Class 9B,Biology,66.2,False,4.6,2025-03-12
+S0892,PG Year 1,AI Ethics,80.9,True,8.2,2024-12-15
+S0893,Class 9A,Chemistry,57.1,False,4.5,2025-02-06
+S0894,Class 6A,History,55.3,False,2.5,2024-08-06
+S0895,Class 11B,Physics,70.8,True,4.5,2024-11-17
+S0896,Class 11A,Computer Science,74.6,True,3.3,2024-08-01
+S0897,PG Year 2,Thesis,93.0,True,14.2,2024-07-28
+S0898,Class 6B,Science,56.3,False,1.3,2024-09-01
+S0899,Class 6B,History,57.4,False,2.7,2024-07-08
+S0900,PG Year 1,Research Methods,77.5,True,11.8,2024-06-24
+S0901,UG Year 3,Machine Learning,69.1,False,10.5,2025-03-11
+S0902,UG Year 3,Project Work,89.8,True,9.6,2024-07-02
+S0903,Class 9B,Math,77.2,True,5.6,2025-01-26
+S0904,Class 9A,Biology,55.8,False,3.8,2024-11-09
+S0905,Class 11A,English,56.5,False,3.3,2025-03-07
+S0906,UG Year 2,Data Analysis,65.8,False,9.3,2025-02-16
+S0907,Class 9A,Biology,54.4,False,3.1,2024-11-14
+S0908,PG Year 2,Data Science,79.3,True,6.4,2025-03-16
+S0909,UG Year 3,Research Methods,76.7,True,10.2,2025-01-08
+S0910,Class 9B,Biology,54.9,False,2.8,2025-02-16
+S0911,Class 9B,Math,62.2,False,3.6,2025-01-28
+S0912,Class 9B,English,65.9,False,5.8,2025-02-13
+S0913,Class 11A,English,68.8,False,6.1,2024-08-18
+S0914,UG Year 1,English,95.0,True,11.6,2025-01-16
+S0915,Class 9B,English,53.8,False,4.9,2024-11-25
+S0916,UG Year 1,English,64.8,True,4.2,2024-08-26
+S0917,PG Year 1,Research Methods,95.1,True,13.1,2025-02-02
+S0918,PG Year 2,Data Science,96.8,True,12.6,2024-09-05
+S0919,UG Year 2,Data Analysis,77.7,False,11.7,2024-08-09
+S0920,UG Year 3,Statistics,100,True,14.0,2024-06-17
+S0921,Class 11A,Physics,69.0,True,5.3,2024-07-21
+S0922,PG Year 1,Statistics,91.2,True,14.3,2024-09-29
+S0923,PG Year 1,Machine Learning,82.3,True,11.0,2024-08-09
+S0924,Class 11A,Chemistry,75.1,False,6.9,2024-10-05
+S0925,Class 6B,Science,48.9,False,1.4,2025-03-24
+S0926,PG Year 2,Deep Learning,100,True,16.6,2024-06-05
+S0927,UG Year 2,Research Methods,66.5,False,5.5,2025-01-24
+S0928,Class 11B,Chemistry,64.6,False,6.2,2024-08-29
+S0929,Class 6B,Geography,64.2,False,4.1,2024-11-04
+S0930,PG Year 1,Statistics,72.1,False,10.3,2024-08-07
+S0931,UG Year 2,Economics,79.3,True,7.3,2024-08-14
+S0932,PG Year 1,AI Ethics,81.6,True,12.7,2024-12-12
+S0933,UG Year 3,Research Methods,74.9,False,6.7,2024-10-18
+S0934,Class 9A,Math,67.0,False,4.4,2024-06-20
+S0935,UG Year 3,Statistics,80.0,True,7.7,2025-02-25
+S0936,Class 11B,Physics,88.1,True,10.0,2024-09-16
+S0937,PG Year 2,Data Science,89.8,False,15.3,2024-11-01
+S0938,UG Year 1,Economics,74.2,True,4.5,2024-07-24
+S0939,Class 9A,Math,71.3,True,4.4,2024-11-11
+S0940,PG Year 1,Machine Learning,76.2,True,8.4,2025-01-08
+S0941,Class 6A,English,52.6,False,1.1,2024-08-01
+S0942,Class 11A,Math,57.4,False,4.4,2024-07-29
+S0943,PG Year 1,Data Science,94.3,True,11.2,2024-06-03
+S0944,PG Year 1,Data Science,84.2,False,15.4,2024-09-23
+S0945,Class 11A,Computer Science,82.6,True,9.8,2025-03-09
+S0946,UG Year 1,Mathematics,69.8,True,6.1,2025-02-09
+S0947,Class 9B,Biology,54.7,False,3.3,2024-09-27
+S0948,Class 9A,Biology,61.3,False,2.6,2024-11-09
+S0949,Class 6A,Geography,64.1,False,3.2,2024-06-10
+S0950,Class 9B,Biology,55.5,False,5.9,2024-10-30
+S0951,UG Year 3,Machine Learning,67.9,False,8.7,2025-03-15
+S0952,UG Year 2,Statistics,74.9,False,7.7,2024-08-07
+S0953,PG Year 1,AI Ethics,78.9,False,13.5,2025-03-11
+S0954,Class 11B,Chemistry,71.4,True,5.8,2024-07-15
+S0955,Class 6A,Math,64.6,True,1.3,2024-07-17
+S0956,PG Year 2,Advanced Statistics,76.9,True,9.1,2024-09-07
+S0957,Class 11B,Physics,78.2,False,8.4,2025-01-03
+S0958,Class 9A,Physics,74.7,True,4.1,2024-07-26
+S0959,Class 6A,History,61.5,False,4.7,2024-10-05
+S0960,UG Year 2,Research Methods,62.3,False,7.1,2024-09-08
+S0961,PG Year 2,AI Ethics,69.8,False,9.5,2024-07-31
+S0962,Class 6A,English,65.1,True,2.2,2025-03-07
+S0963,PG Year 1,Statistics,93.7,False,15.4,2024-07-27
+S0964,UG Year 1,Statistics,78.3,True,7.2,2024-10-15
+S0965,Class 6B,Science,57.2,False,3.6,2025-03-12
+S0966,Class 9B,Physics,75.8,False,5.9,2025-01-26
+S0967,Class 11B,Physics,74.7,False,8.5,2024-07-24
+S0968,Class 11A,Physics,72.9,True,3.8,2025-01-23
+S0969,Class 6B,Science,69.5,True,2.6,2024-11-12
+S0970,Class 11A,Physics,65.5,False,8.0,2024-06-16
+S0971,Class 9A,Math,73.9,False,6.7,2024-11-04
+S0972,Class 9B,English,76.6,True,3.5,2024-07-10
+S0973,Class 11B,Math,80.9,False,9.6,2024-10-08
+S0974,Class 6B,English,57.8,False,5.8,2025-01-04
+S0975,UG Year 1,Statistics,80.5,True,9.0,2024-08-15
+S0976,Class 11B,Computer Science,70.7,True,6.6,2024-09-08
+S0977,UG Year 3,Data Analysis,82.8,False,11.0,2024-06-22
+S0978,UG Year 3,Research Methods,73.7,False,9.5,2024-11-10
+S0979,Class 6A,Geography,67.4,True,4.3,2025-02-20
+S0980,Class 11A,Computer Science,72.4,False,4.3,2024-10-31
+S0981,Class 11B,Physics,72.6,False,5.6,2025-03-17
+S0982,Class 11A,Chemistry,73.3,False,7.2,2025-02-26
+S0983,Class 9A,Chemistry,73.3,False,5.3,2025-01-17
+S0984,Class 11A,English,83.8,True,4.7,2024-06-13
+S0985,UG Year 1,Mathematics,70.8,True,4.7,2024-06-07
+S0986,PG Year 1,Research Methods,83.6,True,7.5,2024-06-25
+S0987,PG Year 1,AI Ethics,92.9,True,14.4,2024-11-09
+S0988,Class 11B,Chemistry,72.8,False,5.3,2025-02-16
+S0989,Class 11A,Chemistry,72.4,False,5.9,2025-01-28
+S0990,Class 6B,English,51.7,False,1.2,2024-07-26
+S0991,UG Year 1,English,68.1,False,5.6,2025-01-11
+S0992,Class 11B,Computer Science,66.8,False,8.7,2025-01-21
+S0993,Class 9A,English,61.7,False,3.2,2024-09-30
+S0994,UG Year 2,Computer Science,73.5,True,5.7,2024-06-25
+S0995,PG Year 1,Statistics,74.1,True,7.6,2024-09-20
+S0996,PG Year 1,Statistics,93.1,True,14.2,2024-07-21
+S0997,Class 6B,Math,74.2,True,4.6,2024-11-06
+S0998,Class 6A,Geography,59.6,False,4.4,2024-10-02
+S0999,PG Year 1,Data Science,84.6,True,13.4,2025-01-10
+S1000,Class 9A,Math,65.2,False,4.0,2025-03-18
