@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, render_template, request
+from flask_login import login_required, current_user
 
 from app import db
 from app.models import UploadBatch, StudentRecord
@@ -21,6 +22,7 @@ def health():
 
 
 @main_bp.route("/api/upload", methods=["POST"])
+@login_required
 def upload_file():
     """
     Accepts a CSV/Excel file under form field 'file'.
@@ -70,6 +72,7 @@ def upload_file():
 
 
 @main_bp.route("/api/batches")
+@login_required
 def list_batches():
     """List upload history - useful for debugging and the future 'manage uploads' UI."""
     batches = UploadBatch.query.order_by(UploadBatch.uploaded_at.desc()).all()
@@ -77,6 +80,7 @@ def list_batches():
 
 
 @main_bp.route("/api/batches/<int:batch_id>", methods=["DELETE"])
+@login_required
 def delete_batch(batch_id):
     """Delete a batch and all its records (cascade) - lets you clean up a bad upload."""
     batch = UploadBatch.query.get_or_404(batch_id)
@@ -94,6 +98,7 @@ def delete_batch(batch_id):
 
 
 @main_bp.route("/api/records")
+@login_required
 def get_records():
     """
     Preview stored records with optional filters.
@@ -129,6 +134,7 @@ def get_records():
 
 
 @main_bp.route("/api/filter-options")
+@login_required
 def get_filter_options():
     """Return unique subjects and classes for dropdown filters."""
     from app.data_access import get_filter_options, get_record_count
@@ -191,6 +197,7 @@ def pipeline_preview_route():
 
 
 @main_bp.route("/api/kpis")
+@login_required
 def get_kpis():
     """
     Master KPI endpoint — runs the full pipeline and returns all
@@ -224,6 +231,7 @@ def get_kpis():
 
 
 @main_bp.route("/api/export/csv")
+@login_required
 def export_csv():
     """Export filtered records as a downloadable CSV."""
     import io
@@ -287,6 +295,7 @@ def stats_summary():
 # ── Day 9: AI Predictive Model endpoints ─────────────────────────────────────
 
 @main_bp.route("/api/model/train", methods=["POST"])
+@login_required
 def train_model_route():
     """Train the predictive model on all current data in the DB."""
     from app.data_access import get_all_records_df
@@ -314,6 +323,7 @@ def model_status_route():
 
 
 @main_bp.route("/api/predict", methods=["POST"])
+@login_required
 def predict_route():
     """
     Predict a student's score.

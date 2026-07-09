@@ -195,6 +195,17 @@
     <div class="header-meta">Student Performance Analytics · Full Stack AI Project</div>
   </div>
   <div class="header-right">
+    <div id="userMenu" style="position:relative">
+      <button onclick="toggleUserMenu()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.8rem;display:flex;align-items:center;gap:6px">
+        👤 <span id="userLabel">Loading...</span> ▾
+      </button>
+      <div id="userDropdown" style="display:none;position:absolute;right:0;top:36px;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:180px;z-index:999;overflow:hidden">
+        <div id="userInfo" style="padding:12px 14px;border-bottom:1px solid #eee;font-size:.82rem;color:#555"></div>
+        <a href="/auth/register" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">➕ Add User</a>
+        <div id="adminLink" style="display:none"><a href="#" onclick="showPage('users',document.querySelector('nav button'))" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">👥 Manage Users</a></div>
+        <button onclick="doLogout()" style="width:100%;padding:10px 14px;background:none;border:none;font-size:.84rem;color:#c0392b;cursor:pointer;text-align:left;font-weight:600">🚪 Sign Out</button>
+      </div>
+    </div>
     <button class="auto-refresh-toggle" id="refreshToggle" onclick="toggleAutoRefresh()">⏱ Auto-refresh: OFF</button>
     <span id="dbStatus" class="ok">● Live</span>
     <span id="lastUpdated"></span>
@@ -1108,9 +1119,45 @@ async function runPrediction(){
 const _origShowPage = showPage;
 // Already patched via inline call in showPage function
 
+
+// ─────────────────────────────────────────────────────
+// Authentication
+// ─────────────────────────────────────────────────────
+async function checkAuth(){
+  try{
+    const res = await fetch('/auth/api/me', {credentials:'include'});
+    const d   = await res.json();
+    if(!d.authenticated){
+      window.location.href = '/auth/login'; return;
+    }
+    document.getElementById('userLabel').textContent = d.user.username;
+    document.getElementById('userInfo').innerHTML =
+      `<strong>${d.user.username}</strong><br>${d.user.email}<br>
+       <span style="font-size:.75rem;background:${d.user.role==='admin'?'#e8f0fb':'#e8f5e9'};padding:1px 7px;border-radius:10px;color:#2F5496">${d.user.role}</span>`;
+    if(d.user.role === 'admin'){
+      document.getElementById('adminLink').style.display = 'block';
+    }
+  }catch(e){ console.error(e); }
+}
+
+function toggleUserMenu(){
+  const dd = document.getElementById('userDropdown');
+  dd.style.display = dd.style.display==='none' ? 'block' : 'none';
+}
+document.addEventListener('click', e => {
+  if(!document.getElementById('userMenu').contains(e.target))
+    document.getElementById('userDropdown').style.display='none';
+});
+
+async function doLogout(){
+  await fetch('/auth/api/logout', {method:'POST', credentials:'include'});
+  window.location.href = '/auth/login';
+}
+
 // ─────────────────────────────────────────────────────
 // Init
 // ─────────────────────────────────────────────────────
+checkAuth();
 loadFilterOptions();
 loadDashboard();
 loadPipelinePanel();

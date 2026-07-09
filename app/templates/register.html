@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — EduTech Impact on AI</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1a3a6e,#2F5496);
+      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:14px;padding:40px;width:100%;max-width:420px;
+      box-shadow:0 20px 60px rgba(0,0,0,.3)}
+    .logo{text-align:center;margin-bottom:28px}
+    .logo h1{font-size:1.6rem;color:#2F5496;font-weight:700}
+    .logo p{font-size:.85rem;color:#888;margin-top:4px}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:.8rem;font-weight:700;
+      color:#555;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+    .form-group input{width:100%;padding:11px 14px;border:1.5px solid #e0e8f0;
+      border-radius:8px;font-size:.95rem;transition:.2s;background:#f7f9fc}
+    .form-group input:focus{outline:none;border-color:#2F5496;background:#fff}
+    .form-group input.valid{border-color:#27ae60}
+    .form-group input.invalid{border-color:#c0392b}
+    .hint{font-size:.73rem;color:#aaa;margin-top:4px}
+    .btn{width:100%;padding:12px;background:#27ae60;color:#fff;border:none;
+      border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s;margin-top:6px}
+    .btn:hover{background:#1e8449}
+    .btn:disabled{background:#aaa;cursor:not-allowed}
+    .error-box{background:#fdecea;border-left:4px solid #c0392b;border-radius:6px;
+      padding:10px 14px;font-size:.85rem;color:#7b1f1f;margin-bottom:16px;display:none}
+    .success-box{background:#e8f5e9;border-left:4px solid #27ae60;border-radius:6px;
+      padding:10px 14px;font-size:.85rem;color:#1a5c2e;margin-bottom:16px;display:none}
+    .footer-link{text-align:center;margin-top:20px;font-size:.85rem;color:#888}
+    .footer-link a{color:#2F5496;font-weight:600;text-decoration:none}
+    .footer-link a:hover{text-decoration:underline}
+    .strength{height:4px;border-radius:2px;margin-top:6px;transition:.3s;background:#eee}
+    .strength.weak{background:#c0392b;width:33%}
+    .strength.medium{background:#e67e22;width:66%}
+    .strength.strong{background:#27ae60;width:100%}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>📊 EduTech Impact on AI</h1>
+    <p>Create a Teacher Account</p>
+  </div>
+
+  <div class="error-box"   id="errorBox"></div>
+  <div class="success-box" id="successBox"></div>
+
+  <div class="form-group">
+    <label>Username</label>
+    <input type="text" id="username" placeholder="Choose a username" oninput="validateUsername(this)" autocomplete="username">
+    <div class="hint">At least 3 characters, letters and numbers only</div>
+  </div>
+  <div class="form-group">
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="your@email.com" oninput="validateEmail(this)" autocomplete="email">
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Create a password" oninput="checkStrength(this)" autocomplete="new-password">
+    <div class="strength" id="strengthBar"></div>
+    <div class="hint">At least 6 characters</div>
+  </div>
+  <div class="form-group">
+    <label>Confirm Password</label>
+    <input type="password" id="confirm" placeholder="Repeat password" oninput="validateConfirm(this)" autocomplete="new-password">
+  </div>
+
+  <button class="btn" id="registerBtn" onclick="doRegister()">Create Account</button>
+
+  <div class="footer-link" style="margin-top:16px">
+    Already have an account? <a href="/auth/login">Sign in</a>
+  </div>
+</div>
+
+<script>
+  function validateUsername(el){
+    const ok = el.value.length >= 3;
+    el.className = ok ? 'valid' : '';
+  }
+  function validateEmail(el){
+    el.className = el.value.includes('@') ? 'valid' : '';
+  }
+  function checkStrength(el){
+    const v = el.value;
+    const bar = document.getElementById('strengthBar');
+    if(v.length === 0){ bar.className='strength'; return; }
+    if(v.length < 6){ bar.className='strength weak'; return; }
+    const strong = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(v);
+    bar.className = strong ? 'strength strong' : 'strength medium';
+  }
+  function validateConfirm(el){
+    const pw = document.getElementById('password').value;
+    el.className = el.value === pw && el.value.length > 0 ? 'valid' : 'invalid';
+  }
+
+  document.addEventListener('keydown', e => { if(e.key==='Enter') doRegister(); });
+
+  async function doRegister(){
+    const username = document.getElementById('username').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm  = document.getElementById('confirm').value;
+    const btn      = document.getElementById('registerBtn');
+    const errBox   = document.getElementById('errorBox');
+    const okBox    = document.getElementById('successBox');
+
+    errBox.style.display = 'none';
+    okBox.style.display  = 'none';
+
+    if(password !== confirm){
+      errBox.textContent = 'Passwords do not match.';
+      errBox.style.display = 'block'; return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Creating account...';
+
+    try{
+      const res  = await fetch('/auth/api/register', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        credentials: 'include',
+        body: JSON.stringify({username, email, password})
+      });
+      const data = await res.json();
+
+      if(res.ok){
+        okBox.textContent = data.message + ' Redirecting...';
+        okBox.style.display = 'block';
+        setTimeout(() => window.location.href = '/', 1000);
+      } else {
+        errBox.textContent = data.error;
+        errBox.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Create Account';
+      }
+    } catch(e){
+      errBox.textContent = 'Network error. Please try again.';
+      errBox.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Create Account';
+    }
+  }
+</script>
+</body>
+</html>

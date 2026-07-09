@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — EduTech Impact on AI</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1a3a6e,#2F5496);
+      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:14px;padding:40px;width:100%;max-width:420px;
+      box-shadow:0 20px 60px rgba(0,0,0,.3)}
+    .logo{text-align:center;margin-bottom:28px}
+    .logo h1{font-size:1.6rem;color:#2F5496;font-weight:700}
+    .logo p{font-size:.85rem;color:#888;margin-top:4px}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;font-size:.8rem;font-weight:700;
+      color:#555;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+    .form-group input{width:100%;padding:11px 14px;border:1.5px solid #e0e8f0;
+      border-radius:8px;font-size:.95rem;transition:.2s;background:#f7f9fc}
+    .form-group input:focus{outline:none;border-color:#2F5496;background:#fff}
+    .btn{width:100%;padding:12px;background:#2F5496;color:#fff;border:none;
+      border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;
+      transition:.2s;margin-top:6px}
+    .btn:hover{background:#1a3a6e}
+    .btn:disabled{background:#aaa;cursor:not-allowed}
+    .error-box{background:#fdecea;border-left:4px solid #c0392b;border-radius:6px;
+      padding:10px 14px;font-size:.85rem;color:#7b1f1f;margin-bottom:16px;display:none}
+    .success-box{background:#e8f5e9;border-left:4px solid #27ae60;border-radius:6px;
+      padding:10px 14px;font-size:.85rem;color:#1a5c2e;margin-bottom:16px;display:none}
+    .footer-link{text-align:center;margin-top:20px;font-size:.85rem;color:#888}
+    .footer-link a{color:#2F5496;font-weight:600;text-decoration:none}
+    .footer-link a:hover{text-decoration:underline}
+    .divider{text-align:center;margin:18px 0;color:#ccc;font-size:.8rem;
+      display:flex;align-items:center;gap:10px}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
+    .demo-box{background:#f0f7ff;border:1px solid #d0e4f7;border-radius:8px;
+      padding:12px 14px;font-size:.82rem;color:#2F5496;margin-bottom:18px}
+    .demo-box strong{display:block;margin-bottom:4px}
+    .remember{display:flex;align-items:center;gap:8px;font-size:.85rem;color:#666;margin-bottom:4px}
+    .remember input{width:auto}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>📊 EduTech Impact on AI</h1>
+    <p>Student Performance Analytics Dashboard</p>
+  </div>
+
+  <div class="demo-box">
+    <strong>🔑 Demo Credentials</strong>
+    Username: <strong>admin</strong> &nbsp;|&nbsp; Password: <strong>admin123</strong>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+  <div class="success-box" id="successBox"></div>
+
+  <div class="form-group">
+    <label>Username or Email</label>
+    <input type="text" id="username" placeholder="Enter username or email" autocomplete="username">
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+  </div>
+  <div class="remember">
+    <input type="checkbox" id="remember">
+    <label for="remember">Remember me</label>
+  </div>
+  <button class="btn" id="loginBtn" onclick="doLogin()">Sign In</button>
+
+  <div class="divider">or</div>
+  <div class="footer-link">
+    Don't have an account? <a href="/auth/register">Create one</a>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+  async function doLogin(){
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const remember = document.getElementById('remember').checked;
+    const btn      = document.getElementById('loginBtn');
+    const errBox   = document.getElementById('errorBox');
+    const okBox    = document.getElementById('successBox');
+
+    errBox.style.display = 'none';
+    okBox.style.display  = 'none';
+
+    if(!username || !password){
+      errBox.textContent = 'Please enter both username and password.';
+      errBox.style.display = 'block'; return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Signing in...';
+
+    try{
+      const res  = await fetch('/auth/api/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        credentials: 'include',
+        body: JSON.stringify({username, password, remember})
+      });
+      const data = await res.json();
+
+      if(res.ok){
+        okBox.textContent = data.message;
+        okBox.style.display = 'block';
+        setTimeout(() => window.location.href = '/', 800);
+      } else {
+        errBox.textContent = data.error;
+        errBox.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Sign In';
+      }
+    } catch(e){
+      errBox.textContent = 'Network error. Please try again.';
+      errBox.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Sign In';
+    }
+  }
+</script>
+</body>
+</html>
