@@ -12,6 +12,14 @@ ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".xls"}
 
 @main_bp.route("/")
 def index():
+    from flask_login import current_user
+    if current_user.is_authenticated:
+        return render_template("index.html")
+    return render_template("landing.html")
+
+@main_bp.route("/dashboard")
+@login_required
+def dashboard():
     return render_template("index.html")
 
 
