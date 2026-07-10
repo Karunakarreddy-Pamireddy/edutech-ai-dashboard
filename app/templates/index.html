@@ -201,8 +201,8 @@
       </button>
       <div id="userDropdown" style="display:none;position:absolute;right:0;top:36px;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:180px;z-index:999;overflow:hidden">
         <div id="userInfo" style="padding:12px 14px;border-bottom:1px solid #eee;font-size:.82rem;color:#555"></div>
-        <a href="/auth/register" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">➕ Add User</a>
-        <div id="adminLink" style="display:none"><a href="#" onclick="showPage('users',document.querySelector('nav button'))" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">👥 Manage Users</a></div>
+        <a href="/auth/register" target="_blank" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">➕ Add User</a>
+        <div id="adminLink" style="display:none"><a href="#" onclick="document.getElementById('userDropdown').style.display='none';showUsersPage()" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">👥 Manage Users</a></div>
         <button onclick="doLogout()" style="width:100%;padding:10px 14px;background:none;border:none;font-size:.84rem;color:#c0392b;cursor:pointer;text-align:left;font-weight:600">🚪 Sign Out</button>
       </div>
     </div>
@@ -218,7 +218,8 @@
   </button>
   <button onclick="showPage('upload',this)">📤 Upload</button>
   <button onclick="showPage('records',this)">🔍 Records</button>
-  <button onclick="showPage('checkpoint',this)">🚦 Day 9 Checkpoint</button>
+  <button onclick="showPage('checkpoint',this)">📋 Project Status</button>
+  <button id="usersNavBtn" onclick="showPage('users',this)" style="display:none">👥 Users</button>
   <button onclick="showPage('predict',this)">🤖 AI Predictor</button>
 </nav>
 
@@ -454,6 +455,49 @@
 </div>
 
 
+
+<!-- ══════════════ USERS PAGE ══════════════ -->
+<div id="users" class="page">
+ <div class="container">
+
+  <!-- Change Password Card -->
+  <div class="card">
+    <h2>🔐 Change My Password</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:14px">
+      <div class="filter-group">
+        <label>Current Password</label>
+        <input type="password" id="oldPwd" placeholder="Current password"
+          style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
+      </div>
+      <div class="filter-group">
+        <label>New Password</label>
+        <input type="password" id="newPwd" placeholder="New password (min 6 chars)"
+          style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
+      </div>
+      <div class="filter-group">
+        <label>Confirm New Password</label>
+        <input type="password" id="confirmPwd" placeholder="Repeat new password"
+          style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+    <div id="pwdResult" style="margin-top:10px;font-size:.85rem"></div>
+  </div>
+
+  <!-- Admin: User Management -->
+  <div class="card" id="adminUsersCard" style="display:none">
+    <h2>👥 Manage Users <span style="font-size:.75rem;color:#888;font-weight:400">(Admin only)</span></h2>
+    <div style="margin-bottom:14px;display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="loadUsers()">↻ Refresh</button>
+      <a href="/auth/register" target="_blank">
+        <button class="btn btn-success" style="margin-top:0">➕ Add New User</button>
+      </a>
+    </div>
+    <div id="usersTableContainer"><div class="empty">Loading users...</div></div>
+  </div>
+
+ </div>
+</div>
 <!-- ══════════════ AI PREDICTOR ══════════════ -->
 <div id="predict" class="page">
  <div class="container">
@@ -549,6 +593,46 @@
 
  </div>
 </div>
+
+<!-- ══════════════ MANAGE USERS ══════════════ -->
+<div id="users" class="page">
+ <div class="container">
+
+  <div class="card">
+    <h2>👥 Manage Users</h2>
+    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+      <a href="/auth/register" target="_blank" class="btn btn-primary" style="text-decoration:none;padding:8px 18px">➕ Add New User</a>
+      <button class="btn btn-secondary" onclick="loadUsers()">↻ Refresh</button>
+      <span style="font-size:.8rem;color:#888">Only admins can manage users</span>
+    </div>
+    <div id="usersTableContainer"><div class="empty">Loading users...</div></div>
+  </div>
+
+  <div class="card">
+    <h2>🔑 Change My Password</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px">
+      <div class="filter-group">
+        <label>Current Password</label>
+        <input type="password" id="oldPassword" placeholder="Current password"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
+      </div>
+      <div class="filter-group">
+        <label>New Password</label>
+        <input type="password" id="newPassword" placeholder="New password (min 6 chars)"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
+      </div>
+      <div class="filter-group">
+        <label>Confirm New Password</label>
+        <input type="password" id="confirmPassword" placeholder="Repeat new password"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+    <div id="passwordResult" style="margin-top:12px"></div>
+  </div>
+
+ </div>
+</div>
 <script>
 // ─────────────────────────────────────────────────────
 // Core utilities
@@ -625,6 +709,7 @@ function showPage(id,btn){
   if(id==='records')    { loadRecordFilterOptions(); loadRecords(); }
   if(id==='checkpoint') { loadCheckpoint(); }
   if(id==='predict')    { checkModelStatus(); }
+  if(id==='users')      { loadUsers(); }
 }
 
 // ─────────────────────────────────────────────────────
@@ -1120,6 +1205,176 @@ const _origShowPage = showPage;
 // Already patched via inline call in showPage function
 
 
+
+// ─────────────────────────────────────────────────────
+// Users Management
+// ─────────────────────────────────────────────────────
+function showUsersPage(){
+  const btn = document.getElementById('usersNavBtn');
+  showPage('users', btn);
+  loadUsers();
+}
+
+async function loadUsers(){
+  try{
+    const res   = await fetch('/auth/api/users', {credentials:'include'});
+    const users = await res.json();
+    if(!res.ok){ document.getElementById('usersTableContainer').innerHTML='<div class="empty">'+users.error+'</div>'; return; }
+    const rows = users.map(u => `
+      <tr>
+        <td><strong>${u.username}</strong></td>
+        <td style="font-size:.8rem;color:#888">${u.email}</td>
+        <td><span class="badge ${u.role==='admin'?'ai':'nonai'}">${u.role}</span></td>
+        <td><span style="color:${u.is_active?'#27ae60':'#c0392b'};font-weight:600;font-size:.82rem">${u.is_active?'Active':'Inactive'}</span></td>
+        <td style="font-size:.78rem;color:#aaa">${new Date(u.created_at).toLocaleDateString()}</td>
+        <td style="display:flex;gap:6px">
+          <button class="btn btn-secondary" style="padding:4px 10px;font-size:.75rem" onclick="changeRole(${u.id},'${u.role==='admin'?'teacher':'admin'}')">
+            Make ${u.role==='admin'?'Teacher':'Admin'}
+          </button>
+          <button class="btn btn-danger" style="padding:4px 10px;font-size:.75rem" onclick="toggleUser(${u.id})">
+            ${u.is_active?'Deactivate':'Activate'}
+          </button>
+        </td>
+      </tr>`).join('');
+    document.getElementById('usersTableContainer').innerHTML = `
+      <table>
+        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }catch(e){ console.error(e); }
+}
+
+async function toggleUser(id){
+  const res = await fetch(`/auth/api/users/${id}/toggle`, {method:'POST', credentials:'include'});
+  const d   = await res.json();
+  if(res.ok){ loadUsers(); }
+  else alert(d.error);
+}
+
+async function changeRole(id, newRole){
+  const res = await fetch(`/auth/api/users/${id}/role`, {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({role: newRole})
+  });
+  const d = await res.json();
+  if(res.ok){ loadUsers(); }
+  else alert(d.error);
+}
+
+async function changePassword(){
+  const old_password = document.getElementById('oldPwd').value;
+  const new_password = document.getElementById('newPwd').value;
+  const confirm      = document.getElementById('confirmPwd').value;
+  const result       = document.getElementById('pwdResult');
+
+  if(new_password !== confirm){
+    result.innerHTML='<span style="color:#c0392b">❌ New passwords do not match.</span>'; return;
+  }
+  if(new_password.length < 6){
+    result.innerHTML='<span style="color:#c0392b">❌ New password must be at least 6 characters.</span>'; return;
+  }
+
+  const res = await fetch('/auth/api/change-password', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({old_password, new_password})
+  });
+  const d = await res.json();
+  if(res.ok){
+    result.innerHTML='<span style="color:#27ae60">✅ '+d.message+'</span>';
+    document.getElementById('oldPwd').value='';
+    document.getElementById('newPwd').value='';
+    document.getElementById('confirmPwd').value='';
+  } else {
+    result.innerHTML='<span style="color:#c0392b">❌ '+d.error+'</span>';
+  }
+}
+
+
+// ─────────────────────────────────────────────────────
+// Users Management
+// ─────────────────────────────────────────────────────
+function showUsersPage(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('users').classList.add('active');
+  loadUsers();
+}
+
+async function loadUsers(){
+  const cont = document.getElementById('usersTableContainer');
+  try{
+    const res   = await fetch('/auth/api/users', {credentials:'include'});
+    if(!res.ok){ cont.innerHTML='<div class="empty">Admin access required.</div>'; return; }
+    const users = await res.json();
+    if(!users.length){ cont.innerHTML='<div class="empty">No users found.</div>'; return; }
+    cont.innerHTML = `<table>
+      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody>${users.map(u=>`<tr>
+        <td>#${u.id}</td>
+        <td><strong>${u.username}</strong></td>
+        <td>${u.email}</td>
+        <td><span class="badge ${u.role==='admin'?'ai':'nonai'}">${u.role}</span></td>
+        <td><span class="badge ${u.is_active?'success':'failed'}">${u.is_active?'Active':'Inactive'}</span></td>
+        <td style="font-size:.78rem">${new Date(u.created_at).toLocaleDateString()}</td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-secondary" style="padding:4px 10px;font-size:.76rem"
+            onclick="toggleUser(${u.id},'${u.username}')">${u.is_active?'Deactivate':'Activate'}</button>
+          <button class="btn btn-secondary" style="padding:4px 10px;font-size:.76rem"
+            onclick="changeRole(${u.id},'${u.username}','${u.role}')">
+            Make ${u.role==='admin'?'Teacher':'Admin'}</button>
+        </td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+  }catch(e){ cont.innerHTML='<div class="empty">Error loading users.</div>'; }
+}
+
+async function toggleUser(id, username){
+  if(!confirm(`${username}: toggle active/inactive?`)) return;
+  const res = await fetch(`/auth/api/users/${id}/toggle`,{method:'POST',credentials:'include'});
+  const d   = await res.json();
+  alert(d.message); loadUsers();
+}
+
+async function changeRole(id, username, currentRole){
+  const newRole = currentRole==='admin' ? 'teacher' : 'admin';
+  if(!confirm(`Change ${username} to ${newRole}?`)) return;
+  const res = await fetch(`/auth/api/users/${id}/role`,{
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({role:newRole})
+  });
+  const d = await res.json();
+  alert(d.message); loadUsers();
+}
+
+async function changePassword(){
+  const old  = document.getElementById('oldPassword').value;
+  const np   = document.getElementById('newPassword').value;
+  const conf = document.getElementById('confirmPassword').value;
+  const res_el = document.getElementById('passwordResult');
+
+  if(!old||!np||!conf){ res_el.innerHTML='<div style="color:#c0392b;font-size:.85rem">All fields are required.</div>'; return; }
+  if(np !== conf){ res_el.innerHTML='<div style="color:#c0392b;font-size:.85rem">New passwords do not match.</div>'; return; }
+  if(np.length < 6){ res_el.innerHTML='<div style="color:#c0392b;font-size:.85rem">Password must be at least 6 characters.</div>'; return; }
+
+  const res  = await fetch('/auth/api/change-password',{
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({old_password:old, new_password:np})
+  });
+  const d = await res.json();
+  if(res.ok){
+    res_el.innerHTML=`<div style="color:#27ae60;font-size:.85rem">✅ ${d.message}</div>`;
+    document.getElementById('oldPassword').value='';
+    document.getElementById('newPassword').value='';
+    document.getElementById('confirmPassword').value='';
+  } else {
+    res_el.innerHTML=`<div style="color:#c0392b;font-size:.85rem">❌ ${d.error}</div>`;
+  }
+}
+
 // ─────────────────────────────────────────────────────
 // Authentication
 // ─────────────────────────────────────────────────────
@@ -1136,6 +1391,8 @@ async function checkAuth(){
        <span style="font-size:.75rem;background:${d.user.role==='admin'?'#e8f0fb':'#e8f5e9'};padding:1px 7px;border-radius:10px;color:#2F5496">${d.user.role}</span>`;
     if(d.user.role === 'admin'){
       document.getElementById('adminLink').style.display = 'block';
+      document.getElementById('usersNavBtn').style.display = 'block';
+      document.getElementById('adminUsersCard').style.display = 'block';
     }
   }catch(e){ console.error(e); }
 }
