@@ -364,3 +364,345 @@ def predict_route():
         return jsonify(result), 400
 
     return jsonify(result), 200
+
+
+# ── Feature additions ─────────────────────────────────────────────────────────
+
+@main_bp.route("/api/student/<student_id>")
+@login_required
+def student_profile(student_id):
+    """Look up individual student — all records, avg score, trend, AI usage."""
+    from app.models import StudentRecord
+    records = StudentRecord.query.filter_by(student_id=student_id)\
+                .order_by(StudentRecord.record_date).all()
+    if not records:
+        return jsonify({"error": f"No records found for student '{student_id}'."}), 404
+
+    scores     = [r.score for r in records]
+    ai_count   = sum(1 for r in records if r.ai_tool_used)
+    subjects   = list(set(r.subject for r in records))
+    classes    = list(set(r.class_name for r in records))
+
+    return jsonify({
+        "student_id":    student_id,
+        "total_records": len(records),
+        "avg_score":     round(sum(scores)/len(scores), 2),
+        "best_score":    round(max(scores), 1),
+        "lowest_score":  round(min(scores), 1),
+        "ai_usage_pct":  round(ai_count/len(records)*100, 1),
+        "subjects":      subjects,
+        "classes":       classes,
+        "records": [
+            {
+                "date":         r.record_date.isoformat(),
+                "subject":      r.subject,
+                "class_name":   r.class_name,
+                "score":        r.score,
+                "ai_tool_used": r.ai_tool_used,
+                "study_hours":  r.study_hours,
+            } for r in records
+        ]
+    })
+
+
+@main_bp.route("/api/student/search")
+@login_required
+def student_search():
+    """Search students by ID prefix — for autocomplete."""
+    q = request.args.get("q", "").strip().upper()
+    if len(q) < 1:
+        return jsonify([])
+    from app.models import StudentRecord
+    from sqlalchemy import distinct
+    matches = (
+        StudentRecord.query
+        .with_entities(distinct(StudentRecord.student_id))
+        .filter(StudentRecord.student_id.like(f"{q}%"))
+        .limit(10).all()
+    )
+    return jsonify([m[0] for m in matches])
+
+
+@main_bp.route("/api/compare")
+@login_required
+def compare():
+    """
+    Compare two groups side by side.
+    ?group_by=class_name&a=Class 5A&b=Class 5B
+    ?group_by=subject&a=Math&b=Science
+    """
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+
+    group_by = request.args.get("group_by", "class_name")
+    a        = request.args.get("a", "")
+    b        = request.args.get("b", "")
+
+    if not a or not b:
+        return jsonify({"error": "Provide both ?a= and ?b= parameters"}), 400
+
+    raw_df   = get_all_records_df()
+    clean_df = run_pipeline(raw_df)
+
+    if clean_df.empty:
+        return jsonify({"error": "No data available"}), 404
+
+    def group_stats(df, val):
+        g = df[df[group_by] == val]
+        if g.empty:
+            return None
+        ai  = g[g["ai_tool_used"]==True]
+        nai = g[g["ai_tool_used"]==False]
+        by_subj = g.groupby("subject")["score"].mean().round(2).to_dict() if group_by == "class_name" else {}
+        return {
+            "label":          val,
+            "total_records":  len(g),
+            "avg_score":      round(g["score"].mean(), 2),
+            "ai_avg_score":   round(ai["score"].mean(), 2) if len(ai) else None,
+            "non_ai_avg":     round(nai["score"].mean(), 2) if len(nai) else None,
+            "ai_adoption_pct":round(g["ai_tool_used"].mean()*100, 1),
+            "pass_rate_pct":  round((g["pass_fail"]=="Pass").mean()*100, 1),
+            "score_std":      round(g["score"].std(), 2),
+            "by_subject":     by_subj,
+            "trend": (
+                g.groupby("year_month")["score"].mean().round(2).to_dict()
+            ),
+        }
+
+    return jsonify({
+        "group_by": group_by,
+        "a": group_stats(clean_df, a),
+        "b": group_stats(clean_df, b),
+        "available": sorted(clean_df[group_by].unique().tolist()),
+    })
+
+
+@main_bp.route("/api/notifications")
+@login_required
+def notifications():
+    """Generate smart alerts based on current data patterns."""
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+
+    raw_df   = get_all_records_df()
+    clean_df = run_pipeline(raw_df)
+
+    alerts = []
+
+    if clean_df.empty:
+        return jsonify({"alerts": [], "count": 0})
+
+    # 1. Low AI adoption classes
+    adoption = clean_df.groupby("class_name")["ai_tool_used"].mean() * 100
+    for cls, pct in adoption.items():
+        if pct < 25:
+            alerts.append({
+                "type": "warning",
+                "icon": "⚠️",
+                "title": f"Low AI Adoption — {cls}",
+                "message": f"Only {round(pct,1)}% of {cls} students use AI tools. Consider encouraging adoption.",
+            })
+
+    # 2. High failing classes
+    fail_rate = clean_df.groupby("class_name").apply(
+        lambda g: (g["pass_fail"]=="Fail").mean()*100
+    )
+    for cls, pct in fail_rate.items():
+        if pct > 20:
+            alerts.append({
+                "type": "danger",
+                "icon": "🚨",
+                "title": f"High Fail Rate — {cls}",
+                "message": f"{round(pct,1)}% of {cls} students are failing. Immediate attention needed.",
+            })
+
+    # 3. Subjects with big AI vs non-AI gap
+    for subj in clean_df["subject"].unique():
+        sg   = clean_df[clean_df["subject"]==subj]
+        ai_s = sg[sg["ai_tool_used"]==True]["score"]
+        nai  = sg[sg["ai_tool_used"]==False]["score"]
+        if len(ai_s) > 5 and len(nai) > 5:
+            gap = ai_s.mean() - nai.mean()
+            if gap > 15:
+                alerts.append({
+                    "type": "info",
+                    "icon": "🤖",
+                    "title": f"Strong AI Impact — {subj}",
+                    "message": f"AI users score {round(gap,1)} pts higher in {subj}. Great subject to promote AI tools.",
+                })
+
+    # 4. Outlier students
+    out_count = int(clean_df["score_outlier"].sum())
+    if out_count > 0:
+        alerts.append({
+            "type": "info",
+            "icon": "📊",
+            "title": f"{out_count} Score Outliers Detected",
+            "message": "Some students have unusually high or low scores. Check the Records tab for details.",
+        })
+
+    # 5. Overall positive insight
+    boost = round(
+        clean_df[clean_df["ai_tool_used"]==True]["score"].mean() -
+        clean_df[clean_df["ai_tool_used"]==False]["score"].mean(), 1
+    )
+    if boost > 0:
+        alerts.append({
+            "type": "success",
+            "icon": "✅",
+            "title": "AI Tools Are Working",
+            "message": f"Across all classes, AI tool users score {boost} points higher on average.",
+        })
+
+    return jsonify({"alerts": alerts, "count": len(alerts)})
+
+
+# ── Day 12: New Dashboard Feature Endpoints ───────────────────────────────────
+
+@main_bp.route("/api/student/<student_id>")
+@login_required
+def get_student(student_id):
+    """Return full history and stats for a single student."""
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+
+    df = get_all_records_df()
+    if df.empty:
+        return jsonify({"error": "No data available."}), 404
+
+    clean = run_pipeline(df)
+    sdf   = clean[clean["student_id"] == student_id.upper()]
+
+    if sdf.empty:
+        return jsonify({"error": f"Student '{student_id}' not found."}), 404
+
+    sdf = sdf.copy()
+    sdf["record_date"] = sdf["record_date"].astype(str)
+
+    records = sdf.sort_values("record_date").to_dict(orient="records")
+    scores  = sdf["score"].tolist()
+
+    return jsonify({
+        "student_id":   student_id.upper(),
+        "total_records":len(sdf),
+        "avg_score":    round(sdf["score"].mean(), 2),
+        "best_score":   round(sdf["score"].max(), 2),
+        "worst_score":  round(sdf["score"].min(), 2),
+        "pass_rate":    round((sdf["pass_fail"] == "Pass").mean() * 100, 1),
+        "ai_usage_pct": round(sdf["ai_tool_used"].mean() * 100, 1),
+        "subjects":     sorted(sdf["subject"].unique().tolist()),
+        "classes":      sorted(sdf["class_name"].unique().tolist()),
+        "score_trend":  {
+            "dates":  sdf.sort_values("record_date")["record_date"].tolist(),
+            "scores": sdf.sort_values("record_date")["score"].tolist(),
+        },
+        "records": records,
+    })
+
+
+@main_bp.route("/api/notifications")
+@login_required
+def get_notifications():
+    """Auto-generate alerts based on KPI thresholds."""
+    from app.data_access import get_all_records_df, get_filter_options
+    from app.pipeline import run_pipeline
+
+    df    = get_all_records_df()
+    if df.empty:
+        return jsonify({"notifications": [], "count": 0})
+
+    clean = run_pipeline(df)
+    notes = []
+
+    # Check each class
+    for cls in clean["class_name"].unique():
+        cdf = clean[clean["class_name"] == cls]
+        avg    = cdf["score"].mean()
+        ai_pct = cdf["ai_tool_used"].mean() * 100
+        pass_r = (cdf["pass_fail"] == "Pass").mean() * 100
+
+        if avg < 55:
+            notes.append({"type":"danger","icon":"🚨",
+                "title":f"{cls} — Low Average Score",
+                "message":f"Average score is {round(avg,1)} — below the 55-point warning threshold.",
+                "class":cls})
+        elif avg < 65:
+            notes.append({"type":"warning","icon":"⚠️",
+                "title":f"{cls} — Below Target",
+                "message":f"Average score is {round(avg,1)} — consider intervention strategies.",
+                "class":cls})
+
+        if ai_pct < 25:
+            notes.append({"type":"info","icon":"📢",
+                "title":f"{cls} — Low AI Adoption",
+                "message":f"Only {round(ai_pct,1)}% of students in {cls} are using AI tools.",
+                "class":cls})
+
+        if pass_r < 80:
+            notes.append({"type":"danger","icon":"🚨",
+                "title":f"{cls} — High Failure Rate",
+                "message":f"Pass rate is {round(pass_r,1)}% — {round(100-pass_r,1)}% of students are failing.",
+                "class":cls})
+
+    # Overall alerts
+    overall_ai  = clean["ai_tool_used"].mean() * 100
+    overall_avg = clean["score"].mean()
+    if overall_ai < 40:
+        notes.append({"type":"info","icon":"💡",
+            "title":"Overall — AI Adoption Below 40%",
+            "message":f"Platform-wide AI adoption is {round(overall_ai,1)}%. Encourage more AI tool usage.",
+            "class":"All"})
+
+    # Sort: danger first, then warning, then info
+    order = {"danger":0,"warning":1,"info":2}
+    notes.sort(key=lambda x: order.get(x["type"],3))
+
+    return jsonify({"notifications": notes[:15], "count": len(notes)})
+
+
+# ── Day 12: New dashboard features ───────────────────────────────────────────
+
+
+
+@main_bp.route("/api/comparison")
+@login_required
+def get_comparison():
+    """Compare two groups side by side. type=class|subject, group_a, group_b"""
+    from app.data_access import get_all_records_df
+    from app.pipeline import run_pipeline
+
+    group_a  = request.args.get("group_a", "")
+    group_b  = request.args.get("group_b", "")
+    grp_type = request.args.get("type", "class")
+
+    if not group_a or not group_b:
+        return jsonify({"error": "Provide group_a and group_b params"}), 400
+
+    raw_df = get_all_records_df()
+    df     = run_pipeline(raw_df)
+    field  = "class_name" if grp_type == "class" else "subject"
+
+    def grp_stats(name):
+        g = df[df[field] == name]
+        if g.empty:
+            return {"name": name, "error": "No data", "total_records":0,
+                    "avg_score":0,"ai_adoption":0,"ai_avg":0,"non_ai_avg":0,"pass_rate":0,"score_dist":{},"trend":{}}
+        ai_df    = g[g["ai_tool_used"] == True]
+        nonai_df = g[g["ai_tool_used"] == False]
+        return {
+            "name":          name,
+            "total_records": int(len(g)),
+            "avg_score":     round(float(g["score"].mean()), 2),
+            "ai_adoption":   round(float(g["ai_tool_used"].mean() * 100), 1),
+            "ai_avg":        round(float(ai_df["score"].mean()), 2) if len(ai_df) else 0,
+            "non_ai_avg":    round(float(nonai_df["score"].mean()), 2) if len(nonai_df) else 0,
+            "pass_rate":     round(float((g["pass_fail"] == "Pass").mean() * 100), 1),
+            "score_dist":    g["score_band"].value_counts().to_dict(),
+            "trend":         g.groupby("year_month")["score"].mean().round(2).to_dict(),
+        }
+
+    return jsonify({
+        "type":    grp_type,
+        "group_a": grp_stats(group_a),
+        "group_b": grp_stats(group_b),
+    })
