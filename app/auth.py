@@ -170,3 +170,23 @@ def api_change_password():
     current_user.set_password(new_password)
     db.session.commit()
     return jsonify({"message": "Password changed successfully."}), 200
+
+
+
+from werkzeug.security import generate_password_hash
+from flask import request, flash, redirect, url_redirect
+from flask_login import login_required, current_user
+from .models import db, User
+
+@auth_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        new_password = request.form.get('new_password')
+        if new_password:
+            # Must hash the password before saving!
+            current_user.password_hash = generate_password_hash(new_password)
+            db.session.commit()
+            flash('Password updated successfully!', 'success')
+            return redirect('/auth/profile')
+    return render_template('profile.html')
