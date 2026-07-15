@@ -2788,3 +2788,85 @@ loadPipelinePanel();
                 this.classList.add('active');
             });
         });
+
+
+
+// Student Search Logic
+        async function searchStudent() {
+            const query = document.getElementById('search-input').value;
+            const resultsDiv = document.getElementById('search-results');
+            
+            if (query.length < 2) {
+                resultsDiv.innerHTML = '';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/search?q=${query}`);
+                const data = await response.json();
+                
+                if (data.length === 0) {
+                    resultsDiv.innerHTML = '<p class="text-muted">No students found.</p>';
+                    return;
+                }
+                
+                let html = '<table class="table table-hover"><thead><tr><th>ID</th><th>Subject</th><th>Score</th><th>AI Used</th></tr></thead><tbody>';
+                data.forEach(student => {
+                    html += `<tr>
+                                <td>${student.student_id}</td>
+                                <td>${student.subject}</td>
+                                <td>${student.score}</td>
+                                <td>${student.ai_used ? '✅ Yes' : '❌ No'}</td>
+                             </tr>`;
+                });
+                html += '</tbody></table>';
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                console.error("Search failed:", error);
+            }
+        }
+
+        // Student Compare Logic
+        async function compareStudents() {
+            const id1 = document.getElementById('student1-id').value;
+            const id2 = document.getElementById('student2-id').value;
+            const resultsDiv = document.getElementById('compare-results');
+            
+            if (!id1 || !id2) {
+                resultsDiv.innerHTML = '<div class="alert alert-danger">Please enter both Student IDs.</div>';
+                return;
+            }
+            
+            resultsDiv.innerHTML = 'Loading comparison...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/compare?id1=${id1}&id2=${id2}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                    return;
+                }
+                
+                // Determine winner
+                const s1Wins = data.student1.average_score > data.student2.average_score;
+                
+                resultsDiv.innerHTML = `
+                    <div class="row text-center mt-3">
+                        <div class="col-md-5">
+                            <h4 class="${s1Wins ? 'text-success' : 'text-danger'}">${data.student1.average_score}</h4>
+                            <p class="text-muted">Avg Score (${data.student1.records_found} classes)</p>
+                        </div>
+                        <div class="col-md-2 align-self-center"><strong>VS</strong></div>
+                        <div class="col-md-5">
+                            <h4 class="${!s1Wins ? 'text-success' : 'text-danger'}">${data.student2.average_score}</h4>
+                            <p class="text-muted">Avg Score (${data.student2.records_found} classes)</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error("Compare failed:", error);
+            }
+        }
+
+        

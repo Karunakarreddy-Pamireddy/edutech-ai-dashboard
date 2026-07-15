@@ -174,7 +174,7 @@ def api_change_password():
 
 
 from werkzeug.security import generate_password_hash
-from flask import request, flash, redirect, url_redirect
+from flask import request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from .models import db, User
 
