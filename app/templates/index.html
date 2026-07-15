@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduTech Impact on AI — Dashboard</title>
+  <title>EduTech Impact on AI</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
@@ -13,293 +13,166 @@
       --bg:#f0f4f8;--card:#fff;--border:#e0e8f0;--text:#222;--muted:#777;
     }
     body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text)}
+    body.dark{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8}
+    body.dark header{background:linear-gradient(135deg,#0a1628,#1a2f5a)}
+    body.dark nav{background:#1e293b;border-bottom-color:#334155}
+    body.dark nav button{color:#94a3b8}
+    body.dark nav button.active{color:#60a5fa;border-bottom-color:#60a5fa}
+    body.dark .kpi-card,body.dark .chart-card,body.dark .card,body.dark .filter-bar,body.dark .pipeline-panel{background:#1e293b;box-shadow:0 1px 6px rgba(0,0,0,.3)}
+    body.dark .filter-group select,body.dark .filter-group input{background:#0f172a;color:#e2e8f0;border-color:#334155}
+    body.dark table th{background:#1a3a6e}
+    body.dark table td{border-bottom-color:#334155;color:#e2e8f0}
+    body.dark table tr:hover td{background:#334155}
+    body.dark .insight{background:linear-gradient(135deg,#1e3a6e,#1a2f5a);color:#93c5fd}
+    body.dark .section-divider{color:#64748b}
+    body.dark .section-divider::after{background:#334155}
+    body.dark .upload-zone{background:#0f172a;border-color:#334155}
+    body.dark .notif-item{background:#0f172a}
+    body.dark .empty{color:#64748b}
 
     header{background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:#fff;
-      padding:15px 32px;display:flex;align-items:center;justify-content:space-between;
+      padding:14px 28px;display:flex;align-items:center;justify-content:space-between;
       box-shadow:0 2px 8px rgba(0,0,0,.2);position:sticky;top:0;z-index:100}
-    header h1{font-size:1.3rem;font-weight:700}
-    .header-meta{font-size:.75rem;opacity:.75;margin-top:1px}
-    .header-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    #dbStatus{font-size:.75rem;padding:3px 10px;border-radius:20px;font-weight:600}
+    header h1{font-size:1.25rem;font-weight:700}
+    .header-meta{font-size:.73rem;opacity:.75;margin-top:1px}
+    .header-right{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+    .hbtn{font-size:.75rem;padding:5px 12px;border-radius:18px;cursor:pointer;
+      border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;white-space:nowrap}
+    .hbtn:hover{background:rgba(255,255,255,.22)}
+    .hbtn.on{background:rgba(39,174,96,.3);border-color:#27ae60}
+    #dbStatus{font-size:.73rem;padding:4px 10px;border-radius:18px;font-weight:600}
     #dbStatus.ok{background:#27ae6040;color:#afffcf}
     #dbStatus.warn{background:#e67e2240;color:#ffe0b2}
-    #lastUpdated{font-size:.72rem;opacity:.7}
-    .auto-refresh-toggle{font-size:.72rem;cursor:pointer;
-      padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.15);
-      color:#fff;border:1px solid rgba(255,255,255,.3);transition:.2s}
-    .auto-refresh-toggle.on{background:rgba(39,174,96,.3);border-color:#27ae60}
 
     nav{background:var(--card);border-bottom:2px solid var(--border);
-      display:flex;padding:0 32px;box-shadow:0 1px 3px rgba(0,0,0,.05);
-      position:sticky;top:55px;z-index:99}
-    nav button{background:none;border:none;padding:12px 18px;cursor:pointer;
-      font-size:.87rem;color:var(--muted);border-bottom:3px solid transparent;
-      transition:.2s;display:flex;align-items:center;gap:5px}
+      display:flex;padding:0 28px;overflow-x:auto;position:sticky;top:55px;z-index:99}
+    nav button{background:none;border:none;padding:11px 14px;cursor:pointer;
+      font-size:.82rem;color:var(--muted);border-bottom:3px solid transparent;
+      transition:.2s;white-space:nowrap;display:flex;align-items:center;gap:5px}
     nav button.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
     nav button:hover{color:var(--blue);background:#f7f9fc}
-    .nav-badge{background:var(--blue);color:#fff;font-size:.66rem;
-      padding:1px 6px;border-radius:10px;font-weight:700}
+    .nav-badge{background:var(--blue);color:#fff;font-size:.64rem;
+      padding:1px 5px;border-radius:8px;font-weight:700}
 
-    .container{max-width:1200px;margin:22px auto;padding:0 24px}
+    .container{max-width:1200px;margin:20px auto;padding:0 20px}
     .page{display:none}.page.active{display:block}
 
-    /* skeleton */
     .skeleton{background:linear-gradient(90deg,#e8edf3 25%,#f4f6f9 50%,#e8edf3 75%);
       background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-    /* KPI cards */
-    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-      gap:13px;margin-bottom:20px}
-    .kpi-card{background:var(--card);border-radius:10px;padding:16px 18px;
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:12px;margin-bottom:18px}
+    .kpi-card{background:var(--card);border-radius:10px;padding:15px 16px;
       box-shadow:0 1px 6px rgba(0,0,0,.08);border-top:4px solid var(--blue);
-      transition:transform .2s,box-shadow .2s;cursor:default}
+      transition:transform .2s,box-shadow .2s}
     .kpi-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.11)}
-    .kpi-icon{font-size:1.3rem;margin-bottom:4px}
-    .kpi-value{font-size:1.85rem;font-weight:700;color:var(--blue);
-      font-variant-numeric:tabular-nums;transition:color .3s}
-    .kpi-label{font-size:.72rem;color:var(--muted);margin-top:3px;
-      text-transform:uppercase;letter-spacing:.5px;font-weight:600}
-    .kpi-sub{font-size:.72rem;color:#bbb;margin-top:2px}
+    .kpi-icon{font-size:1.2rem;margin-bottom:4px}
+    .kpi-value{font-size:1.75rem;font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums}
+    .kpi-label{font-size:.7rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+    .kpi-sub{font-size:.68rem;color:#bbb;margin-top:2px}
     .kpi-card.green{border-top-color:var(--green)}.kpi-card.green .kpi-value{color:var(--green)}
     .kpi-card.orange{border-top-color:var(--orange)}.kpi-card.orange .kpi-value{color:var(--orange)}
     .kpi-card.purple{border-top-color:var(--purple)}.kpi-card.purple .kpi-value{color:var(--purple)}
     .kpi-card.red{border-top-color:var(--red)}.kpi-card.red .kpi-value{color:var(--red)}
 
-    /* insight */
-    .insight{background:linear-gradient(135deg,#e8f0fb,#f0f7ff);
-      border-left:4px solid var(--blue);border-radius:8px;
-      padding:13px 16px;margin-bottom:18px;font-size:.88rem;color:var(--blue-dark);
+    .insight{background:linear-gradient(135deg,#e8f0fb,#f0f7ff);border-left:4px solid var(--blue);
+      border-radius:8px;padding:12px 15px;margin-bottom:16px;font-size:.86rem;color:var(--blue-dark);
       display:flex;align-items:flex-start;gap:10px}
-    .insight-icon{font-size:1.3rem;flex-shrink:0}
-    .insight ul{margin-top:5px;padding-left:16px}
-    .insight ul li{margin-top:3px;font-size:.83rem}
+    .insight ul{margin-top:4px;padding-left:14px}
+    .insight ul li{margin-top:2px;font-size:.82rem}
 
-    /* filter bar */
-    .filter-bar{background:var(--card);border-radius:10px;padding:13px 16px;
-      margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);
-      display:flex;flex-wrap:wrap;gap:11px;align-items:flex-end}
-    .filter-group label{display:block;font-size:.7rem;color:var(--muted);
-      margin-bottom:3px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-    .filter-group select,.filter-group input{padding:7px 10px;border:1.5px solid var(--border);
-      border-radius:6px;font-size:.84rem;background:#f7f9fc;min-width:125px;transition:.2s}
-    .filter-group select:focus,.filter-group input:focus{
-      outline:none;border-color:var(--blue);background:#fff}
-    .btn{padding:7px 16px;border-radius:6px;border:none;cursor:pointer;
-      font-size:.84rem;font-weight:600;transition:.2s}
+    .filter-bar{background:var(--card);border-radius:10px;padding:12px 15px;
+      margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);
+      display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+    .filter-group label{display:block;font-size:.68rem;color:var(--muted);margin-bottom:3px;
+      font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+    .filter-group select,.filter-group input{padding:7px 9px;border:1.5px solid var(--border);
+      border-radius:6px;font-size:.83rem;background:#f7f9fc;min-width:115px;transition:.2s}
+    .filter-group select:focus,.filter-group input:focus{outline:none;border-color:var(--blue);background:#fff}
+    .btn{padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:.83rem;font-weight:600;transition:.2s}
     .btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue-dark)}
     .btn-secondary{background:#f0f4f8;color:#555}.btn-secondary:hover{background:#e0e8f0}
     .btn-success{background:var(--green);color:#fff}.btn-success:hover{background:#1e8449}
-    .btn-danger{background:var(--red);color:#fff;padding:5px 11px;font-size:.77rem}
-    .btn-danger:hover{background:#962d22}
-    .filter-indicator{font-size:.73rem;color:var(--orange);font-weight:700;
-      display:none;align-items:center;gap:4px;padding:4px 10px;
+    .btn-danger{background:var(--red);color:#fff;padding:5px 10px;font-size:.76rem}
+    .filter-indicator{font-size:.72rem;color:var(--orange);font-weight:700;
+      display:none;align-items:center;gap:4px;padding:4px 9px;
       background:#fff8e1;border-radius:12px;border:1px solid #f39c12}
 
-    /* pipeline panel */
-    .pipeline-panel{background:var(--card);border-radius:10px;padding:15px 18px;
-      margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+    .pipeline-panel{background:var(--card);border-radius:10px;padding:13px 16px;
+      margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
     .pp-item{text-align:center}
-    .pp-value{font-size:1.05rem;font-weight:700;color:var(--blue)}
-    .pp-label{font-size:.68rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
+    .pp-value{font-size:1rem;font-weight:700;color:var(--blue)}
+    .pp-label{font-size:.65rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.3px}
 
-    /* chart grid */
-    .chart-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:18px}
+    .chart-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-bottom:16px}
     .chart-grid.cols3{grid-template-columns:2fr 1fr 1fr}
-    .chart-card{background:var(--card);border-radius:10px;padding:18px;
+    .chart-card{background:var(--card);border-radius:10px;padding:16px;
       box-shadow:0 1px 6px rgba(0,0,0,.08);transition:box-shadow .2s}
     .chart-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.1)}
-    .chart-card h3{font-size:.87rem;color:var(--blue);margin-bottom:12px;font-weight:700;
-      border-bottom:1px solid var(--border);padding-bottom:8px;
-      display:flex;align-items:center;justify-content:space-between}
-    .chart-wrap{position:relative;height:240px}
+    .chart-card h3{font-size:.85rem;color:var(--blue);margin-bottom:11px;font-weight:700;
+      border-bottom:1px solid var(--border);padding-bottom:7px}
+    .chart-wrap{position:relative;height:230px}
 
-    /* tables */
-    .table-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
-    table{width:100%;border-collapse:collapse;font-size:.83rem}
-    th{background:var(--blue);color:#fff;padding:9px 11px;text-align:left;font-weight:600}
-    td{padding:9px 11px;border-bottom:1px solid #eee}
+    .table-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:16px}
+    table{width:100%;border-collapse:collapse;font-size:.82rem}
+    th{background:var(--blue);color:#fff;padding:8px 10px;text-align:left;font-weight:600}
+    td{padding:8px 10px;border-bottom:1px solid #eee}
     tr:last-child td{border-bottom:none}
     tr:hover td{background:#f7f9fc}
 
-    /* badges */
-    .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.73rem;font-weight:700}
+    .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:700}
     .badge.ai{background:#e8f5e9;color:var(--green)}
     .badge.nonai{background:#fdecea;color:var(--red)}
     .badge.success{background:#e8f5e9;color:var(--green)}
     .badge.partial{background:#fff8e1;color:var(--orange)}
     .badge.failed{background:#fdecea;color:var(--red)}
 
-    /* section divider */
-    .section-divider{font-size:.75rem;color:var(--muted);font-weight:700;
-      text-transform:uppercase;letter-spacing:.8px;margin:4px 0 11px;
+    .section-divider{font-size:.72rem;color:var(--muted);font-weight:700;
+      text-transform:uppercase;letter-spacing:.8px;margin:3px 0 10px;
       display:flex;align-items:center;gap:8px}
     .section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
-    /* Day 9 checkpoint */
-    .checkpoint-card{border-radius:10px;padding:20px 24px;margin-bottom:20px;
-      box-shadow:0 1px 6px rgba(0,0,0,.08)}
-    .checkpoint-card.ready{background:linear-gradient(135deg,#e8f5e9,#f0fff4);
-      border-left:5px solid var(--green)}
-    .checkpoint-card.not-ready{background:linear-gradient(135deg,#fff8e1,#fffde7);
-      border-left:5px solid var(--orange)}
-    .checkpoint-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}
-    .checkpoint-card p{font-size:.88rem;margin-top:6px;color:#555}
-    .checkpoint-items{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .checkpoint-item{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600}
-    .checkpoint-item.pass{background:#e8f5e9;color:var(--green)}
-    .checkpoint-item.fail{background:#fdecea;color:var(--red)}
+    .card{background:var(--card);border-radius:10px;padding:18px;
+      box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:16px}
+    .card h2{font-size:.95rem;color:var(--blue);margin-bottom:13px;
+      padding-bottom:8px;border-bottom:1px solid var(--border);font-weight:700}
 
-    /* upload */
-    .card{background:var(--card);border-radius:10px;padding:20px;
-      box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:18px}
-    .card h2{font-size:.98rem;color:var(--blue);margin-bottom:14px;
-      padding-bottom:9px;border-bottom:1px solid var(--border);font-weight:700}
-    .upload-zone{border:2px dashed var(--blue);border-radius:10px;padding:28px;
+    .upload-zone{border:2px dashed var(--blue);border-radius:10px;padding:26px;
       text-align:center;background:#f7f9fc;cursor:pointer;transition:.2s}
     .upload-zone:hover,.upload-zone.drag-over{background:var(--blue-light);border-color:var(--blue-dark)}
     .upload-zone input{display:none}
     .upload-zone label{cursor:pointer;color:var(--blue);font-weight:700}
     .upload-zone p{color:#999;font-size:.78rem;margin-top:5px}
-    #selectedFile{margin-top:8px;font-size:.83rem;color:#444;font-weight:600}
-    .result-box{margin-top:12px;padding:12px;border-radius:6px;font-size:.86rem;display:none}
+    #selectedFile{margin-top:8px;font-size:.82rem;color:#444;font-weight:600}
+    .result-box{margin-top:11px;padding:11px;border-radius:6px;font-size:.85rem;display:none}
     .result-box.success{background:#e8f5e9;border-left:4px solid var(--green);color:#1a5c2e}
     .result-box.error{background:#fdecea;border-left:4px solid var(--red);color:#7b1f1f}
     .result-box.partial{background:#fff8e1;border-left:4px solid var(--orange);color:#7a5c00}
-    .progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;display:none;overflow:hidden}
+    .progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:7px;display:none;overflow:hidden}
     .progress-bar-fill{height:100%;background:var(--blue);animation:prog 1.5s ease-in-out infinite;width:40%}
     @keyframes prog{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
 
-    .empty{text-align:center;padding:36px;color:#bbb;font-size:.88rem}
+    .notif-item{padding:12px 14px;border-radius:8px;margin-bottom:9px;
+      border-left:4px solid #ccc;background:#f7f9fc;font-size:.86rem}
+    .notif-item.success{border-left-color:var(--green);background:#f0fff4}
+    .notif-item.warning{border-left-color:var(--orange);background:#fffbeb}
+    .notif-item.danger{border-left-color:var(--red);background:#fff5f5}
+    .notif-item.info{border-left-color:var(--blue);background:#f0f7ff}
 
-    .notif-item{padding:14px 16px;border-radius:8px;margin-bottom:10px;
-      border-left:4px solid #ccc;background:#f7f9fc;font-size:.88rem}
-    .notif-item.success{border-left-color:#27ae60;background:#f0fff4}
-    .notif-item.warning{border-left-color:#e67e22;background:#fffbeb}
-    .notif-item.danger{border-left-color:#c0392b;background:#fff5f5}
-    .notif-item.info{border-left-color:#2F5496;background:#f0f7ff}
-
-
-    /* export toolbar */
-    .export-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;
-      flex-wrap:wrap}
-    .export-bar span{font-size:.8rem;color:var(--muted)}
-
-
-    /* ── Dark Mode ── */
-    body.dark{
-      --bg:#0f1923;--card:#1a2535;--border:#2a3a50;--text:#e0e8f0;--muted:#8a9bb0;
-      --blue-light:#1a2a4a;
-    }
-    body.dark .filter-bar,body.dark .chart-card,body.dark .card,
-    body.dark .pipeline-panel,body.dark .insight,body.dark .kpi-card{
-      background:var(--card);color:var(--text)}
-    body.dark nav{background:#111e2d;border-bottom-color:var(--border)}
-    body.dark table th{background:#1e3a6e}
-    body.dark td{border-bottom-color:var(--border)}
-    body.dark tr:hover td{background:#1a2535}
-    body.dark select,body.dark input{background:#1a2535;color:var(--text);border-color:var(--border)}
-    body.dark .section-divider::after{background:var(--border)}
-    body.dark .empty{color:#4a5a70}
-    .dark-toggle{background:none;border:1px solid rgba(255,255,255,.3);color:#fff;
-      padding:5px 12px;border-radius:16px;cursor:pointer;font-size:.78rem;transition:.2s}
-    .dark-toggle:hover{background:rgba(255,255,255,.1)}
-
-    /* ── Notifications ── */
-    .notif-bell{position:relative;cursor:pointer;background:none;
-      border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 12px;
-      border-radius:16px;font-size:.82rem;transition:.2s}
-    .notif-bell:hover{background:rgba(255,255,255,.1)}
-    .notif-count{position:absolute;top:-6px;right:-6px;background:#c0392b;
-      color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;
-      border-radius:50%;display:flex;align-items:center;justify-content:center;
-      display:none}
-    .notif-panel{position:absolute;right:0;top:40px;width:340px;background:#fff;
-      border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.15);z-index:999;
-      max-height:400px;overflow-y:auto;display:none}
-    body.dark .notif-panel{background:#1a2535;color:var(--text)}
-    .notif-header{padding:12px 16px;font-weight:700;font-size:.85rem;
-      border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
-    .notif-item{padding:12px 16px;border-bottom:1px solid #f0f4f8;
-      font-size:.82rem;display:flex;gap:10px;align-items:flex-start}
-    body.dark .notif-item{border-bottom-color:var(--border)}
-    .notif-item.success{border-left:3px solid #27ae60}
-    .notif-item.warning{border-left:3px solid #e67e22}
-    .notif-item.danger{border-left:3px solid #c0392b}
-    .notif-item.info{border-left:3px solid #2F5496}
-    .notif-title{font-weight:700;color:var(--text);margin-bottom:2px}
-    .notif-msg{color:var(--muted);font-size:.78rem;line-height:1.4}
-
-    /* ── Upload progress ── */
-    .upload-progress-wrap{margin-top:12px;display:none}
-    .upload-progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
-    .upload-progress-fill{height:100%;background:linear-gradient(90deg,#2F5496,#27ae60);
-      width:0%;border-radius:4px;transition:width .3s ease}
-    .upload-progress-text{font-size:.78rem;color:var(--muted);margin-top:4px;text-align:center}
-
-
-    /* ── Dark Mode ── */
-    body.dark{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8}
-    body.dark header{background:linear-gradient(135deg,#0f172a,#1e293b)}
-    body.dark nav{background:#1e293b;border-bottom-color:#334155}
-    body.dark nav button{color:#94a3b8}
-    body.dark nav button.active{color:#60a5fa;border-bottom-color:#60a5fa}
-    body.dark nav button:hover{background:#334155;color:#e2e8f0}
-    body.dark .kpi-card,body.dark .chart-card,body.dark .card,
-    body.dark .filter-bar,body.dark .pipeline-panel,body.dark .upload-zone{background:#1e293b;color:#e2e8f0}
-    body.dark .filter-group select,body.dark .filter-group input{background:#0f172a;color:#e2e8f0;border-color:#334155}
-    body.dark th{background:#1e3a6e}
-    body.dark td{border-bottom-color:#334155;color:#e2e8f0}
-    body.dark tr:hover td{background:#334155}
-    body.dark .insight{background:linear-gradient(135deg,#1e3a6e22,#1e293b);color:#93c5fd}
-    body.dark .kpi-value{color:#60a5fa}
-    body.dark .kpi-card.green .kpi-value{color:#4ade80}
-    body.dark .kpi-card.orange .kpi-value{color:#fb923c}
-    body.dark .kpi-card.purple .kpi-value{color:#c084fc}
-    body.dark .section-divider{color:#64748b}
-    body.dark .section-divider::after{background:#334155}
-    body.dark .pp-value{color:#93c5fd}
-    body.dark .badge.success{background:#14532d;color:#4ade80}
-    body.dark .badge.ai{background:#14532d;color:#4ade80}
-    body.dark .badge.nonai{background:#7f1d1d;color:#fca5a5}
-    body.dark .empty{color:#475569}
-    body.dark .checkpoint-card.ready{background:linear-gradient(135deg,#14532d22,#1e293b)}
-    body.dark .checkpoint-card.not-ready{background:linear-gradient(135deg,#78350f22,#1e293b)}
+    .empty{text-align:center;padding:32px;color:#bbb;font-size:.87rem}
+    .user-dropdown{display:none;position:absolute;right:0;top:36px;background:var(--card);
+      border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:180px;z-index:999;overflow:hidden;
+      border:1px solid var(--border)}
 
     @media(max-width:900px){
       .chart-grid,.chart-grid.cols3,.table-grid{grid-template-columns:1fr}
       .kpi-grid{grid-template-columns:repeat(2,1fr)}
-      header{padding:11px 14px}
-      nav{padding:0 10px;top:49px}
-      .container{padding:0 11px}
+      header{padding:10px 12px}
+      nav{padding:0 8px;top:48px}
+      .container{padding:0 10px}
     }
-  
-    /* ── Dark Mode ── */
-    body.dark{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8}
-    body.dark header{background:linear-gradient(135deg,#0a1628,#1a2f5a)}
-    body.dark nav{background:#1e293b;border-bottom-color:#334155}
-    body.dark nav button{color:#94a3b8}
-    body.dark nav button.active{color:#60a5fa;border-bottom-color:#60a5fa}
-    body.dark .kpi-card{background:#1e293b;box-shadow:0 1px 6px rgba(0,0,0,.3)}
-    body.dark .chart-card{background:#1e293b;box-shadow:0 1px 6px rgba(0,0,0,.3)}
-    body.dark .filter-bar{background:#1e293b}
-    body.dark .filter-group select,body.dark .filter-group input{background:#0f172a;color:#e2e8f0;border-color:#334155}
-    body.dark .pipeline-panel{background:#1e293b}
-    body.dark table th{background:#1a3a6e}
-    body.dark table td{border-bottom-color:#334155;color:#e2e8f0}
-    body.dark table tr:hover td{background:#334155}
-    body.dark .insight{background:linear-gradient(135deg,#1e3a6e,#1a2f5a);color:#93c5fd}
-    body.dark .card{background:#1e293b}
-    body.dark .upload-zone{background:#0f172a;border-color:#334155}
-    body.dark .result-box.success{background:#14532d;color:#86efac}
-    body.dark .result-box.error{background:#450a0a;color:#fca5a5}
-    body.dark .empty{color:#64748b}
-    body.dark .section-divider{color:#64748b}
-    body.dark .section-divider::after{background:#334155}
-    body.dark .notification-panel{background:#1e293b;border-left:3px solid #334155}
-    body.dark .notif-item{background:#0f172a;border-color:#334155}
-
   </style>
 </head>
 <body>
@@ -310,81 +183,56 @@
     <div class="header-meta">Student Performance Analytics · Full Stack AI Project</div>
   </div>
   <div class="header-right">
-    <div id="userMenu" style="position:relative">
-      <button onclick="toggleUserMenu()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.8rem;display:flex;align-items:center;gap:6px">
-        👤 <span id="userLabel">Loading...</span> ▾
+    <!-- User menu -->
+    <div style="position:relative" id="userMenuWrap">
+      <button class="hbtn" onclick="toggleUserMenu()">
+        👤 <span id="userLabel">...</span> ▾
       </button>
-      <div id="userDropdown" style="display:none;position:absolute;right:0;top:36px;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:180px;z-index:999;overflow:hidden">
-        <div id="userInfo" style="padding:12px 14px;border-bottom:1px solid #eee;font-size:.82rem;color:#555"></div>
-        <a href="/auth/register" target="_blank" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">➕ Add User</a>
-        <div id="adminLink" style="display:none"><a href="#" onclick="document.getElementById('userDropdown').style.display='none';showUsersPage()" style="display:block;padding:10px 14px;font-size:.84rem;color:#2F5496;text-decoration:none;border-bottom:1px solid #eee">👥 Manage Users</a></div>
-        <button onclick="doLogout()" style="width:100%;padding:10px 14px;background:none;border:none;font-size:.84rem;color:#c0392b;cursor:pointer;text-align:left;font-weight:600">🚪 Sign Out</button>
+      <div class="user-dropdown" id="userDropdown">
+        <div id="userInfo" style="padding:10px 13px;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--muted)"></div>
+        <a href="/auth/register" target="_blank" style="display:block;padding:9px 13px;font-size:.82rem;color:var(--blue);text-decoration:none;border-bottom:1px solid var(--border)">➕ Add User</a>
+        <div id="adminLink" style="display:none">
+          <a href="#" onclick="document.getElementById('userDropdown').style.display='none';showUsersPage()" style="display:block;padding:9px 13px;font-size:.82rem;color:var(--blue);text-decoration:none;border-bottom:1px solid var(--border)">👥 Manage Users</a>
+        </div>
+        <button onclick="doLogout()" style="width:100%;padding:9px 13px;background:none;border:none;font-size:.82rem;color:var(--red);cursor:pointer;text-align:left;font-weight:600">🚪 Sign Out</button>
       </div>
     </div>
-    <button class="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
-    <div style="position:relative" id="notifWrapper">
-      <button class="notif-bell" onclick="toggleNotifs()">
-        🔔 Alerts <span class="notif-count" id="notifCount">0</span>
-      </button>
-      <div class="notif-panel" id="notifPanel">
-        <div class="notif-header"><span>Smart Alerts</span><span id="notifTotal">0 alerts</span></div>
-        <div id="notifList"></div>
-      </div>
-    </div>
-    <button class="auto-refresh-toggle" id="refreshToggle" onclick="toggleAutoRefresh()">⏱ Auto-refresh: OFF</button>
+    <button class="hbtn" id="darkBtn" onclick="toggleDark()">🌙 Dark</button>
+    <button class="hbtn" id="refreshToggle" onclick="toggleAutoRefresh()">⏱ Auto: OFF</button>
     <span id="dbStatus" class="ok">● Live</span>
-    <span id="lastUpdated"></span>
+    <span id="lastUpdated" style="font-size:.68rem;opacity:.7"></span>
   </div>
 </header>
 
 <nav>
-  <button class="active" onclick="showPage('dashboard',this)">
-    📈 Dashboard <span class="nav-badge" id="navRecords">—</span>
-  </button>
+  <button class="active" onclick="showPage('dashboard',this)">📈 Dashboard <span class="nav-badge" id="navRecords">—</span></button>
   <button onclick="showPage('upload',this)">📤 Upload</button>
   <button onclick="showPage('records',this)">🔍 Records</button>
-  <button onclick="showPage('checkpoint',this)">📋 Project Status</button>
-  <button id="usersNavBtn" onclick="showPage('users',this)" style="display:none">👥 Users</button>
+  <button onclick="showPage('compare',this)">⚖️ Compare</button>
+  <button onclick="showPage('search',this)">🔎 Student</button>
+  <button onclick="showPage('notifications',this)">🔔 Alerts <span class="nav-badge" id="alertBadge">—</span></button>
   <button onclick="showPage('predict',this)">🤖 AI Predictor</button>
+  <button onclick="showPage('checkpoint',this)">🚦 Status</button>
+  <button onclick="showPage('users',this)" id="usersNavBtn" style="display:none">👥 Users</button>
 </nav>
 
-<!-- ══════════════ DASHBOARD ══════════════ -->
+<!-- ══ DASHBOARD ══ -->
 <div id="dashboard" class="page active">
  <div class="container">
-
-  <!-- Filter bar -->
   <div class="filter-bar">
-    <div class="filter-group">
-      <label>Subject</label>
-      <select id="fSubject"><option value="">All Subjects</option></select>
+    <div class="filter-group"><label>Subject</label><select id="fSubject"><option value="">All Subjects</option></select></div>
+    <div class="filter-group"><label>Class</label><select id="fClass"><option value="">All Classes</option></select></div>
+    <div class="filter-group"><label>AI Tool</label>
+      <select id="fAI"><option value="">All Students</option><option value="true">AI Users</option><option value="false">Non-AI Only</option></select>
     </div>
-    <div class="filter-group">
-      <label>Class</label>
-      <select id="fClass"><option value="">All Classes</option></select>
-    </div>
-    <div class="filter-group">
-      <label>AI Tool</label>
-      <select id="fAI">
-        <option value="">All Students</option>
-        <option value="true">AI Users</option>
-        <option value="false">Non-AI Only</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>From</label>
-      <input type="date" id="fFrom">
-    </div>
-    <div class="filter-group">
-      <label>To</label>
-      <input type="date" id="fTo">
-    </div>
+    <div class="filter-group"><label>From</label><input type="date" id="fFrom"></div>
+    <div class="filter-group"><label>To</label><input type="date" id="fTo"></div>
     <button class="btn btn-primary" onclick="loadDashboard()">Apply</button>
     <button class="btn btn-secondary" onclick="clearFilters()">Clear</button>
-    <button class="btn btn-success" onclick="exportCSV()" title="Download filtered data as CSV">⬇ Export CSV</button>
-    <span class="filter-indicator" id="filterIndicator">⚡ Filtered view</span>
+    <button class="btn btn-success" onclick="exportCSV()">⬇ Export CSV</button>
+    <span class="filter-indicator" id="filterIndicator">⚡ Filtered</span>
   </div>
 
-  <!-- KPI Cards -->
   <div class="kpi-grid">
     <div class="kpi-card blue"><div class="kpi-icon">📋</div><div class="kpi-value" id="kTotal">—</div><div class="kpi-label">Total Records</div></div>
     <div class="kpi-card blue"><div class="kpi-icon">👥</div><div class="kpi-value" id="kStudents">—</div><div class="kpi-label">Students</div></div>
@@ -394,80 +242,47 @@
     <div class="kpi-card green"><div class="kpi-icon">🚀</div><div class="kpi-value" id="kAIBoost">—</div><div class="kpi-label">AI Score Boost</div><div class="kpi-sub" id="kBoostSub"></div></div>
   </div>
 
-  <!-- Insight -->
-  <div class="insight">
-    <div class="insight-icon">💡</div>
-    <div id="insightBox">Loading insights...</div>
-  </div>
+  <div class="insight"><div style="font-size:1.2rem">💡</div><div id="insightBox">Loading insights...</div></div>
 
-  <!-- Pipeline health -->
   <div class="section-divider">Pipeline Health</div>
   <div class="pipeline-panel" id="pipelinePanel">
-    <div class="pp-item"><div class="pp-value skeleton" style="height:22px;width:50px;margin:auto"></div><div class="pp-label">Loading</div></div>
+    <div class="pp-item"><div class="pp-value skeleton" style="height:20px;width:44px;margin:auto"></div><div class="pp-label">Loading</div></div>
   </div>
 
-  <!-- Charts Row 1 -->
   <div class="section-divider">Core AI Impact</div>
   <div class="chart-grid">
-    <div class="chart-card">
-      <h3>🤖 AI vs Non-AI by Subject</h3>
-      <div class="chart-wrap"><canvas id="chartAISubject"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>📈 Score Trend Over Time</h3>
-      <div class="chart-wrap"><canvas id="chartTrend"></canvas></div>
-    </div>
+    <div class="chart-card"><h3>🤖 AI vs Non-AI by Subject</h3><div class="chart-wrap"><canvas id="chartAISubject"></canvas></div></div>
+    <div class="chart-card"><h3>📈 Score Trend Over Time</h3><div class="chart-wrap"><canvas id="chartTrend"></canvas></div></div>
   </div>
 
-  <!-- Charts Row 2 -->
   <div class="section-divider">Performance Breakdown</div>
   <div class="chart-grid">
-    <div class="chart-card">
-      <h3>📚 Avg Score by Subject</h3>
-      <div class="chart-wrap"><canvas id="chartSubject"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>🏫 Avg Score by Class</h3>
-      <div class="chart-wrap"><canvas id="chartClass"></canvas></div>
-    </div>
+    <div class="chart-card"><h3>📚 Avg Score by Subject</h3><div class="chart-wrap"><canvas id="chartSubject"></canvas></div></div>
+    <div class="chart-card"><h3>🏫 Avg Score by Class</h3><div class="chart-wrap"><canvas id="chartClass"></canvas></div></div>
   </div>
 
-  <!-- Charts Row 3 -->
   <div class="section-divider">Distribution & Adoption</div>
   <div class="chart-grid cols3">
-    <div class="chart-card">
-      <h3>📊 Score Distribution</h3>
-      <div class="chart-wrap"><canvas id="chartDist"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>✅ Pass / Fail</h3>
-      <div class="chart-wrap"><canvas id="chartPassFail"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>🤖 AI Adoption by Class</h3>
-      <div class="chart-wrap"><canvas id="chartAIAdopt"></canvas></div>
-    </div>
+    <div class="chart-card"><h3>📊 Score Distribution</h3><div class="chart-wrap"><canvas id="chartDist"></canvas></div></div>
+    <div class="chart-card"><h3>✅ Pass / Fail</h3><div class="chart-wrap"><canvas id="chartPassFail"></canvas></div></div>
+    <div class="chart-card"><h3>🤖 AI Adoption by Class</h3><div class="chart-wrap"><canvas id="chartAIAdopt"></canvas></div></div>
   </div>
 
-  <!-- Leaderboard -->
   <div class="section-divider">Student Leaderboard</div>
   <div class="table-grid">
-    <div class="chart-card">
-      <h3>🏆 Top 5 Students</h3>
+    <div class="chart-card"><h3>🏆 Top 5 Students</h3>
       <table><thead><tr><th>#</th><th>Student</th><th>Score</th><th>AI Tool</th></tr></thead>
       <tbody id="topStudents"><tr><td colspan="4" class="empty">Loading...</td></tr></tbody></table>
     </div>
-    <div class="chart-card">
-      <h3>⚠️ Needs Support</h3>
+    <div class="chart-card"><h3>⚠️ Needs Support</h3>
       <table><thead><tr><th>#</th><th>Student</th><th>Score</th><th>AI Tool</th></tr></thead>
       <tbody id="bottomStudents"><tr><td colspan="4" class="empty">Loading...</td></tr></tbody></table>
     </div>
   </div>
-
  </div>
 </div>
 
-<!-- ══════════════ UPLOAD ══════════════ -->
+<!-- ══ UPLOAD ══ -->
 <div id="upload" class="page">
  <div class="container">
   <div class="card">
@@ -476,1217 +291,255 @@
       <input type="file" id="fileInput" accept=".csv,.xlsx,.xls">
       <label for="fileInput">📁 Click to choose file <span style="font-weight:400;color:#aaa">or drag & drop</span></label>
       <p>Supports .csv and .xlsx · Max 10MB</p>
-      <p style="font-size:.74rem;margin-top:3px">Required: student_id · class_name · subject · score · ai_tool_used · study_hours · record_date</p>
+      <p style="font-size:.73rem;margin-top:3px">Required: student_id · class_name · subject · score · ai_tool_used · study_hours · record_date</p>
       <div id="selectedFile"></div>
     </div>
-    <div id="xhrProgress" style="display:none;margin-top:10px">
-      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:4px">
-        <span id="xhrLabel">Uploading...</span><span id="xhrPct">0%</span>
-      </div>
-      <div style="height:6px;background:var(--border);border-radius:4px;overflow:hidden">
-        <div id="xhrBar" style="height:100%;background:var(--blue);border-radius:4px;width:0%;transition:width .2s"></div>
-      </div>
-    </div>
-    <div style="margin-top:11px"><button class="btn btn-primary" onclick="uploadFile()">Upload File</button></div>
+    <div class="progress-bar" id="uploadProgress"><div class="progress-bar-fill"></div></div>
+    <div style="margin-top:10px"><button class="btn btn-primary" onclick="uploadFile()">Upload File</button></div>
     <div class="result-box" id="uploadResult"></div>
   </div>
   <div class="card">
     <h2>📦 Upload Batches</h2>
-    <button class="btn btn-secondary" onclick="loadBatches()" style="margin-bottom:12px">↻ Refresh</button>
+    <button class="btn btn-secondary" onclick="loadBatches()" style="margin-bottom:11px">↻ Refresh</button>
     <div id="batchesContainer"><div class="empty">Loading...</div></div>
   </div>
  </div>
 </div>
 
-<!-- ══════════════ RECORDS ══════════════ -->
+<!-- ══ RECORDS ══ -->
 <div id="records" class="page">
  <div class="container">
   <div class="card">
     <h2>🔍 Records Preview</h2>
-    <div class="filter-bar" style="padding:11px 14px;margin-bottom:12px">
-      <div class="filter-group">
-        <label>Subject</label>
-        <select id="rSubject" onchange="loadRecords()"><option value="">All</option></select>
-      </div>
-      <div class="filter-group">
-        <label>Class</label>
-        <select id="rClass" onchange="loadRecords()"><option value="">All</option></select>
-      </div>
-      <div class="filter-group">
-        <label>AI Tool</label>
-        <select id="rAI" onchange="loadRecords()">
-          <option value="">All</option>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
+    <div class="filter-bar" style="padding:10px 13px;margin-bottom:11px">
+      <div class="filter-group"><label>Subject</label><select id="rSubject" onchange="loadRecords()"><option value="">All</option></select></div>
+      <div class="filter-group"><label>Class</label><select id="rClass" onchange="loadRecords()"><option value="">All</option></select></div>
+      <div class="filter-group"><label>AI Tool</label>
+        <select id="rAI" onchange="loadRecords()"><option value="">All</option><option value="true">Yes</option><option value="false">No</option></select>
       </div>
       <button class="btn btn-secondary" onclick="clearRecordFilters()">Clear</button>
     </div>
-    <div id="recordsMeta" style="font-size:.76rem;color:var(--muted);margin-bottom:7px"></div>
+    <div id="recordsMeta" style="font-size:.75rem;color:var(--muted);margin-bottom:7px"></div>
     <div style="overflow-x:auto"><div id="recordsTable"><div class="empty">Upload data to see records.</div></div></div>
   </div>
  </div>
 </div>
 
-
-<!-- ══════════════ COMPARE ══════════════ -->
-<div id="compare" class="page">
- <div class="container">
-  <div class="card">
-    <h2>⚖️ Comparison Mode — Side by Side Analysis</h2>
-    <div class="filter-bar" style="padding:12px 14px;margin-bottom:0">
-      <div class="filter-group">
-        <label>Compare By</label>
-        <select id="cmpType" onchange="updateCompareOptions()">
-          <option value="class">Class</option>
-          <option value="subject">Subject</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Group A</label>
-        <select id="cmpGroup1"></select>
-      </div>
-      <div class="filter-group">
-        <label>Group B</label>
-        <select id="cmpGroup2"></select>
-      </div>
-      <button class="btn btn-primary" onclick="runComparison()">Compare</button>
-    </div>
-  </div>
-
-  <div id="compareResult" style="display:none">
-    <!-- KPI comparison -->
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;margin-bottom:18px;align-items:start">
-      <div class="card" id="cmpCard1"></div>
-      <div style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;color:var(--muted);padding:20px">VS</div>
-      <div class="card" id="cmpCard2"></div>
-    </div>
-    <!-- Charts row -->
-    <div class="chart-grid">
-      <div class="chart-card"><h3>📊 Score Distribution Comparison</h3><div class="chart-wrap"><canvas id="cmpDistChart"></canvas></div></div>
-      <div class="chart-card"><h3>📈 Score Trend Comparison</h3><div class="chart-wrap"><canvas id="cmpTrendChart"></canvas></div></div>
-    </div>
-    <div class="chart-grid">
-      <div class="chart-card"><h3>🤖 AI vs Non-AI Scores</h3><div class="chart-wrap"><canvas id="cmpAIChart"></canvas></div></div>
-      <div class="chart-card"><h3>📋 Summary Insight</h3><div id="cmpInsight" style="padding:10px 0;font-size:.88rem;line-height:1.8;color:#555"></div></div>
-    </div>
-  </div>
- </div>
-</div>
-
-<!-- ══════════════ STUDENT SEARCH ══════════════ -->
-<div id="search" class="page">
- <div class="container">
-  <div class="card">
-    <h2>🔍 Student Search</h2>
-    <p style="font-size:.85rem;color:var(--muted);margin-bottom:14px">Look up a student by their ID to see their full assessment history, score trend, and AI tool usage pattern.</p>
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <input type="text" id="studentSearchInput" placeholder="Enter Student ID (e.g. S0042)"
-        style="padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;min-width:220px;background:var(--bg);color:var(--text)"
-        onkeydown="if(event.key==='Enter') searchStudent()">
-      <button class="btn btn-primary" onclick="searchStudent()">Search</button>
-      <span style="font-size:.78rem;color:var(--muted)">or click a student ID from the leaderboard</span>
-    </div>
-  </div>
-
-  <div id="studentResult" style="display:none">
-    <!-- Profile card -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;margin-bottom:18px" id="studentKPIs"></div>
-
-    <!-- Score trend -->
-    <div class="chart-card" style="margin-bottom:18px">
-      <h3>📈 Score History</h3>
-      <div class="chart-wrap"><canvas id="studentTrendChart"></canvas></div>
-    </div>
-
-    <!-- Records table -->
-    <div class="card">
-      <h2>📋 All Assessment Records</h2>
-      <div style="overflow-x:auto"><div id="studentRecordsTable"></div></div>
-    </div>
-  </div>
-
-  <div id="studentNotFound" style="display:none" class="card">
-    <div class="empty">Student not found. Check the ID and try again.</div>
-  </div>
- </div>
-</div>
-
-<!-- ══════════════ DAY 9 CHECKPOINT ══════════════ -->
-<div id="checkpoint" class="page">
- <div class="container">
-  <div class="checkpoint-card" id="checkpointCard">
-    <h3 id="checkpointTitle">🚦 Checking Day 8 Checkpoint...</h3>
-    <p id="checkpointMsg">Evaluating whether the dashboard is ready to proceed to the Day 9 AI predictive model.</p>
-    <div class="checkpoint-items" id="checkpointItems"></div>
-  </div>
-
-  <div class="chart-card" id="day9Details" style="display:none">
-    <h3>🤖 Day 9 Plan — Predictive AI Model</h3>
-    <div style="padding:10px 0;font-size:.88rem;line-height:1.8;color:#444">
-      <p><strong>Model goal:</strong> Predict a student's score given their study hours, AI tool usage, and subject.</p>
-      <br>
-      <p><strong>Algorithm:</strong> Linear Regression (scikit-learn) — simple, interpretable, appropriate for this dataset size.</p>
-      <br>
-      <p><strong>Features (inputs):</strong></p>
-      <ul style="margin-left:20px;margin-top:6px">
-        <li>study_hours (numeric)</li>
-        <li>ai_tool_used (boolean → 0/1)</li>
-        <li>subject (one-hot encoded)</li>
-      </ul>
-      <br>
-      <p><strong>Target (output):</strong> score (0–100)</p>
-      <br>
-      <p><strong>What gets built:</strong></p>
-      <ul style="margin-left:20px;margin-top:6px">
-        <li>Train/test split → train model → evaluate (R², MAE)</li>
-        <li>Save model with joblib</li>
-        <li>POST /api/predict endpoint</li>
-        <li>"Predict My Score" widget on the dashboard</li>
-      </ul>
-      <br>
-      <p><strong>Fallback if not built:</strong> Document approach in README as "future work" — the dashboard is still a complete project.</p>
-    </div>
-  </div>
-
-  <div class="chart-card" style="margin-top:16px">
-    <h3>📋 Full Project Status</h3>
-    <table style="margin-top:8px">
-      <thead><tr><th>Day</th><th>Phase</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>Day 1</td><td>Setup & Planning</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 2</td><td>Data Ingestion & Upload</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 3</td><td>Data Storage & Batch Management</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 4</td><td>Pandas Cleaning Pipeline</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 5</td><td>KPI Calculations</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 6</td><td>Dashboard Frontend (Charts)</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 7</td><td>UI Polish & Interactivity</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 8</td><td>Completion & Export</td><td><span class="badge success">✅ Done</span></td></tr>
-        <tr><td>Day 9</td><td>AI Predictive Model</td><td><span class="badge partial" id="day9Status">Conditional</span></td></tr>
-        <tr><td>Day 10</td><td>Deploy & Demo</td><td><span class="badge" style="background:#e8edf3;color:#666">⬜ Pending</span></td></tr>
-      </tbody>
-    </table>
-  </div>
- </div>
-</div>
-
-
-
-<!-- ══════════════ USERS PAGE ══════════════ -->
-<div id="users" class="page">
- <div class="container">
-
-  <!-- Change Password Card -->
-  <div class="card">
-    <h2>🔐 Change My Password</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:14px">
-      <div class="filter-group">
-        <label>Current Password</label>
-        <input type="password" id="oldPwd" placeholder="Current password"
-          style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
-      </div>
-      <div class="filter-group">
-        <label>New Password</label>
-        <input type="password" id="newPwd" placeholder="New password (min 6 chars)"
-          style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
-      </div>
-      <div class="filter-group">
-        <label>Confirm New Password</label>
-        <input type="password" id="confirmPwd" placeholder="Repeat new password"
-          style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
-    <div id="pwdResult" style="margin-top:10px;font-size:.85rem"></div>
-  </div>
-
-  <!-- Admin: User Management -->
-  <div class="card" id="adminUsersCard" style="display:none">
-    <h2>👥 Manage Users <span style="font-size:.75rem;color:#888;font-weight:400">(Admin only)</span></h2>
-    <div style="margin-bottom:14px;display:flex;gap:10px">
-      <button class="btn btn-primary" onclick="loadUsers()">↻ Refresh</button>
-      <a href="/auth/register" target="_blank">
-        <button class="btn btn-success" style="margin-top:0">➕ Add New User</button>
-      </a>
-    </div>
-    <div id="usersTableContainer"><div class="empty">Loading users...</div></div>
-  </div>
-
- </div>
-</div>
-<!-- ══════════════ AI PREDICTOR ══════════════ -->
-<div id="predict" class="page">
- <div class="container">
-
-  <!-- Model status card -->
-  <div class="card" id="modelStatusCard">
-    <h2>🤖 AI Predictive Model — Predict Student Score</h2>
-    <div id="modelStatus" style="padding:10px 0;font-size:.88rem;color:#666">Checking model status...</div>
-    <div style="margin-top:12px">
-      <button class="btn btn-primary" onclick="trainModel()" id="trainBtn">🔄 Train Model on Current Data</button>
-    </div>
-    <div id="trainResult" style="margin-top:12px"></div>
-  </div>
-
-  <!-- Metrics card -->
-  <div class="card" id="metricsCard" style="display:none">
-    <h2>📊 Model Performance Metrics</h2>
-    <div id="metricsContent"></div>
-    <div style="margin-top:14px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f39c12;border-radius:6px;font-size:.8rem;color:#7a5c00">
-      ⚠️ <strong>Disclaimer:</strong> This model is trained on synthetic data for demonstration purposes only. 
-      Predictions should not be used for real academic assessment or decision-making.
-    </div>
-  </div>
-
-  <!-- Predict widget -->
-  <div class="card" id="predictWidget" style="display:none">
-    <h2>🎯 Predict My Score</h2>
-    <p style="font-size:.85rem;color:#666;margin-bottom:16px">
-      Enter a student profile below to get a predicted score from the trained model.
-    </p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:18px">
-      <div class="filter-group">
-        <label>Study Hours per Week</label>
-        <input type="number" id="pStudyHours" min="0" max="24" step="0.5" value="5"
-          style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem">
-        <div style="font-size:.72rem;color:#aaa;margin-top:3px">0 – 24 hours</div>
-      </div>
-      <div class="filter-group">
-        <label>Subject</label>
-        <select id="pSubject" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem">
-          <option value="Math">Math</option>
-          <option value="Science">Science</option>
-          <option value="English">English</option>
-          <option value="History">History</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>AI Tool Used?</label>
-        <select id="pAIUsed" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem">
-          <option value="true">Yes — Uses AI study tools</option>
-          <option value="false">No — Does not use AI tools</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="runPrediction()" style="padding:10px 28px;font-size:.95rem">
-      🎯 Predict Score
-    </button>
-
-    <!-- Result -->
-    <div id="predResult" style="display:none;margin-top:20px">
-      <div style="background:linear-gradient(135deg,#e8f0fb,#f0f7ff);border-radius:10px;padding:20px 24px;border-left:5px solid var(--blue)">
-        <div style="font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Predicted Score</div>
-        <div id="predScore" style="font-size:3.5rem;font-weight:700;color:var(--blue);line-height:1.1;margin:8px 0">—</div>
-        <div id="predBand" style="font-size:.85rem;color:#666"></div>
-        <div id="predInputSummary" style="margin-top:12px;font-size:.82rem;color:#888"></div>
-      </div>
-
-      <!-- Comparison: AI vs No AI -->
-      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="predComparison"></div>
-    </div>
-  </div>
-
-  <!-- How it works -->
-  <div class="card">
-    <h2>🔬 How the Model Works</h2>
-    <div style="font-size:.86rem;line-height:1.8;color:#555">
-      <p><strong>Algorithm:</strong> Linear Regression (scikit-learn)</p>
-      <p><strong>Features used to predict score:</strong></p>
-      <ul style="margin:6px 0 12px 20px">
-        <li>Study hours per week (numeric)</li>
-        <li>AI tool used (Yes=1, No=0)</li>
-        <li>Subject (one-hot encoded — each subject becomes a separate feature)</li>
-      </ul>
-      <p><strong>Training:</strong> 80% of uploaded records used to train, 20% held out to test accuracy.</p>
-      <p><strong>Metrics explained:</strong></p>
-      <ul style="margin:6px 0 0 20px">
-        <li><strong>R²</strong> — How well the model explains score variation (0 = useless, 1 = perfect)</li>
-        <li><strong>MAE</strong> — Average error in score points (lower = better)</li>
-        <li><strong>RMSE</strong> — Like MAE but penalises large errors more heavily</li>
-      </ul>
-    </div>
-  </div>
-
- </div>
-</div>
-
-<!-- ══════════════ MANAGE USERS ══════════════ -->
-<div id="users" class="page">
- <div class="container">
-
-  <div class="card">
-    <h2>👥 Manage Users</h2>
-    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
-      <a href="/auth/register" target="_blank" class="btn btn-primary" style="text-decoration:none;padding:8px 18px">➕ Add New User</a>
-      <button class="btn btn-secondary" onclick="loadUsers()">↻ Refresh</button>
-      <span style="font-size:.8rem;color:#888">Only admins can manage users</span>
-    </div>
-    <div id="usersTableContainer"><div class="empty">Loading users...</div></div>
-  </div>
-
-  <div class="card">
-    <h2>🔑 Change My Password</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px">
-      <div class="filter-group">
-        <label>Current Password</label>
-        <input type="password" id="oldPassword" placeholder="Current password"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
-      </div>
-      <div class="filter-group">
-        <label>New Password</label>
-        <input type="password" id="newPassword" placeholder="New password (min 6 chars)"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
-      </div>
-      <div class="filter-group">
-        <label>Confirm New Password</label>
-        <input type="password" id="confirmPassword" placeholder="Repeat new password"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.9rem">
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
-    <div id="passwordResult" style="margin-top:12px"></div>
-  </div>
-
- </div>
-</div>
-
-<!-- ══════════════ COMPARE ══════════════ -->
-<div id="compare" class="page">
- <div class="container">
-  <div class="card">
-    <h2>⚖️ Side-by-Side Comparison</h2>
-    <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">Compare two classes or subjects across all KPIs.</p>
-    <div class="filter-bar" style="margin-bottom:0">
-      <div class="filter-group">
-        <label>Compare By</label>
-        <select id="cmpGroupBy" onchange="updateCompareOptions()">
-          <option value="class_name">Class</option>
-          <option value="subject">Subject</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Group A</label>
-        <select id="cmpA"></select>
-      </div>
-      <div class="filter-group">
-        <label>Group B</label>
-        <select id="cmpB"></select>
-      </div>
-      <button class="btn btn-primary" onclick="runCompare()">Compare →</button>
-    </div>
-  </div>
-
-  <div id="compareResults" style="display:none">
-    <!-- KPI comparison cards -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px" id="cmpCards"></div>
-    <!-- Chart comparison -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-      <div class="chart-card">
-        <h3>📊 Score Distribution Comparison</h3>
-        <div class="chart-wrap"><canvas id="cmpBarChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>📈 Score Trend Comparison</h3>
-        <div class="chart-wrap"><canvas id="cmpTrendChart"></canvas></div>
-      </div>
-    </div>
-    <!-- Detailed table -->
-    <div class="chart-card">
-      <h3>📋 Detailed Metrics</h3>
-      <div style="overflow-x:auto"><table id="cmpTable"></table></div>
-    </div>
-  </div>
- </div>
-</div>
-
-<!-- ══════════════ STUDENT SEARCH ══════════════ -->
-<div id="search" class="page">
- <div class="container">
-  <div class="card">
-    <h2>🔍 Student Performance Search</h2>
-    <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">Look up any student by ID to see their full performance history.</p>
-    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
-      <div class="filter-group" style="flex:1;min-width:200px">
-        <label>Student ID</label>
-        <input type="text" id="searchInput" placeholder="e.g. S0001" oninput="searchSuggest(this.value)"
-          autocomplete="off" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem">
-        <div id="searchSuggestions" style="position:relative">
-          <div id="suggList" style="position:absolute;top:0;left:0;right:0;background:#fff;
-            border:1px solid var(--border);border-radius:6px;z-index:50;display:none;
-            box-shadow:0 4px 12px rgba(0,0,0,.1)"></div>
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="searchStudent()">Search</button>
-    </div>
-  </div>
-
-  <div id="studentResult" style="display:none">
-    <!-- Summary cards -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px" id="studentKPIs"></div>
-    <!-- Score history chart -->
-    <div class="chart-card" style="margin-bottom:18px">
-      <h3>📈 Score History</h3>
-      <div class="chart-wrap"><canvas id="studentChart"></canvas></div>
-    </div>
-    <!-- Records table -->
-    <div class="chart-card">
-      <h3>📋 All Records</h3>
-      <div style="overflow-x:auto"><div id="studentRecords"></div></div>
-    </div>
-  </div>
- </div>
-</div>
-
-
-<!-- ══════════════ COMPARISON MODE ══════════════ -->
+<!-- ══ COMPARE ══ -->
 <div id="compare" class="page">
  <div class="container">
   <div class="card">
     <h2>⚖️ Comparison Mode — Side by Side</h2>
-    <div class="filter-bar" style="padding:12px 14px;margin-bottom:14px">
-      <div class="filter-group">
-        <label>Compare by</label>
-        <select id="cmpType" onchange="updateCmpOptions()">
-          <option value="class">Class</option>
-          <option value="subject">Subject</option>
-        </select>
+    <div class="filter-bar" style="padding:11px 13px;margin-bottom:13px">
+      <div class="filter-group"><label>Compare by</label>
+        <select id="cmpType" onchange="updateCmpOptions()"><option value="class">Class</option><option value="subject">Subject</option></select>
       </div>
-      <div class="filter-group">
-        <label>Group A</label>
-        <select id="cmpA"><option value="">Select...</option></select>
-      </div>
-      <div class="filter-group">
-        <label>Group B</label>
-        <select id="cmpB"><option value="">Select...</option></select>
-      </div>
+      <div class="filter-group"><label>Group A</label><select id="cmpA"><option value="">Select...</option></select></div>
+      <div class="filter-group"><label>Group B</label><select id="cmpB"><option value="">Select...</option></select></div>
       <button class="btn btn-primary" onclick="runComparison()">Compare</button>
     </div>
     <div id="cmpResult"></div>
   </div>
-
   <div class="chart-grid" id="cmpCharts" style="display:none">
-    <div class="chart-card">
-      <h3>📊 Score Comparison</h3>
-      <div class="chart-wrap"><canvas id="cmpScoreChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>🤖 AI Adoption & Impact</h3>
-      <div class="chart-wrap"><canvas id="cmpAIChart"></canvas></div>
-    </div>
+    <div class="chart-card"><h3>📊 Score Comparison</h3><div class="chart-wrap"><canvas id="cmpScoreChart"></canvas></div></div>
+    <div class="chart-card"><h3>🤖 AI Adoption %</h3><div class="chart-wrap"><canvas id="cmpAIChart"></canvas></div></div>
   </div>
  </div>
 </div>
 
-<!-- ══════════════ STUDENT SEARCH ══════════════ -->
+<!-- ══ STUDENT SEARCH ══ -->
 <div id="search" class="page">
  <div class="container">
   <div class="card">
     <h2>🔎 Student Search</h2>
-    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
-      <div class="filter-group" style="flex:1;min-width:200px">
+    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px">
+      <div class="filter-group" style="flex:1;min-width:180px">
         <label>Student ID</label>
         <input type="text" id="searchId" placeholder="e.g. S0042"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem"
-          onkeydown="if(event.key==='Enter') searchStudent()">
+          style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:6px;font-size:.92rem"
+          onkeydown="if(event.key==='Enter')searchStudent()">
       </div>
       <button class="btn btn-primary" onclick="searchStudent()">🔍 Search</button>
     </div>
     <div id="searchResult"><div class="empty">Enter a student ID to look up their full performance history.</div></div>
   </div>
   <div class="chart-grid" id="studentCharts" style="display:none">
-    <div class="chart-card">
-      <h3>📈 Score History</h3>
-      <div class="chart-wrap"><canvas id="studentTrendChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>📚 Scores by Subject</h3>
-      <div class="chart-wrap"><canvas id="studentSubjectChart"></canvas></div>
-    </div>
+    <div class="chart-card"><h3>📈 Score History</h3><div class="chart-wrap"><canvas id="studentTrendChart"></canvas></div></div>
+    <div class="chart-card"><h3>📚 Scores by Subject</h3><div class="chart-wrap"><canvas id="studentSubjectChart"></canvas></div></div>
   </div>
  </div>
 </div>
 
-<!-- ══════════════ NOTIFICATIONS ══════════════ -->
+<!-- ══ NOTIFICATIONS ══ -->
 <div id="notifications" class="page">
  <div class="container">
   <div class="card">
     <h2>🔔 Alerts & Insights</h2>
-    <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">
-      Auto-generated alerts based on your current data. Updated every time you load this tab.
-    </p>
-    <button class="btn btn-secondary" onclick="loadNotifications()" style="margin-bottom:16px">↻ Refresh Alerts</button>
+    <p style="font-size:.83rem;color:var(--muted);margin-bottom:13px">Auto-generated alerts based on your current data.</p>
+    <button class="btn btn-secondary" onclick="loadNotifications()" style="margin-bottom:13px">↻ Refresh Alerts</button>
     <div id="notifList"><div class="empty">Loading alerts...</div></div>
   </div>
  </div>
 </div>
 
+<!-- ══ AI PREDICTOR ══ -->
+<div id="predict" class="page">
+ <div class="container">
+  <div class="card">
+    <h2>🤖 AI Predictive Model — Predict Student Score</h2>
+    <div id="modelStatus" style="padding:8px 0;font-size:.86rem;color:#666">Checking model status...</div>
+    <div style="margin-top:11px"><button class="btn btn-primary" id="trainBtn" onclick="trainModel()">🔄 Train Model on Current Data</button></div>
+    <div id="trainResult" style="margin-top:11px"></div>
+  </div>
+  <div class="card" id="metricsCard" style="display:none">
+    <h2>📊 Model Performance Metrics</h2>
+    <div id="metricsContent"></div>
+    <div style="margin-top:12px;padding:10px 13px;background:#fff8e1;border-left:3px solid var(--orange);border-radius:6px;font-size:.78rem;color:#7a5c00">
+      ⚠️ Trained on synthetic data for demonstration only. Not for real academic decisions.
+    </div>
+  </div>
+  <div class="card" id="predictWidget" style="display:none">
+    <h2>🎯 Predict My Score</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:16px">
+      <div class="filter-group">
+        <label>Study Hours per Week</label>
+        <input type="number" id="pStudyHours" min="0" max="24" step="0.5" value="5"
+          style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.93rem">
+      </div>
+      <div class="filter-group">
+        <label>Subject</label>
+        <select id="pSubject" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.93rem">
+          <option>Math</option><option>Science</option><option>English</option><option>History</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>AI Tool Used?</label>
+        <select id="pAIUsed" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-size:.93rem">
+          <option value="true">Yes — Uses AI study tools</option>
+          <option value="false">No — Does not use AI tools</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="runPrediction()" style="padding:9px 24px">🎯 Predict Score</button>
+    <div id="predResult" style="display:none;margin-top:18px">
+      <div style="background:linear-gradient(135deg,#e8f0fb,#f0f7ff);border-radius:10px;padding:18px 22px;border-left:5px solid var(--blue)">
+        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Predicted Score</div>
+        <div id="predScore" style="font-size:3.2rem;font-weight:700;color:var(--blue);line-height:1.1;margin:7px 0">—</div>
+        <div id="predBand" style="font-size:.83rem;color:#666"></div>
+        <div id="predInputSummary" style="margin-top:10px;font-size:.8rem;color:#888"></div>
+      </div>
+      <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:11px" id="predComparison"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🔬 How the Model Works</h2>
+    <div style="font-size:.84rem;line-height:1.8;color:#555">
+      <p><strong>Algorithm:</strong> Linear Regression (scikit-learn)</p>
+      <p><strong>Features:</strong> study_hours, ai_tool_used (0/1), subject (one-hot encoded)</p>
+      <p><strong>Split:</strong> 80% train / 20% test · Metrics: R², MAE, RMSE</p>
+    </div>
+  </div>
+ </div>
+</div>
+
+<!-- ══ STATUS / CHECKPOINT ══ -->
+<div id="checkpoint" class="page">
+ <div class="container">
+  <div class="checkpoint-card card" id="checkpointCard">
+    <h3 id="checkpointTitle" style="font-size:1rem;font-weight:700;margin-bottom:7px">🚦 Checking...</h3>
+    <p id="checkpointMsg" style="font-size:.85rem;color:#555"></p>
+    <div class="checkpoint-items" id="checkpointItems" style="display:flex;gap:9px;flex-wrap:wrap;margin-top:11px"></div>
+  </div>
+  <div class="card" id="day9Details" style="display:none">
+    <h2>🤖 Day 9 — Predictive AI Model Plan</h2>
+    <div style="font-size:.84rem;line-height:1.8;color:#555">
+      <p><strong>Goal:</strong> Predict student score from study_hours, AI tool usage, and subject.</p>
+      <p><strong>Algorithm:</strong> Linear Regression · <strong>Eval:</strong> R², MAE, RMSE</p>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📋 Full Project Status</h2>
+    <table style="margin-top:7px"><thead><tr><th>Day</th><th>Phase</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Day 1</td><td>Setup & Planning</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 2</td><td>Data Ingestion</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 3</td><td>Data Storage & Batch UI</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 4</td><td>Pandas Pipeline</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 5</td><td>KPI Calculations</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 6</td><td>Dashboard Frontend</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 7</td><td>UI Polish</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 8</td><td>Export & Auto-refresh</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 9</td><td>AI Predictive Model</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 10</td><td>Deployment</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 11</td><td>User Authentication</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 12</td><td>Advanced Features</td><td><span class="badge success">✅ Done</span></td></tr>
+    </tbody></table>
+  </div>
+ </div>
+</div>
+
+<!-- ══ USERS ══ -->
+<div id="users" class="page">
+ <div class="container">
+  <div class="card">
+    <h2>👥 Manage Users</h2>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <a href="/auth/register" target="_blank" class="btn btn-primary" style="text-decoration:none">➕ Add New User</a>
+      <button class="btn btn-secondary" onclick="loadUsers()">↻ Refresh</button>
+    </div>
+    <div id="usersTableContainer"><div class="empty">Loading users...</div></div>
+  </div>
+  <div class="card">
+    <h2>🔑 Change My Password</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px;margin-bottom:14px">
+      <div class="filter-group">
+        <label>Current Password</label>
+        <input type="password" id="oldPassword" placeholder="Current password"
+          style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:6px;font-size:.88rem">
+      </div>
+      <div class="filter-group">
+        <label>New Password</label>
+        <input type="password" id="newPassword" placeholder="New password (min 6 chars)"
+          style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:6px;font-size:.88rem">
+      </div>
+      <div class="filter-group">
+        <label>Confirm New Password</label>
+        <input type="password" id="confirmPassword" placeholder="Repeat new password"
+          style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:6px;font-size:.88rem">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+    <div id="passwordResult" style="margin-top:11px"></div>
+  </div>
+ </div>
+</div>
+
 <script>
-// ─────────────────────────────────────────────────────
-// Core utilities
-// ─────────────────────────────────────────────────────
 const charts = {};
-function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
-
-function animateCount(el, target, suffix='', decimals=0, duration=700){
-  const start = parseFloat(el.dataset.current||0)||0;
-  const range  = target - start;
-  const t0     = performance.now();
-  el.dataset.current = target;
-  (function step(now){
-    const p   = Math.min((now-t0)/duration,1);
-    const e   = 1-Math.pow(1-p,3);
-    el.textContent = (start+range*e).toFixed(decimals)+suffix;
-    if(p<1) requestAnimationFrame(step);
-  })(t0);
+const TOOLTIP = {backgroundColor:'rgba(26,58,110,.92)',padding:9,cornerRadius:6,titleFont:{size:11},bodyFont:{size:10}};
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function animateCount(el,target,suf='',dec=0,dur=600){
+  const start=parseFloat(el.dataset.current||0)||0,range=target-start,t0=performance.now();
+  el.dataset.current=target;
+  (function step(now){const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3);
+    el.textContent=(start+range*e).toFixed(dec)+suf;if(p<1)requestAnimationFrame(step);})(t0);
 }
+function setKPI(id,val,suf='',dec=0){const el=document.getElementById(id);if(el)animateCount(el,parseFloat(val)||0,suf,dec);}
 
-function setKPI(id,val,suf='',dec=0){
-  const el=document.getElementById(id);
-  if(el) animateCount(el,parseFloat(val)||0,suf,dec);
-}
-
-const TOOLTIP = {
-  backgroundColor:'rgba(26,58,110,.92)',
-  padding:9, cornerRadius:6,
-  titleFont:{size:11}, bodyFont:{size:10}
-};
-
-// ─────────────────────────────────────────────────────
-// Auto-refresh
-// ─────────────────────────────────────────────────────
-let autoRefreshInterval = null;
-let lastRecordCount     = 0;
-
-function toggleAutoRefresh(){
-  const btn = document.getElementById('refreshToggle');
-  if(autoRefreshInterval){
-    clearInterval(autoRefreshInterval);
-    autoRefreshInterval = null;
-    btn.textContent = '⏱ Auto-refresh: OFF';
-    btn.classList.remove('on');
-  } else {
-    autoRefreshInterval = setInterval(checkForNewData, 30000); // every 30s
-    btn.textContent = '⏱ Auto-refresh: ON';
-    btn.classList.add('on');
-  }
-}
-
-async function checkForNewData(){
-  try{
-    const res = await fetch('/api/stats/summary');
-    const d   = await res.json();
-    if(d.total_records !== lastRecordCount){
-      lastRecordCount = d.total_records;
-      loadFilterOptions();
-      loadDashboard();
-      loadPipelinePanel();
-    }
-  }catch(e){}
-}
-
-// ─────────────────────────────────────────────────────
-// Navigation
-// ─────────────────────────────────────────────────────
+// ── Nav ──
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  if(id==='upload')     { loadBatches(); }
-  if(id==='records')    { loadRecordFilterOptions(); loadRecords(); }
-  if(id==='checkpoint')    { loadCheckpoint(); }
-  if(id==='predict')       { checkModelStatus(); }
-  if(id==='compare')       { updateCmpOptions(); }
-  if(id==='notifications') { loadNotifications(); }
-  if(id==='compare')    { initCompare(); }
-  if(id==='search')     { }
-  if(id==='users')      { loadUsers(); }
+  if(btn) btn.classList.add('active');
+  if(id==='upload')       loadBatches();
+  if(id==='records')      {loadRecordFilterOptions();loadRecords();}
+  if(id==='compare')      updateCmpOptions();
+  if(id==='notifications')loadNotifications();
+  if(id==='predict')      checkModelStatus();
+  if(id==='checkpoint')   loadCheckpoint();
+  if(id==='users')        loadUsers();
 }
-
-// ─────────────────────────────────────────────────────
-// Filters
-// ─────────────────────────────────────────────────────
-function getFilters(){
-  return new URLSearchParams({
-    subject:      document.getElementById('fSubject').value,
-    class_name:   document.getElementById('fClass').value,
-    ai_tool_used: document.getElementById('fAI').value,
-    date_from:    document.getElementById('fFrom').value,
-    date_to:      document.getElementById('fTo').value,
-  });
-}
-
-function isFiltered(){
-  return ['fSubject','fClass','fAI','fFrom','fTo'].some(id=>document.getElementById(id).value!=='');
-}
-
-function clearFilters(){
-  ['fSubject','fClass','fAI','fFrom','fTo'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('filterIndicator').style.display='none';
-  loadDashboard();
-}
-
-async function loadFilterOptions(){
-  try{
-    const res=await fetch('/api/filter-options', {credentials:'include'});
-    const d  =await res.json();
-    document.getElementById('navRecords').textContent=d.total_records||'0';
-    lastRecordCount = d.total_records||0;
-    populateSelect('fSubject',d.subjects);
-    populateSelect('fClass',d.classes);
-  }catch(e){}
-}
-
-function populateSelect(id,values){
-  const sel=document.getElementById(id); const cur=sel.value;
-  while(sel.options.length>1) sel.remove(1);
-  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
-  sel.value=cur;
-}
-
-// Export CSV
-function exportCSV(){
-  const params=getFilters();
-  window.open(`/api/export/csv?${params}`,'_blank');
-}
-
-// ─────────────────────────────────────────────────────
-// Pipeline panel
-// ─────────────────────────────────────────────────────
-async function loadPipelinePanel(){
-  try{
-    const res=await fetch('/api/pipeline/summary', {credentials:'include'});
-    const d  =await res.json();
-    if(d.error){return;}
-    document.getElementById('pipelinePanel').innerHTML=`
-      <div class="pp-item"><div class="pp-value">${d.total_records}</div><div class="pp-label">Records</div></div>
-      <div class="pp-item"><div class="pp-value">${d.score_stats.mean}</div><div class="pp-label">Mean Score</div></div>
-      <div class="pp-item"><div class="pp-value">${d.score_stats.min}–${d.score_stats.max}</div><div class="pp-label">Score Range</div></div>
-      <div class="pp-item"><div class="pp-value">${d.ai_tool_usage.adoption_pct}%</div><div class="pp-label">AI Adoption</div></div>
-      <div class="pp-item"><div class="pp-value">${d.pass_rate_pct}%</div><div class="pp-label">Pass Rate</div></div>
-      <div class="pp-item"><div class="pp-value">${d.outliers_flagged}</div><div class="pp-label">Outliers</div></div>
-      <div class="pp-item"><div class="pp-value" style="font-size:.82rem">${d.date_range.from}</div><div class="pp-label">From</div></div>
-      <div class="pp-item"><div class="pp-value" style="font-size:.82rem">${d.date_range.to}</div><div class="pp-label">To</div></div>`;
-  }catch(e){}
-}
-
-// ─────────────────────────────────────────────────────
-// Dashboard
-// ─────────────────────────────────────────────────────
-async function loadDashboard(){
-  const params=getFilters();
-  document.getElementById('filterIndicator').style.display=isFiltered()?'flex':'none';
-  try{
-    const res=await fetch(`/api/kpis?${params}`, {credentials:'include'});
-    if(!res.ok){
-      document.getElementById('insightBox').innerHTML=
-        'No data yet — <strong>Upload a file</strong> on the Upload tab to get started.';
-      return;
-    }
-    const d=await res.json();
-    renderKPICards(d.overview);
-    renderInsight(d.overview,d.leaderboard);
-    renderAISubjectChart(d.ai_vs_nonai.by_subject);
-    renderTrendChart(d.trend);
-    renderBar('chartSubject',d.by_subject.labels,d.by_subject.scores,'Avg Score','#2F5496');
-    renderBar('chartClass',  d.by_class.labels,  d.by_class.scores,  'Avg Score','#27ae60');
-    renderDist(d.score_distribution);
-    renderDoughnut('chartPassFail',d.pass_fail.labels,d.pass_fail.counts,['#27ae60','#c0392b','#e67e22']);
-    renderBar('chartAIAdopt',d.ai_adoption.labels,d.ai_adoption.rates,'Adoption %','#8e44ad',true);
-    renderLeaderboard(d.leaderboard);
-    document.getElementById('dbStatus').className='ok';
-    document.getElementById('dbStatus').textContent='● Live';
-    document.getElementById('lastUpdated').textContent='Updated '+new Date().toLocaleTimeString();
-    loadNotifications();
-  }catch(e){
-    document.getElementById('dbStatus').className='warn';
-    document.getElementById('dbStatus').textContent='● Error';
-  }
-}
-
-// ─────────────────────────────────────────────────────
-// KPI Cards
-// ─────────────────────────────────────────────────────
-function renderKPICards(o){
-  setKPI('kTotal',   o.total_records,'',0);
-  setKPI('kStudents',o.total_students,'',0);
-  setKPI('kAvgScore',o.avg_score,'',2);
-  setKPI('kPassRate',o.pass_rate_pct,'%',1);
-  setKPI('kAIAdopt', o.ai_adoption_pct,'%',1);
-  document.getElementById('kAIBoost').textContent=(o.ai_score_boost>=0?'+':'')+o.ai_score_boost;
-  document.getElementById('kAIBoost').dataset.current=o.ai_score_boost;
-  document.getElementById('kScoreRange').textContent=`Non-AI ${o.avg_score_non_ai} · AI ${o.avg_score_ai}`;
-  document.getElementById('kBoostSub').textContent=`${o.avg_score_ai} vs ${o.avg_score_non_ai}`;
-  const boostCard=document.getElementById('kAIBoost').closest('.kpi-card');
-  boostCard.className='kpi-card '+(o.ai_score_boost>=0?'green':'red');
-}
-
-// ─────────────────────────────────────────────────────
-// Insight engine
-// ─────────────────────────────────────────────────────
-function renderInsight(o,lb){
-  const topAI   =lb&&lb.top   ? lb.top.filter(s=>s.ai_used).length   : 0;
-  const botNonAI=lb&&lb.bottom? lb.bottom.filter(s=>!s.ai_used).length: 0;
-  const bullets=[];
-  if(o.ai_score_boost>0)
-    bullets.push(`AI tool users score <strong>+${o.ai_score_boost} points higher</strong> on average (${o.avg_score_ai} vs ${o.avg_score_non_ai})`);
-  if(topAI===5)
-    bullets.push(`All <strong>top 5 students</strong> are AI tool users — strongest evidence of AI impact`);
-  if(botNonAI>=4)
-    bullets.push(`<strong>${botNonAI} of 5 bottom students</strong> are non-AI users`);
-  if(o.ai_adoption_pct<50)
-    bullets.push(`AI adoption at <strong>${o.ai_adoption_pct}%</strong> — majority not yet using AI tools, high growth opportunity`);
-  else
-    bullets.push(`AI adoption at <strong>${o.ai_adoption_pct}%</strong> across all classes`);
-  if(o.pass_rate_pct===100)
-    bullets.push(`<strong>100% pass rate</strong> — all students above the passing threshold`);
-  document.getElementById('insightBox').innerHTML=
-    `<strong>Key Findings</strong><ul>${bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
-}
-
-// ─────────────────────────────────────────────────────
-// Charts
-// ─────────────────────────────────────────────────────
-function renderAISubjectChart(data){
-  destroyChart('chartAISubject');
-  const ctx=document.getElementById('chartAISubject').getContext('2d');
-  charts['chartAISubject']=new Chart(ctx,{type:'bar',data:{labels:data.subjects,datasets:[
-    {label:'AI Users',    data:data.ai_scores,    backgroundColor:'#27ae6077',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
-    {label:'Non-AI Users',data:data.non_ai_scores,backgroundColor:'#c0392b77',borderColor:'#c0392b',borderWidth:2,borderRadius:4},
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top'},tooltip:TOOLTIP},
-    scales:{y:{beginAtZero:false,min:50,title:{display:true,text:'Avg Score'}}}}});
-}
-
-function renderTrendChart(data){
-  destroyChart('chartTrend');
-  const ctx=document.getElementById('chartTrend').getContext('2d');
-  charts['chartTrend']=new Chart(ctx,{type:'line',data:{labels:data.months,datasets:[
-    {label:'Overall',    data:data.overall,     borderColor:'#2F5496',backgroundColor:'#2F549618',tension:.35,fill:true,pointRadius:4},
-    {label:'AI Users',   data:data.ai_users,    borderColor:'#27ae60',backgroundColor:'transparent',tension:.35,pointRadius:4},
-    {label:'Non-AI',     data:data.non_ai_users,borderColor:'#c0392b',backgroundColor:'transparent',tension:.35,borderDash:[5,4],pointRadius:4},
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top'},tooltip:TOOLTIP},
-    scales:{y:{beginAtZero:false,min:50}}}});
-}
-
-function renderBar(id,labels,data,label,color,isPercent=false){
-  destroyChart(id);
-  const min=Math.max(0,Math.min(...data)-8);
-  const ctx=document.getElementById(id).getContext('2d');
-  charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{
-    label,data,backgroundColor:color+'88',borderColor:color,
-    borderWidth:2,borderRadius:5,hoverBackgroundColor:color+'cc'}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TOOLTIP,
-        callbacks:{label:c=>`${label}: ${c.parsed.y}${isPercent?'%':''}`}}},
-      scales:{y:{beginAtZero:false,min,ticks:{callback:v=>isPercent?v+'%':v}}}}});
-}
-
-function renderDist(data){
-  destroyChart('chartDist');
-  const colors=['#c0392b88','#e67e2288','#2F549688','#27ae6088'];
-  const borders=['#c0392b','#e67e22','#2F5496','#27ae60'];
-  const ctx=document.getElementById('chartDist').getContext('2d');
-  charts['chartDist']=new Chart(ctx,{type:'bar',data:{labels:data.labels,
-    datasets:[{label:'Students',data:data.counts,backgroundColor:colors,borderColor:borders,borderWidth:2,borderRadius:5}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:TOOLTIP},
-      scales:{y:{beginAtZero:true,title:{display:true,text:'Students'}}}}});
-}
-
-function renderDoughnut(id,labels,data,colors){
-  destroyChart(id);
-  const ctx=document.getElementById(id).getContext('2d');
-  charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,hoverOffset:6}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
-      plugins:{legend:{position:'bottom'},tooltip:TOOLTIP}}});
-}
-
-// ─────────────────────────────────────────────────────
-// Leaderboard
-// ─────────────────────────────────────────────────────
-function renderLeaderboard(lb){
-  const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
-  document.getElementById('topStudents').innerHTML=lb.top.map((s,i)=>`<tr>
-    <td>${medals[i]}</td><td><strong>${s.student_id}</strong></td>
-    <td><strong style="color:var(--green)">${s.avg_score}</strong></td>
-    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
-  </tr>`).join('');
-  document.getElementById('bottomStudents').innerHTML=lb.bottom.map((s,i)=>`<tr>
-    <td style="color:var(--muted)">${i+1}</td><td><strong>${s.student_id}</strong></td>
-    <td><strong style="color:var(--red)">${s.avg_score}</strong></td>
-    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
-  </tr>`).join('');
-}
-
-// ─────────────────────────────────────────────────────
-// Day 9 Checkpoint
-// ─────────────────────────────────────────────────────
-async function loadCheckpoint(){
-  try{
-    const res=await fetch('/api/pipeline/summary');
-    const d  =await res.json();
-    const card=document.getElementById('checkpointCard');
-    const items=document.getElementById('checkpointItems');
-    const batRes=await fetch('/api/batches');
-    const batches=await batRes.json();
-
-    const checks=[
-      {label:'Data uploaded',     pass: d.total_records>0},
-      {label:'300+ records',      pass: d.total_records>=300},
-      {label:'Pipeline running',  pass: !d.error},
-      {label:'4 subjects present',pass: d.subjects&&d.subjects.length>=4},
-      {label:'AI adoption >30%',  pass: d.ai_tool_usage&&d.ai_tool_usage.adoption_pct>=30},
-      {label:'Dashboard charts',  pass: true},
-      {label:'Filters working',   pass: true},
-      {label:'Export CSV',        pass: true},
-    ];
-
-    const allPass=checks.every(c=>c.pass);
-    card.className='checkpoint-card '+(allPass?'ready':'not-ready');
-    document.getElementById('checkpointTitle').textContent=
-      allPass?'✅ Day 8 Checkpoint PASSED — Proceed to Day 9 AI Model!':'⚠️ Day 8 Checkpoint — Some items pending';
-    document.getElementById('checkpointMsg').textContent=
-      allPass
-        ? 'The dashboard is complete and working end-to-end. You are cleared to build the Day 9 scikit-learn predictive model.'
-        : 'Complete the checklist items below before starting Day 9.';
-    items.innerHTML=checks.map(c=>
-      `<span class="checkpoint-item ${c.pass?'pass':'fail'}">${c.pass?'✅':'❌'} ${c.label}</span>`
-    ).join('');
-    document.getElementById('day9Details').style.display='block';
-    document.getElementById('day9Status').textContent=allPass?'Ready ✅':'Pending';
-    document.getElementById('day9Status').className='badge '+(allPass?'success':'partial');
-  }catch(e){
-    document.getElementById('checkpointTitle').textContent='⚠️ Could not load checkpoint data';
-  }
-}
-
-// ─────────────────────────────────────────────────────
-// Upload
-// ─────────────────────────────────────────────────────
-const fi=document.getElementById('fileInput');
-const dz=document.getElementById('dropZone');
-fi.addEventListener('change',e=>{
-  const f=e.target.files[0];
-  document.getElementById('selectedFile').textContent=f?`📄 ${f.name}`:'';
-});
-dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over');});
-dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
-dz.addEventListener('drop',e=>{
-  e.preventDefault();dz.classList.remove('drag-over');
-  const f=e.dataTransfer.files[0];
-  if(f){fi.files=e.dataTransfer.files;document.getElementById('selectedFile').textContent=`📄 ${f.name}`;}
-});
-
-async function uploadFile(){
-  if(!fi.files[0]){alert('Please select a file first.');return;}
-  const fd=new FormData();fd.append('file',fi.files[0]);
-  const rb=document.getElementById('uploadResult');
-  const prog=document.getElementById('uploadProgress');
-  rb.style.display='none';prog.style.display='block';
-  try{
-    const res=await fetch('/api/upload',{method:'POST',body:fd});
-    const data=await res.json();
-    prog.style.display='none';
-    if(res.ok){
-      rb.className=`result-box ${data.summary.error_rows>0?'partial':'success'}`;
-      rb.innerHTML=`<strong>✅ ${data.message}</strong>
-        ${data.summary.error_rows>0?`<br>Skipped rows:<ul>${data.summary.errors.map(e=>`<li>Row ${e.row}: ${e.reason}</li>`).join('')}</ul>`:''}`;
-    } else {
-      rb.className='result-box error';rb.innerHTML=`<strong>❌ Error:</strong> ${data.error}`;
-    }
-    rb.style.display='block';
-    fi.value='';document.getElementById('selectedFile').textContent='';
-    loadBatches();loadFilterOptions();loadDashboard();loadPipelinePanel();
-  }catch(e){
-    prog.style.display='none';
-    rb.className='result-box error';rb.innerHTML=`Network error: ${e.message}`;rb.style.display='block';
-  }
-}
-
-async function loadBatches(){
-  const res=await fetch('/api/batches');const batches=await res.json();
-  const cont=document.getElementById('batchesContainer');
-  if(!batches.length){cont.innerHTML='<div class="empty">No uploads yet.</div>';return;}
-  cont.innerHTML=`<table>
-    <thead><tr><th>ID</th><th>Filename</th><th>Rows</th><th>Status</th><th>Uploaded</th><th></th></tr></thead>
-    <tbody>${batches.map(b=>`<tr>
-      <td>#${b.id}</td><td>${b.filename}</td><td>${b.row_count}</td>
-      <td><span class="badge ${b.status}">${b.status}</span></td>
-      <td>${new Date(b.uploaded_at).toLocaleString()}</td>
-      <td><button class="btn btn-danger" onclick="deleteBatch(${b.id})">Delete</button></td>
-    </tr>`).join('')}</tbody></table>`;
-}
-
-async function deleteBatch(id){
-  if(!confirm(`Delete batch #${id} and all its records?`))return;
-  const res=await fetch(`/api/batches/${id}`,{method:'DELETE'});
-  alert((await res.json()).message);
-  loadBatches();loadFilterOptions();loadDashboard();loadPipelinePanel();
-}
-
-// ─────────────────────────────────────────────────────
-// Records
-// ─────────────────────────────────────────────────────
-async function loadRecordFilterOptions(){
-  const res=await fetch('/api/filter-options');const d=await res.json();
-  populateSelect('rSubject',d.subjects);populateSelect('rClass',d.classes);
-}
-
-async function loadRecords(){
-  const p=new URLSearchParams({
-    subject:document.getElementById('rSubject').value,
-    class_name:document.getElementById('rClass').value,
-    ai_tool_used:document.getElementById('rAI').value,limit:100});
-  const res=await fetch(`/api/records?${p}`);const d=await res.json();
-  const cont=document.getElementById('recordsTable');
-  const meta=document.getElementById('recordsMeta');
-  if(!d.total){meta.textContent='';cont.innerHTML='<div class="empty">No records match filters.</div>';return;}
-  meta.textContent=`Showing ${d.showing} of ${d.total} records`;
-  cont.innerHTML=`<table>
-    <thead><tr><th>Student</th><th>Class</th><th>Subject</th><th>Score</th><th>AI Tool</th><th>Study Hrs</th><th>Date</th></tr></thead>
-    <tbody>${d.records.map(r=>`<tr>
-      <td>${r.student_id}</td><td>${r.class_name||'—'}</td><td>${r.subject}</td>
-      <td><strong>${r.score}</strong></td>
-      <td>${r.ai_tool_used?'<span class="badge ai">✓ Yes</span>':'<span class="badge nonai">No</span>'}</td>
-      <td>${r.study_hours??'—'}</td><td>${r.record_date}</td>
-    </tr>`).join('')}</tbody></table>`;
-}
-
-function clearRecordFilters(){
-  ['rSubject','rClass','rAI'].forEach(id=>document.getElementById(id).value='');
-  loadRecords();
-}
-
-
-// ─────────────────────────────────────────────────────
-// AI Predictor
-// ─────────────────────────────────────────────────────
-async function checkModelStatus(){
-  try{
-    const res = await fetch('/api/model/status');
-    const d   = await res.json();
-    const statusEl = document.getElementById('modelStatus');
-    const metrics  = document.getElementById('metricsCard');
-    const widget   = document.getElementById('predictWidget');
-
-    if(!d.trained){
-      statusEl.innerHTML = '<span style="color:#e67e22">⚠️ No trained model yet.</span> Click the button below to train the model on your uploaded data.';
-      metrics.style.display='none';
-      widget.style.display='none';
-    } else {
-      const m = d.meta;
-      statusEl.innerHTML = `<span style="color:#27ae60">✅ Model trained</span> on <strong>${m.trained_on} records</strong> · R² = <strong>${m.r2}</strong> · MAE = <strong>${m.mae} pts</strong>`;
-      renderMetrics(m);
-      metrics.style.display='block';
-      widget.style.display='block';
-      // Populate subject dropdown from model subjects
-      if(m.subjects){
-        const sel = document.getElementById('pSubject');
-        sel.innerHTML = m.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
-      }
-    }
-  }catch(e){ console.error(e); }
-}
-
-function renderMetrics(m){
-  const coefRows = Object.entries(m.coefficients||{})
-    .sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]))
-    .map(([k,v])=>`<tr>
-      <td>${k}</td>
-      <td><strong style="color:${v>=0?'#27ae60':'#c0392b'}">${v>=0?'+':''}${v}</strong></td>
-      <td style="font-size:.78rem">
-        <div style="height:10px;background:${v>=0?'#27ae60':'#c0392b'};width:${Math.min(Math.abs(v)*10,100)}%;border-radius:4px;opacity:.6"></div>
-      </td>
-    </tr>`).join('');
-
-  document.getElementById('metricsContent').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
-      <div style="text-align:center;padding:14px;background:#f7f9fc;border-radius:8px">
-        <div style="font-size:1.6rem;font-weight:700;color:#2F5496">${m.r2}</div>
-        <div style="font-size:.72rem;color:#888;text-transform:uppercase;margin-top:2px">R² Score</div>
-      </div>
-      <div style="text-align:center;padding:14px;background:#f7f9fc;border-radius:8px">
-        <div style="font-size:1.6rem;font-weight:700;color:#27ae60">${m.mae}</div>
-        <div style="font-size:.72rem;color:#888;text-transform:uppercase;margin-top:2px">MAE (pts)</div>
-      </div>
-      <div style="text-align:center;padding:14px;background:#f7f9fc;border-radius:8px">
-        <div style="font-size:1.6rem;font-weight:700;color:#e67e22">${m.rmse}</div>
-        <div style="font-size:.72rem;color:#888;text-transform:uppercase;margin-top:2px">RMSE (pts)</div>
-      </div>
-    </div>
-    <div style="font-size:.82rem;font-weight:700;color:#555;margin-bottom:8px">Feature Coefficients (impact on score per unit)</div>
-    <table>
-      <thead><tr><th>Feature</th><th>Coefficient</th><th>Impact</th></tr></thead>
-      <tbody>${coefRows}</tbody>
-    </table>
-    <div style="margin-top:10px;font-size:.78rem;color:#aaa">
-      Trained on ${m.train_size} records · Tested on ${m.test_size} records · Intercept: ${m.intercept}
-    </div>`;
-}
-
-async function trainModel(){
-  const btn = document.getElementById('trainBtn');
-  const res_el = document.getElementById('trainResult');
-  btn.disabled=true; btn.textContent='⏳ Training...';
-  res_el.innerHTML='';
-  try{
-    const res  = await fetch('/api/model/train',{method:'POST'});
-    const data = await res.json();
-    if(res.ok){
-      res_el.innerHTML=`<div style="padding:10px;background:#e8f5e9;border-left:3px solid #27ae60;border-radius:5px;font-size:.85rem;color:#1a5c2e">
-        ✅ Model trained successfully! R²=${data.metrics.r2} · MAE=${data.metrics.mae}pts on ${data.metrics.trained_on} records.
-      </div>`;
-      checkModelStatus();
-    } else {
-      res_el.innerHTML=`<div style="padding:10px;background:#fdecea;border-left:3px solid #c0392b;border-radius:5px;font-size:.85rem;color:#7b1f1f">❌ ${data.error}</div>`;
-    }
-  }catch(e){
-    res_el.innerHTML=`<div style="padding:10px;background:#fdecea;border-radius:5px;font-size:.85rem;color:#c0392b">Network error: ${e.message}</div>`;
-  }
-  btn.disabled=false; btn.textContent='🔄 Train Model on Current Data';
-}
-
-async function runPrediction(){
-  const hours   = parseFloat(document.getElementById('pStudyHours').value)||0;
-  const subject = document.getElementById('pSubject').value;
-  const aiUsed  = document.getElementById('pAIUsed').value==='true';
-  const resEl   = document.getElementById('predResult');
-  resEl.style.display='none';
-  try{
-    const res  = await fetch('/api/predict',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({study_hours:hours,ai_tool_used:aiUsed,subject})
-    });
-    const d = await res.json();
-    if(!res.ok){ alert(d.error||'Prediction failed'); return; }
-
-    document.getElementById('predScore').textContent = d.predicted_score;
-    document.getElementById('predBand').textContent  =
-      `Confidence range: ${d.confidence_band.low} – ${d.confidence_band.high} (±MAE)`;
-    document.getElementById('predInputSummary').textContent =
-      `Input: ${hours}h study · Subject: ${subject} · AI tool: ${aiUsed?'Yes':'No'}`;
-
-    // Also show what score would be with/without AI (compare)
-    const altRes = await fetch('/api/predict',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({study_hours:hours,ai_tool_used:!aiUsed,subject})
-    });
-    const altD = await altRes.json();
-    const diff = (d.predicted_score - altD.predicted_score).toFixed(1);
-    const better = aiUsed ? 'with AI tool' : 'without AI tool';
-    const diffSign = diff>=0 ? '+' : '';
-    document.getElementById('predComparison').innerHTML=`
-      <div style="padding:14px;background:#e8f5e9;border-radius:8px;text-align:center">
-        <div style="font-size:.72rem;color:#888;text-transform:uppercase;font-weight:700">With AI Tool</div>
-        <div style="font-size:1.6rem;font-weight:700;color:#27ae60">${aiUsed?d.predicted_score:altD.predicted_score}</div>
-      </div>
-      <div style="padding:14px;background:#fdecea;border-radius:8px;text-align:center">
-        <div style="font-size:.72rem;color:#888;text-transform:uppercase;font-weight:700">Without AI Tool</div>
-        <div style="font-size:1.6rem;font-weight:700;color:#c0392b">${aiUsed?altD.predicted_score:d.predicted_score}</div>
-      </div>`;
-
-    resEl.style.display='block';
-    resEl.scrollIntoView({behavior:'smooth',block:'nearest'});
-  }catch(e){ alert('Network error: '+e.message); }
-}
-
-// Patch showPage to check model status when opening predict tab
-const _origShowPage = showPage;
-// Already patched via inline call in showPage function
-
-
-
-// ─────────────────────────────────────────────────────
-// Users Management
-// ─────────────────────────────────────────────────────
-function showUsersPage(){
-  const btn = document.getElementById('usersNavBtn');
-  showPage('users', btn);
-  loadUsers();
-}
-
-async function loadUsers(){
-  try{
-    const res   = await fetch('/auth/api/users', {credentials:'include'});
-    const users = await res.json();
-    if(!res.ok){ document.getElementById('usersTableContainer').innerHTML='<div class="empty">'+users.error+'</div>'; return; }
-    const rows = users.map(u => `
-      <tr>
-        <td><strong>${u.username}</strong></td>
-        <td style="font-size:.8rem;color:#888">${u.email}</td>
-        <td><span class="badge ${u.role==='admin'?'ai':'nonai'}">${u.role}</span></td>
-        <td><span style="color:${u.is_active?'#27ae60':'#c0392b'};font-weight:600;font-size:.82rem">${u.is_active?'Active':'Inactive'}</span></td>
-        <td style="font-size:.78rem;color:#aaa">${new Date(u.created_at).toLocaleDateString()}</td>
-        <td style="display:flex;gap:6px">
-          <button class="btn btn-secondary" style="padding:4px 10px;font-size:.75rem" onclick="changeRole(${u.id},'${u.role==='admin'?'teacher':'admin'}')">
-            Make ${u.role==='admin'?'Teacher':'Admin'}
-          </button>
-          <button class="btn btn-danger" style="padding:4px 10px;font-size:.75rem" onclick="toggleUser(${u.id})">
-            ${u.is_active?'Deactivate':'Activate'}
-          </button>
-        </td>
-      </tr>`).join('');
-    document.getElementById('usersTableContainer').innerHTML = `
-      <table>
-        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>`;
-  }catch(e){ console.error(e); }
-}
-
-async function toggleUser(id){
-  const res = await fetch(`/auth/api/users/${id}/toggle`, {method:'POST', credentials:'include'});
-  const d   = await res.json();
-  if(res.ok){ loadUsers(); }
-  else alert(d.error);
-}
-
-async function changeRole(id, newRole){
-  const res = await fetch(`/auth/api/users/${id}/role`, {
-    method:'POST', credentials:'include',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({role: newRole})
-  });
-  const d = await res.json();
-  if(res.ok){ loadUsers(); }
-  else alert(d.error);
-}
-
-async function changePassword(){
-  const old_password = document.getElementById('oldPwd').value;
-  const new_password = document.getElementById('newPwd').value;
-  const confirm      = document.getElementById('confirmPwd').value;
-  const result       = document.getElementById('pwdResult');
-
-  if(new_password !== confirm){
-    result.innerHTML='<span style="color:#c0392b">❌ New passwords do not match.</span>'; return;
-  }
-  if(new_password.length < 6){
-    result.innerHTML='<span style="color:#c0392b">❌ New password must be at least 6 characters.</span>'; return;
-  }
-
-  const res = await fetch('/auth/api/change-password', {
-    method:'POST', credentials:'include',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({old_password, new_password})
-  });
-  const d = await res.json();
-  if(res.ok){
-    result.innerHTML='<span style="color:#27ae60">✅ '+d.message+'</span>';
-    document.getElementById('oldPwd').value='';
-    document.getElementById('newPwd').value='';
-    document.getElementById('confirmPwd').value='';
-  } else {
-    result.innerHTML='<span style="color:#c0392b">❌ '+d.error+'</span>';
-  }
-}
-
-
-// ─────────────────────────────────────────────────────
-// Users Management
-// ─────────────────────────────────────────────────────
 function showUsersPage(){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
@@ -1694,861 +547,452 @@ function showUsersPage(){
   loadUsers();
 }
 
-async function loadUsers(){
-  const cont = document.getElementById('usersTableContainer');
-  try{
-    const res   = await fetch('/auth/api/users', {credentials:'include'});
-    if(!res.ok){ cont.innerHTML='<div class="empty">Admin access required.</div>'; return; }
-    const users = await res.json();
-    if(!users.length){ cont.innerHTML='<div class="empty">No users found.</div>'; return; }
-    cont.innerHTML = `<table>
-      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
-      <tbody>${users.map(u=>`<tr>
-        <td>#${u.id}</td>
-        <td><strong>${u.username}</strong></td>
-        <td>${u.email}</td>
-        <td><span class="badge ${u.role==='admin'?'ai':'nonai'}">${u.role}</span></td>
-        <td><span class="badge ${u.is_active?'success':'failed'}">${u.is_active?'Active':'Inactive'}</span></td>
-        <td style="font-size:.78rem">${new Date(u.created_at).toLocaleDateString()}</td>
-        <td style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn btn-secondary" style="padding:4px 10px;font-size:.76rem"
-            onclick="toggleUser(${u.id},'${u.username}')">${u.is_active?'Deactivate':'Activate'}</button>
-          <button class="btn btn-secondary" style="padding:4px 10px;font-size:.76rem"
-            onclick="changeRole(${u.id},'${u.username}','${u.role}')">
-            Make ${u.role==='admin'?'Teacher':'Admin'}</button>
-        </td>
-      </tr>`).join('')}</tbody>
-    </table>`;
-  }catch(e){ cont.innerHTML='<div class="empty">Error loading users.</div>'; }
-}
-
-async function toggleUser(id, username){
-  if(!confirm(`${username}: toggle active/inactive?`)) return;
-  const res = await fetch(`/auth/api/users/${id}/toggle`,{method:'POST',credentials:'include'});
-  const d   = await res.json();
-  alert(d.message); loadUsers();
-}
-
-async function changeRole(id, username, currentRole){
-  const newRole = currentRole==='admin' ? 'teacher' : 'admin';
-  if(!confirm(`Change ${username} to ${newRole}?`)) return;
-  const res = await fetch(`/auth/api/users/${id}/role`,{
-    method:'POST', credentials:'include',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({role:newRole})
-  });
-  const d = await res.json();
-  alert(d.message); loadUsers();
-}
-
-async function changePassword(){
-  const old  = document.getElementById('oldPassword').value;
-  const np   = document.getElementById('newPassword').value;
-  const conf = document.getElementById('confirmPassword').value;
-  const res_el = document.getElementById('passwordResult');
-
-  if(!old||!np||!conf){ res_el.innerHTML='<div style="color:#c0392b;font-size:.85rem">All fields are required.</div>'; return; }
-  if(np !== conf){ res_el.innerHTML='<div style="color:#c0392b;font-size:.85rem">New passwords do not match.</div>'; return; }
-  if(np.length < 6){ res_el.innerHTML='<div style="color:#c0392b;font-size:.85rem">Password must be at least 6 characters.</div>'; return; }
-
-  const res  = await fetch('/auth/api/change-password',{
-    method:'POST', credentials:'include',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({old_password:old, new_password:np})
-  });
-  const d = await res.json();
-  if(res.ok){
-    res_el.innerHTML=`<div style="color:#27ae60;font-size:.85rem">✅ ${d.message}</div>`;
-    document.getElementById('oldPassword').value='';
-    document.getElementById('newPassword').value='';
-    document.getElementById('confirmPassword').value='';
-  } else {
-    res_el.innerHTML=`<div style="color:#c0392b;font-size:.85rem">❌ ${d.error}</div>`;
-  }
-}
-
-
-// ─────────────────────────────────────────────────────
-// Dark Mode
-// ─────────────────────────────────────────────────────
+// ── Dark mode ──
 function toggleDark(){
-  document.body.classList.toggle('dark');
-  const btn = document.querySelector('.dark-toggle');
-  const dark = document.body.classList.contains('dark');
-  btn.textContent = dark ? '☀️ Light' : '🌙 Dark';
-  localStorage.setItem('darkMode', dark);
+  const d=document.body.classList.toggle('dark');
+  document.getElementById('darkBtn').textContent=d?'☀️ Light':'🌙 Dark';
+  localStorage.setItem('edutech_dark',d?'1':'0');
 }
-if(localStorage.getItem('darkMode')==='true'){
+if(localStorage.getItem('edutech_dark')==='1'){
   document.body.classList.add('dark');
-  document.querySelector('.dark-toggle') && (document.querySelector('.dark-toggle').textContent='☀️ Light');
+  document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('darkBtn');if(b)b.textContent='☀️ Light';});
 }
 
-// ─────────────────────────────────────────────────────
-// Notifications
-// ─────────────────────────────────────────────────────
-async function loadNotifications(){
-  try{
-    const res = await fetch('/api/notifications',{credentials:'include'});
-    if(!res.ok) return;
-    const d   = await res.json();
-    const count= d.count;
-    const countEl = document.getElementById('notifCount');
-    if(count>0){ countEl.style.display='flex'; countEl.textContent=count; }
-    else { countEl.style.display='none'; }
-    document.getElementById('notifTotal').textContent = count+' alert'+(count!==1?'s':'');
-    document.getElementById('notifList').innerHTML = d.alerts.length
-      ? d.alerts.map(a=>`<div class="notif-item ${a.type}">
-          <div style="font-size:1.2rem;flex-shrink:0">${a.icon}</div>
-          <div><div class="notif-title">${a.title}</div>
-          <div class="notif-msg">${a.message}</div></div>
-        </div>`).join('')
-      : '<div style="padding:16px;text-align:center;color:#aaa;font-size:.85rem">No alerts right now ✅</div>';
+// ── Auto-refresh ──
+let arInterval=null,lastCount=0;
+function toggleAutoRefresh(){
+  const btn=document.getElementById('refreshToggle');
+  if(arInterval){clearInterval(arInterval);arInterval=null;btn.textContent='⏱ Auto: OFF';btn.classList.remove('on');}
+  else{arInterval=setInterval(checkForNewData,30000);btn.textContent='⏱ Auto: ON';btn.classList.add('on');}
+}
+async function checkForNewData(){
+  try{const r=await fetch('/api/stats/summary',{credentials:'include'});
+    const d=await r.json();
+    if(d.total_records!==lastCount){lastCount=d.total_records;loadFilterOptions();loadDashboard();loadPipelinePanel();}
   }catch(e){}
 }
 
-function toggleNotifs(){
-  const panel = document.getElementById('notifPanel');
-  panel.style.display = panel.style.display==='none' ? 'block' : 'none';
+// ── Filters ──
+function getFilters(){return new URLSearchParams({
+  subject:document.getElementById('fSubject').value,class_name:document.getElementById('fClass').value,
+  ai_tool_used:document.getElementById('fAI').value,date_from:document.getElementById('fFrom').value,date_to:document.getElementById('fTo').value});}
+function isFiltered(){return['fSubject','fClass','fAI','fFrom','fTo'].some(id=>document.getElementById(id).value!=='');}
+function clearFilters(){['fSubject','fClass','fAI','fFrom','fTo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('filterIndicator').style.display='none';loadDashboard();}
+async function loadFilterOptions(){
+  try{const r=await fetch('/api/filter-options',{credentials:'include'});const d=await r.json();
+    document.getElementById('navRecords').textContent=d.total_records||'0';
+    lastCount=d.total_records||0;
+    populateSelect('fSubject',d.subjects);populateSelect('fClass',d.classes);}catch(e){}
 }
-document.addEventListener('click', e=>{
-  if(!document.getElementById('notifWrapper').contains(e.target))
-    document.getElementById('notifPanel').style.display='none';
-});
+function populateSelect(id,values){
+  const sel=document.getElementById(id);if(!sel)return;const cur=sel.value;
+  while(sel.options.length>1)sel.remove(1);
+  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
+  sel.value=cur;
+}
+function exportCSV(){window.open(`/api/export/csv?${getFilters()}`,'_blank');}
 
-// ─────────────────────────────────────────────────────
-// Compare
-// ─────────────────────────────────────────────────────
-let compareOptions = {class_name:[], subject:[]};
-
-async function loadCompareOptions(){
-  try{
-    const res = await fetch('/api/filter-options',{credentials:'include'});
-    const d   = await res.json();
-    compareOptions.class_name = d.classes||[];
-    compareOptions.subject    = d.subjects||[];
-    updateCompareOptions();
+// ── Pipeline panel ──
+async function loadPipelinePanel(){
+  try{const r=await fetch('/api/pipeline/summary',{credentials:'include'});const d=await r.json();
+    if(d.error)return;
+    document.getElementById('pipelinePanel').innerHTML=`
+      <div class="pp-item"><div class="pp-value">${d.total_records}</div><div class="pp-label">Records</div></div>
+      <div class="pp-item"><div class="pp-value">${d.score_stats.mean}</div><div class="pp-label">Mean Score</div></div>
+      <div class="pp-item"><div class="pp-value">${d.score_stats.min}–${d.score_stats.max}</div><div class="pp-label">Score Range</div></div>
+      <div class="pp-item"><div class="pp-value">${d.ai_tool_usage.adoption_pct}%</div><div class="pp-label">AI Adoption</div></div>
+      <div class="pp-item"><div class="pp-value">${d.pass_rate_pct}%</div><div class="pp-label">Pass Rate</div></div>
+      <div class="pp-item"><div class="pp-value">${d.outliers_flagged}</div><div class="pp-label">Outliers</div></div>
+      <div class="pp-item"><div class="pp-value" style="font-size:.8rem">${d.date_range.from}</div><div class="pp-label">From</div></div>
+      <div class="pp-item"><div class="pp-value" style="font-size:.8rem">${d.date_range.to}</div><div class="pp-label">To</div></div>`;
   }catch(e){}
 }
 
-function updateCompareOptions(){
-  const by  = document.getElementById('cmpGroupBy').value;
-  const opts = compareOptions[by]||[];
-  ['cmpA','cmpB'].forEach((id,i)=>{
-    const sel = document.getElementById(id);
-    sel.innerHTML = opts.map(o=>`<option value="${o}">${o}</option>`).join('');
-    if(opts[i]) sel.value = opts[i];
-  });
+// ── Dashboard ──
+async function loadDashboard(){
+  const params=getFilters();
+  document.getElementById('filterIndicator').style.display=isFiltered()?'flex':'none';
+  try{const r=await fetch(`/api/kpis?${params}`,{credentials:'include'});
+    if(!r.ok){document.getElementById('insightBox').innerHTML='No data yet — upload a file on the Upload tab.';return;}
+    const d=await r.json();
+    renderKPICards(d.overview);renderInsight(d.overview,d.leaderboard);
+    renderAISubjectChart(d.ai_vs_nonai.by_subject);renderTrendChart(d.trend);
+    renderBar('chartSubject',d.by_subject.labels,d.by_subject.scores,'Avg Score','#2F5496');
+    renderBar('chartClass',d.by_class.labels,d.by_class.scores,'Avg Score','#27ae60');
+    renderDist(d.score_distribution);
+    renderDoughnut('chartPassFail',d.pass_fail.labels,d.pass_fail.counts,['#27ae60','#c0392b','#e67e22']);
+    renderBar('chartAIAdopt',d.ai_adoption.labels,d.ai_adoption.rates,'Adoption %','#8e44ad',true);
+    renderLeaderboard(d.leaderboard);
+    document.getElementById('dbStatus').className='ok';document.getElementById('dbStatus').textContent='● Live';
+    document.getElementById('lastUpdated').textContent='Updated '+new Date().toLocaleTimeString();
+  }catch(e){document.getElementById('dbStatus').className='warn';document.getElementById('dbStatus').textContent='● Error';}
 }
 
-async function runCompare(){
-  const by = document.getElementById('cmpGroupBy').value;
-  const a  = document.getElementById('cmpA').value;
-  const b  = document.getElementById('cmpB').value;
-  if(a===b){ alert('Please select two different groups to compare.'); return; }
-
-  const res = await fetch(`/api/compare?group_by=${by}&a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`,
-    {credentials:'include'});
-  const d   = await res.json();
-  if(!res.ok){ alert(d.error||'Compare failed'); return; }
-
-  document.getElementById('compareResults').style.display='block';
-
-  // KPI cards
-  const metrics = [
-    {label:'Avg Score', key:'avg_score'},
-    {label:'AI Avg',    key:'ai_avg_score'},
-    {label:'Non-AI Avg',key:'non_ai_avg'},
-    {label:'AI Adoption',key:'ai_adoption_pct',suf:'%'},
-    {label:'Pass Rate',  key:'pass_rate_pct',suf:'%'},
-    {label:'Records',    key:'total_records'},
-  ];
-  document.getElementById('cmpCards').innerHTML = metrics.map(m=>`
-    <div class="chart-card" style="padding:16px">
-      <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;font-weight:700;margin-bottom:10px">${m.label}</div>
-      <div style="display:flex;justify-content:space-around">
-        <div style="text-align:center">
-          <div style="font-size:1.4rem;font-weight:700;color:#2F5496">${(d.a?.[m.key] ?? '—') + (m.suf || '')}</div>
-          <div style="font-size:.75rem;color:var(--muted);margin-top:2px">${a}</div>
-        </div>
-        <div style="font-size:1.2rem;color:var(--muted);display:flex;align-items:center">vs</div>
-        <div style="text-align:center">
-          <div style="font-size:1.4rem;font-weight:700;color:#27ae60">${(d.b?.[m.key] ?? '—') + (m.suf || '')}</div>
-          <div style="font-size:.75rem;color:var(--muted);margin-top:2px">${b}</div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-
-  // Bar chart
-  destroyChart('cmpBarChart');
-  const ctx1 = document.getElementById('cmpBarChart').getContext('2d');
-  const barMetrics = ['avg_score','ai_avg_score','non_ai_avg'];
-  const barLabels  = ['Overall Avg','AI Users Avg','Non-AI Avg'];
-  charts['cmpBarChart'] = new Chart(ctx1,{type:'bar',data:{
-    labels:barLabels,
-    datasets:[
-      {label:a,data:barMetrics.map(k=>d.a?.[k]||0),backgroundColor:'#2F549688',borderColor:'#2F5496',borderWidth:2,borderRadius:4},
-      {label:b,data:barMetrics.map(k=>d.b?.[k]||0),backgroundColor:'#27ae6088',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
-    ]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},
-    scales:{y:{beginAtZero:false,min:40}}}});
-
-  // Trend chart
-  destroyChart('cmpTrendChart');
-  const ctx2  = document.getElementById('cmpTrendChart').getContext('2d');
-  const allMonths = [...new Set([...Object.keys(d.a?.trend||{}), ...Object.keys(d.b?.trend||{})])].sort();
-  charts['cmpTrendChart'] = new Chart(ctx2,{type:'line',data:{
-    labels:allMonths,
-    datasets:[
-      {label:a,data:allMonths.map(m=>d.a?.trend?.[m]||null),borderColor:'#2F5496',backgroundColor:'#2F549618',tension:.3,fill:true,pointRadius:3},
-      {label:b,data:allMonths.map(m=>d.b?.trend?.[m]||null),borderColor:'#27ae60',backgroundColor:'transparent',tension:.3,pointRadius:3},
-    ]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},
-    scales:{y:{beginAtZero:false,min:40}}}});
-
-  // Table
-  document.getElementById('cmpTable').innerHTML=`
-    <thead><tr><th>Metric</th><th>${a}</th><th>${b}</th><th>Difference</th></tr></thead>
-    <tbody>
-      ${[
-        ['Total Records','total_records',''],
-        ['Avg Score','avg_score',''],
-        ['AI Users Avg','ai_avg_score',''],
-        ['Non-AI Avg','non_ai_avg',''],
-        ['AI Adoption','ai_adoption_pct','%'],
-        ['Pass Rate','pass_rate_pct','%'],
-        ['Score Std Dev','score_std',''],
-      ].map(([lbl,key,suf])=>{
-        const va = d.a?.[key]??null;
-        const vb = d.b?.[key]??null;
-        const diff = (va!==null&&vb!==null) ? round2(va-vb) : '—';
-        const col  = diff>0?'#27ae60':diff<0?'#c0392b':'#888';
-        return `<tr>
-          <td><strong>${lbl}</strong></td>
-          <td>${va!==null?va+suf:'—'}</td>
-          <td>${vb!==null?vb+suf:'—'}</td>
-          <td style="color:${col};font-weight:700">${diff!=='—'?(diff>0?'+':'')+diff+suf:diff}</td>
-        </tr>`;
-      }).join('')}
-    </tbody>`;
-}
-function round2(n){ return Math.round(n*100)/100; }
-
-// ─────────────────────────────────────────────────────
-// Student Search
-// ─────────────────────────────────────────────────────
-let searchTimer = null;
-
-async function searchSuggest(q){
-  clearTimeout(searchTimer);
-  const list = document.getElementById('suggList');
-  if(q.length < 1){ list.style.display='none'; return; }
-  searchTimer = setTimeout(async()=>{
-    const res  = await fetch(`/api/student/search?q=${encodeURIComponent(q)}`,{credentials:'include'});
-    const ids  = await res.json();
-    if(!ids.length){ list.style.display='none'; return; }
-    list.innerHTML = ids.map(id=>`
-      <div onclick="pickStudent('${id}')"
-        style="padding:9px 14px;cursor:pointer;font-size:.88rem;border-bottom:1px solid var(--border)"
-        onmouseenter="this.style.background='var(--blue-light)'"
-        onmouseleave="this.style.background=''">${id}</div>`).join('');
-    list.style.display='block';
-  }, 200);
+// ── KPI Cards ──
+function renderKPICards(o){
+  setKPI('kTotal',o.total_records,'',0);setKPI('kStudents',o.total_students,'',0);
+  setKPI('kAvgScore',o.avg_score,'',2);setKPI('kPassRate',o.pass_rate_pct,'%',1);
+  setKPI('kAIAdopt',o.ai_adoption_pct,'%',1);
+  document.getElementById('kAIBoost').textContent=(o.ai_score_boost>=0?'+':'')+o.ai_score_boost;
+  document.getElementById('kAIBoost').dataset.current=o.ai_score_boost;
+  document.getElementById('kScoreRange').textContent=`Non-AI ${o.avg_score_non_ai} · AI ${o.avg_score_ai}`;
+  document.getElementById('kBoostSub').textContent=`${o.avg_score_ai} vs ${o.avg_score_non_ai}`;
+  const bc=document.getElementById('kAIBoost').closest('.kpi-card');
+  bc.className='kpi-card '+(o.ai_score_boost>=0?'green':'red');
 }
 
-function pickStudent(id){
-  document.getElementById('searchInput').value = id;
-  document.getElementById('suggList').style.display='none';
-  searchStudent();
+// ── Insight engine ──
+function renderInsight(o,lb){
+  const topAI=lb&&lb.top?lb.top.filter(s=>s.ai_used).length:0;
+  const botNonAI=lb&&lb.bottom?lb.bottom.filter(s=>!s.ai_used).length:0;
+  const bullets=[];
+  if(o.ai_score_boost>0)bullets.push(`AI users score <strong>+${o.ai_score_boost} pts higher</strong> (${o.avg_score_ai} vs ${o.avg_score_non_ai})`);
+  if(topAI===5)bullets.push(`All <strong>top 5 students</strong> are AI tool users`);
+  if(botNonAI>=4)bullets.push(`<strong>${botNonAI} of 5 bottom students</strong> are non-AI users`);
+  bullets.push(`AI adoption: <strong>${o.ai_adoption_pct}%</strong> across all classes`);
+  if(o.pass_rate_pct<100)bullets.push(`Pass rate: <strong>${o.pass_rate_pct}%</strong>`);
+  document.getElementById('insightBox').innerHTML=`<strong>Key Findings</strong><ul>${bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
 }
 
-async function searchStudent(){
-  const id = document.getElementById('searchInput').value.trim().toUpperCase();
-  if(!id){ alert('Please enter a student ID.'); return; }
-  document.getElementById('suggList').style.display='none';
-
-  const res = await fetch(`/api/student/${encodeURIComponent(id)}`,{credentials:'include'});
-  const d   = await res.json();
-  if(!res.ok){ alert(d.error||'Student not found'); return; }
-
-  document.getElementById('studentResult').style.display='block';
-
-  // KPI cards
-  document.getElementById('studentKPIs').innerHTML = [
-    {label:'Student ID',   value:d.student_id,       color:'blue'},
-    {label:'Total Records',value:d.total_records,     color:'blue'},
-    {label:'Avg Score',    value:d.avg_score,         color:'green'},
-    {label:'Best Score',   value:d.best_score,        color:'green'},
-    {label:'Lowest Score', value:d.lowest_score,      color:'red'},
-    {label:'AI Usage',     value:d.ai_usage_pct+'%',  color:'purple'},
-  ].map(k=>`<div class="kpi-card ${k.color}">
-    <div class="kpi-value">${k.value}</div>
-    <div class="kpi-label">${k.label}</div>
-  </div>`).join('');
-
-  // Score history chart
-  destroyChart('studentChart');
-  const ctx = document.getElementById('studentChart').getContext('2d');
-  charts['studentChart'] = new Chart(ctx,{type:'line',data:{
-    labels:d.records.map(r=>r.date+' ('+r.subject+')'),
-    datasets:[{
-      label:'Score',data:d.records.map(r=>r.score),
-      borderColor:'#2F5496',backgroundColor:'#2F549618',
-      tension:.3,fill:true,pointRadius:5,pointHoverRadius:7,
-      pointBackgroundColor:d.records.map(r=>r.ai_tool_used?'#27ae60':'#c0392b'),
-    }]
-  },options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{
-      afterLabel:ctx=>'AI Tool: '+(d.records[ctx.dataIndex].ai_tool_used?'Yes':'No')
-    }}},
-    scales:{y:{beginAtZero:false,min:Math.max(0,Math.min(...d.records.map(r=>r.score))-10)}}}});
-
-  // Records table
-  document.getElementById('studentRecords').innerHTML=`<table>
-    <thead><tr><th>Date</th><th>Subject</th><th>Class</th><th>Score</th><th>AI Tool</th><th>Study Hrs</th></tr></thead>
-    <tbody>${d.records.map(r=>`<tr>
-      <td>${r.date}</td><td>${r.subject}</td><td>${r.class_name||'—'}</td>
-      <td><strong style="color:${r.score>=50?'#27ae60':'#c0392b'}">${r.score}</strong></td>
-      <td><span class="badge ${r.ai_tool_used?'ai':'nonai'}">${r.ai_tool_used?'✓ Yes':'No'}</span></td>
-      <td>${r.study_hours??'—'}</td>
-    </tr>`).join('')}</tbody></table>`;
+// ── Charts ──
+function renderAISubjectChart(data){
+  destroyChart('chartAISubject');const ctx=document.getElementById('chartAISubject').getContext('2d');
+  charts['chartAISubject']=new Chart(ctx,{type:'bar',data:{labels:data.subjects,datasets:[
+    {label:'AI Users',data:data.ai_scores,backgroundColor:'#27ae6077',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
+    {label:'Non-AI Users',data:data.non_ai_scores,backgroundColor:'#c0392b77',borderColor:'#c0392b',borderWidth:2,borderRadius:4},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:TOOLTIP},
+    scales:{y:{beginAtZero:false,min:50,title:{display:true,text:'Avg Score'}}}}});
 }
-
-// ─────────────────────────────────────────────────────
-// Enhanced Upload with Real Progress Bar
-// ─────────────────────────────────────────────────────
-async function uploadFile(){
-  const fi = document.getElementById('fileInput');
-  if(!fi.files[0]){ alert('Please select a file first.'); return; }
-  const rb   = document.getElementById('uploadResult');
-  const prog = document.getElementById('xhrProgress');
-  const bar  = document.getElementById('xhrBar');
-  const pct  = document.getElementById('xhrPct');
-  const lbl  = document.getElementById('xhrLabel');
-  rb.style.display='none'; prog.style.display='block';
-  bar.style.width='0%'; pct.textContent='0%'; lbl.textContent='Uploading...';
-
-  const fd = new FormData(); fd.append('file', fi.files[0]);
-
-  return new Promise(resolve => {
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = e => {
-      if(e.lengthComputable){
-        const p = Math.round(e.loaded/e.total*100);
-        bar.style.width = p+'%'; pct.textContent = p+'%';
-        lbl.textContent = p < 100 ? `Uploading... ${p}%` : 'Processing rows...';
-      }
-    };
-    xhr.onload = () => {
-      prog.style.display='none';
-      const data = JSON.parse(xhr.responseText);
-      if(xhr.status===201){
-        const cls = data.summary.error_rows>0?'partial':'success';
-        rb.className=`result-box ${cls}`;
-        rb.innerHTML=`<strong>✅ ${data.message}</strong>
-          ${data.summary.error_rows>0?`<br>Skipped rows:<ul>
-            ${data.summary.errors.map(e=>`<li>Row ${e.row}: ${e.reason}</li>`).join('')}
-          </ul>`:''}`;
-      } else {
-        rb.className='result-box error';
-        rb.innerHTML=`<strong>❌ Error:</strong> ${data.error}`;
-      }
-      rb.style.display='block';
-      fi.value=''; document.getElementById('selectedFile').textContent='';
-      loadBatches(); loadFilterOptions(); loadDashboard(); loadPipelinePanel();
-      loadNotifications(); resolve();
-    };
-    xhr.onerror = () => {
-      prog.style.display='none';
-      rb.className='result-box error'; rb.innerHTML='Network error.';
-      rb.style.display='block'; resolve();
-    };
-    xhr.open('POST', API_BASE+'/api/upload');
-    xhr.withCredentials = true;
-    xhr.send(fd);
-  });
+function renderTrendChart(data){
+  destroyChart('chartTrend');const ctx=document.getElementById('chartTrend').getContext('2d');
+  charts['chartTrend']=new Chart(ctx,{type:'line',data:{labels:data.months,datasets:[
+    {label:'Overall',data:data.overall,borderColor:'#2F5496',backgroundColor:'#2F549618',tension:.35,fill:true,pointRadius:4},
+    {label:'AI Users',data:data.ai_users,borderColor:'#27ae60',backgroundColor:'transparent',tension:.35,pointRadius:4},
+    {label:'Non-AI',data:data.non_ai_users,borderColor:'#c0392b',backgroundColor:'transparent',tension:.35,borderDash:[5,4],pointRadius:4},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:TOOLTIP},
+    scales:{y:{beginAtZero:false,min:0}}}});
 }
-
-// ─────────────────────────────────────────────────────
-// Notifications
-// ─────────────────────────────────────────────────────
-async function loadNotifications(){
-  try{
-    const res = await fetch(API_BASE+'/api/notifications',{credentials:'include'});
-    const d   = await res.json();
-    const cnt = document.getElementById('notifCount');
-    const list= document.getElementById('notifList');
-    const count = (d.notifications||[]).length;
-    if(count > 0){
-      cnt.style.display='inline'; cnt.textContent=count;
-    } else {
-      cnt.style.display='none';
-    }
-    const colors = {danger:'#fdecea',warning:'#fff8e1',info:'#e8f0fb'};
-    const borders = {danger:'#c0392b',warning:'#f39c12',info:'#2F5496'};
-    if(!(d.notifications)|| d.notifications.length===0){
-      list.innerHTML='<div style="padding:16px;text-align:center;font-size:.85rem;color:var(--muted)">✅ No alerts — all metrics look good!</div>';
-    } else {
-      list.innerHTML = d.notifications.map(n=>`
-        <div style="padding:10px 12px;margin:6px 0;border-radius:7px;
-          background:${colors[n.type]};border-left:3px solid ${borders[n.type]}">
-          <div style="font-size:.82rem;font-weight:700;color:${borders[n.type]}">${n.icon} ${n.title}</div>
-          <div style="font-size:.78rem;color:#555;margin-top:3px">${n.message}</div>
-        </div>`).join('');
-    }
-  }catch(e){ console.error(e); }
+function renderBar(id,labels,data,label,color,isPercent=false){
+  destroyChart(id);const min=Math.max(0,Math.min(...data)-8);
+  const ctx=document.getElementById(id).getContext('2d');
+  charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label,data,
+    backgroundColor:color+'88',borderColor:color,borderWidth:2,borderRadius:5,hoverBackgroundColor:color+'cc'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TOOLTIP,
+      callbacks:{label:c=>`${label}: ${c.parsed.y}${isPercent?'%':''}`}}},
+      scales:{y:{beginAtZero:false,min,ticks:{callback:v=>isPercent?v+'%':v}}}}});
 }
-
-function toggleNotifications(){
-  const p = document.getElementById('notifPanel');
-  p.style.display = p.style.display==='none' ? 'block' : 'none';
-  if(p.style.display==='block') loadNotifications();
+function renderDist(data){
+  destroyChart('chartDist');
+  const colors=['#c0392b88','#e67e2288','#2F549688','#27ae6088'],borders=['#c0392b','#e67e22','#2F5496','#27ae60'];
+  const ctx=document.getElementById('chartDist').getContext('2d');
+  charts['chartDist']=new Chart(ctx,{type:'bar',data:{labels:data.labels,
+    datasets:[{label:'Students',data:data.counts,backgroundColor:colors,borderColor:borders,borderWidth:2,borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TOOLTIP},
+      scales:{y:{beginAtZero:true,title:{display:true,text:'Students'}}}}});
 }
-document.addEventListener('click', e => {
-  const panel = document.getElementById('notifPanel');
-  const bell  = document.getElementById('bellBtn');
-  if(panel && bell && !panel.contains(e.target) && !bell.contains(e.target))
-    panel.style.display='none';
-});
-
-// ─────────────────────────────────────────────────────
-// Comparison Mode
-// ─────────────────────────────────────────────────────
-let cmpOptions = {classes:[], subjects:[]};
-
-async function initCompare(){
-  const res = await fetch(API_BASE+'/api/filter-options',{credentials:'include'});
-  const d   = await res.json();
-  cmpOptions.classes  = d.classes  || [];
-  cmpOptions.subjects = d.subjects || [];
-  updateCompareOptions();
+function renderDoughnut(id,labels,data,colors){
+  destroyChart(id);const ctx=document.getElementById(id).getContext('2d');
+  charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom'},tooltip:TOOLTIP}}});
 }
-
-function updateCompareOptions(){
-  const type = document.getElementById('cmpType').value;
-  const opts = type==='class' ? cmpOptions.classes : cmpOptions.subjects;
-  ['cmpGroup1','cmpGroup2'].forEach((id,i)=>{
-    const sel = document.getElementById(id);
-    sel.innerHTML = opts.map(o=>`<option value="${o}">${o}</option>`).join('');
-    if(i===1 && opts.length>1) sel.selectedIndex=1;
-  });
-}
-
-async function runComparison(){
-  const type   = document.getElementById('cmpType').value;
-  const group1 = document.getElementById('cmpGroup1').value;
-  const group2 = document.getElementById('cmpGroup2').value;
-  if(group1===group2){ alert('Please select two different groups.'); return; }
-
-  const gby = type==='class'?'class_name':'subject';
-  const res = await fetch(`${API_BASE}/api/compare?group_by=${gby}&a=${encodeURIComponent(group1)}&b=${encodeURIComponent(group2)}`,
-    {credentials:'include'});
-  const d = await res.json();
-  if(!res.ok){ alert(d.error); return; }
-
-  document.getElementById('compareResult').style.display='block';
-
-  // KPI cards
-  function cmpCard(g, color){
-    g.name=g.name||g.label; g.ai_adoption=g.ai_adoption||g.ai_adoption_pct; g.pass_rate=g.pass_rate||g.pass_rate_pct; g.ai_avg_score=g.ai_avg_score||0; g.nonai_avg_score=g.nonai_avg_score||g.non_ai_avg||0;
-    return `<h3 style="font-size:1rem;color:${color};font-weight:700;margin-bottom:12px">${g.name}</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      ${[
-        ['Avg Score', g.avg_score, color],
-        ['Pass Rate', g.pass_rate+'%', '#27ae60'],
-        ['AI Adoption', g.ai_adoption+'%', '#8e44ad'],
-        ['Records', g.total_records, '#e67e22'],
-      ].map(([l,v,c])=>`<div style="text-align:center;padding:10px;background:var(--bg);border-radius:8px">
-        <div style="font-size:1.4rem;font-weight:700;color:${c}">${v}</div>
-        <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase">${l}</div>
-      </div>`).join('')}
-    </div>`;
-  }
-  document.getElementById('cmpCard1').innerHTML = cmpCard(d.group1,'#2F5496');
-  document.getElementById('cmpCard2').innerHTML = cmpCard(d.group2,'#27ae60');
-
-  // Distribution chart
-  destroyChart('cmpDistChart');
-  const ctx1 = document.getElementById('cmpDistChart').getContext('2d');
-  const bands = ['Below Average','Average','Good','Excellent'];
-  charts['cmpDistChart'] = new Chart(ctx1,{type:'bar',data:{labels:bands,datasets:[
-    {label:d.group1.name, data:bands.map(b=>(d.group1.score_dist||d.group1.score_distribution||{})[b]||0),backgroundColor:'#2F549688',borderColor:'#2F5496',borderWidth:2,borderRadius:4},
-    {label:d.group2.name, data:bands.map(b=>(d.group2.score_dist||d.group2.score_distribution||{})[b]||0),backgroundColor:'#27ae6088',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:TOOLTIP}}});
-
-  // Trend chart
-  destroyChart('cmpTrendChart');
-  const ctx2 = document.getElementById('cmpTrendChart').getContext('2d');
-  d.group1.trend=d.group1.trend||{months:d.group1.score_trend?.months||[],scores:d.group1.score_trend?.scores||[]};
-  d.group2.trend=d.group2.trend||{months:d.group2.score_trend?.months||[],scores:d.group2.score_trend?.scores||[]};
-  const allMonths = [...new Set([...d.group1.trend.months,...d.group2.trend.months])].sort();
-  const align = (trend) => allMonths.map(m => {
-    const i = trend.months.indexOf(m);
-    return i>=0 ? trend.scores[i] : null;
-  });
-  charts['cmpTrendChart'] = new Chart(ctx2,{type:'line',data:{labels:allMonths,datasets:[
-    {label:d.group1.name,data:align(d.group1.trend),borderColor:'#2F5496',backgroundColor:'transparent',tension:.3,pointRadius:3,spanGaps:true},
-    {label:d.group2.name,data:align(d.group2.trend),borderColor:'#27ae60',backgroundColor:'transparent',tension:.3,pointRadius:3,borderDash:[],spanGaps:true},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:TOOLTIP},scales:{y:{beginAtZero:false}}}});
-
-  // AI vs Non-AI chart
-  destroyChart('cmpAIChart');
-  const ctx3 = document.getElementById('cmpAIChart').getContext('2d');
-  charts['cmpAIChart'] = new Chart(ctx3,{type:'bar',data:{labels:[d.group1.name,d.group2.name],datasets:[
-    {label:'AI Users',   data:[d.group1.ai_avg_score,  d.group2.ai_avg_score],  backgroundColor:'#27ae6088',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
-    {label:'Non-AI',     data:[d.group1.nonai_avg_score,d.group2.nonai_avg_score],backgroundColor:'#c0392b88',borderColor:'#c0392b',borderWidth:2,borderRadius:4},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:TOOLTIP},scales:{y:{beginAtZero:false,min:40}}}});
-
-  // Insight
-  d.group1.name=d.group1.name||d.group1.label; d.group2.name=d.group2.name||d.group2.label;
-  d.group1.ai_adoption=d.group1.ai_adoption||d.group1.ai_adoption_pct; d.group2.ai_adoption=d.group2.ai_adoption||d.group2.ai_adoption_pct;
-  d.group1.pass_rate=d.group1.pass_rate||d.group1.pass_rate_pct; d.group2.pass_rate=d.group2.pass_rate||d.group2.pass_rate_pct;
-  const winner = d.group1.avg_score > d.group2.avg_score ? d.group1 : d.group2;
-  const loser  = d.group1.avg_score > d.group2.avg_score ? d.group2 : d.group1;
-  const diff   = Math.abs(d.group1.avg_score - d.group2.avg_score).toFixed(1);
-  document.getElementById('cmpInsight').innerHTML = `
-    <div style="background:var(--blue-light);border-left:3px solid var(--blue);border-radius:6px;padding:12px 14px;margin-bottom:10px">
-      <strong>${winner.name}</strong> outperforms <strong>${loser.name}</strong> by
-      <strong style="color:var(--blue)">${diff} points</strong> on average score.
-    </div>
-    <ul style="margin-left:16px;color:var(--muted)">
-      <li style="margin-bottom:6px">AI adoption: <strong style="color:var(--purple)">${d.group1.name} ${d.group1.ai_adoption}%</strong> vs <strong style="color:var(--purple)">${d.group2.name} ${d.group2.ai_adoption}%</strong></li>
-      <li style="margin-bottom:6px">Pass rate: <strong style="color:var(--green)">${d.group1.name} ${d.group1.pass_rate}%</strong> vs <strong style="color:var(--green)">${d.group2.name} ${d.group2.pass_rate}%</strong></li>
-      <li>Records compared: ${d.group1.total_records} vs ${d.group2.total_records}</li>
-    </ul>`;
-}
-
-// ─────────────────────────────────────────────────────
-// Student Search
-// ─────────────────────────────────────────────────────
-async function searchStudent(){
-  const sid = document.getElementById('studentSearchInput').value.trim().toUpperCase();
-  if(!sid){ alert('Please enter a student ID.'); return; }
-
-  document.getElementById('studentResult').style.display='none';
-  document.getElementById('studentNotFound').style.display='none';
-
-  const res = await fetch(`${API_BASE}/api/student/${sid}`,{credentials:'include'});
-  if(!res.ok){
-    document.getElementById('studentNotFound').style.display='block'; return;
-  }
-  const d = await res.json();
-
-  // KPI cards
-  const kpiColors = ['blue','green','orange','purple','green','orange'];
-  const kpis = [
-    ['Student ID',    d.student_id,       'blue'],
-    ['Avg Score',     d.avg_score,        'green'],
-    ['Best Score',    d.best_score,       'orange'],
-    ['Worst Score',   d.worst_score,      'red'],
-    ['Pass Rate',     d.pass_rate+'%',    'green'],
-    ['AI Usage',      d.ai_usage_pct+'%', 'purple'],
-  ];
-  document.getElementById('studentKPIs').innerHTML = kpis.map(([l,v,c])=>`
-    <div class="kpi-card ${c}">
-      <div class="kpi-value" style="font-size:1.5rem">${v}</div>
-      <div class="kpi-label">${l}</div>
-    </div>`).join('');
-
-  // Trend chart
-  destroyChart('studentTrendChart');
-  const ctx = document.getElementById('studentTrendChart').getContext('2d');
-  charts['studentTrendChart'] = new Chart(ctx,{type:'line',data:{
-    labels: d.score_trend.dates,
-    datasets:[{
-      label:'Score', data:d.score_trend.scores,
-      borderColor:'#2F5496', backgroundColor:'#2F549618',
-      tension:.3, fill:true, pointRadius:5, pointHoverRadius:7,
-    }]
-  },options:{responsive:true,maintainAspectRatio:false,
-    plugins:{tooltip:{...TOOLTIP,callbacks:{afterLabel:ctx=>`Subject: ${d.records[ctx.dataIndex]?.subject||''}`}}},
-    scales:{y:{min:0,max:100,title:{display:true,text:'Score'}}}}});
-
-  // Records table
-  document.getElementById('studentRecordsTable').innerHTML = `<table>
-    <thead><tr><th>Date</th><th>Subject</th><th>Class</th><th>Score</th><th>AI Tool</th><th>Study Hrs</th><th>Grade</th></tr></thead>
-    <tbody>${d.records.map(r=>`<tr>
-      <td>${r.record_date}</td>
-      <td>${r.subject}</td>
-      <td>${r.class_name||'—'}</td>
-      <td><strong style="color:${r.score>=65?'#27ae60':r.score>=50?'#e67e22':'#c0392b'}">${r.score}</strong></td>
-      <td>${r.ai_tool_used?'<span class="badge ai">✓ Yes</span>':'<span class="badge nonai">No</span>'}</td>
-      <td>${r.study_hours??'—'}</td>
-      <td><span class="badge ${r.score_band==='Excellent'?'ai':r.score_band==='Below Average'?'nonai':'success'}">${r.score_band}</span></td>
-    </tr>`).join('')}</tbody></table>`;
-
-  document.getElementById('studentResult').style.display='block';
-}
-
-// Make leaderboard student IDs clickable
 function renderLeaderboard(lb){
   const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
   document.getElementById('topStudents').innerHTML=lb.top.map((s,i)=>`<tr>
-    <td>${medals[i]}</td>
-    <td><a href="#" onclick="openStudentSearch('${s.student_id}')" style="color:var(--blue);font-weight:700">${s.student_id}</a></td>
+    <td>${medals[i]}</td><td><strong>${s.student_id}</strong></td>
     <td><strong style="color:var(--green)">${s.avg_score}</strong></td>
-    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
-  </tr>`).join('');
+    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td></tr>`).join('');
   document.getElementById('bottomStudents').innerHTML=lb.bottom.map((s,i)=>`<tr>
-    <td style="color:var(--muted)">${i+1}</td>
-    <td><a href="#" onclick="openStudentSearch('${s.student_id}')" style="color:var(--blue);font-weight:700">${s.student_id}</a></td>
+    <td style="color:var(--muted)">${i+1}</td><td><strong>${s.student_id}</strong></td>
     <td><strong style="color:var(--red)">${s.avg_score}</strong></td>
-    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td>
-  </tr>`).join('');
+    <td><span class="badge ${s.ai_used?'ai':'nonai'}">${s.ai_used?'✓ AI':'Non-AI'}</span></td></tr>`).join('');
 }
 
-function openStudentSearch(sid){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('search').classList.add('active');
-  document.getElementById('studentSearchInput').value = sid;
-  searchStudent();
+// ── Upload ──
+const fi=document.getElementById('fileInput'),dz=document.getElementById('dropZone');
+fi.addEventListener('change',e=>{const f=e.target.files[0];document.getElementById('selectedFile').textContent=f?`📄 ${f.name}`:''});
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-over');
+  const f=e.dataTransfer.files[0];if(f){fi.files=e.dataTransfer.files;document.getElementById('selectedFile').textContent=`📄 ${f.name}`;}});
+async function uploadFile(){
+  if(!fi.files[0]){alert('Please select a file first.');return;}
+  const fd=new FormData();fd.append('file',fi.files[0]);
+  const rb=document.getElementById('uploadResult'),prog=document.getElementById('uploadProgress');
+  rb.style.display='none';prog.style.display='block';
+  try{const res=await fetch('/api/upload',{method:'POST',body:fd,credentials:'include'});
+    const data=await res.json();prog.style.display='none';
+    if(res.ok){rb.className=`result-box ${data.summary.error_rows>0?'partial':'success'}`;
+      rb.innerHTML=`<strong>✅ ${data.message}</strong>`;}
+    else{rb.className='result-box error';rb.innerHTML=`<strong>❌ ${data.error}</strong>`;}
+    rb.style.display='block';fi.value='';document.getElementById('selectedFile').textContent='';
+    loadBatches();loadFilterOptions();loadDashboard();loadPipelinePanel();
+  }catch(e){prog.style.display='none';rb.className='result-box error';rb.innerHTML=`Network error: ${e.message}`;rb.style.display='block';}
+}
+async function loadBatches(){
+  const r=await fetch('/api/batches',{credentials:'include'});const batches=await r.json();
+  const cont=document.getElementById('batchesContainer');
+  if(!batches.length){cont.innerHTML='<div class="empty">No uploads yet.</div>';return;}
+  cont.innerHTML=`<table><thead><tr><th>ID</th><th>Filename</th><th>Rows</th><th>Status</th><th>Uploaded</th><th></th></tr></thead>
+    <tbody>${batches.map(b=>`<tr><td>#${b.id}</td><td>${b.filename}</td><td>${b.row_count}</td>
+      <td><span class="badge ${b.status}">${b.status}</span></td>
+      <td>${new Date(b.uploaded_at).toLocaleString()}</td>
+      <td><button class="btn btn-danger" onclick="deleteBatch(${b.id})">Delete</button></td></tr>`).join('')}</tbody></table>`;
+}
+async function deleteBatch(id){
+  if(!confirm(`Delete batch #${id} and all its records?`))return;
+  const r=await fetch(`/api/batches/${id}`,{method:'DELETE',credentials:'include'});
+  alert((await r.json()).message);loadBatches();loadFilterOptions();loadDashboard();loadPipelinePanel();
 }
 
+// ── Records ──
+async function loadRecordFilterOptions(){
+  const r=await fetch('/api/filter-options',{credentials:'include'});const d=await r.json();
+  populateSelect('rSubject',d.subjects);populateSelect('rClass',d.classes);
+}
+async function loadRecords(){
+  const p=new URLSearchParams({subject:document.getElementById('rSubject').value,
+    class_name:document.getElementById('rClass').value,ai_tool_used:document.getElementById('rAI').value,limit:100});
+  const r=await fetch(`/api/records?${p}`,{credentials:'include'});const d=await r.json();
+  const cont=document.getElementById('recordsTable'),meta=document.getElementById('recordsMeta');
+  if(!d.total){meta.textContent='';cont.innerHTML='<div class="empty">No records match filters.</div>';return;}
+  meta.textContent=`Showing ${d.showing} of ${d.total} records`;
+  cont.innerHTML=`<table><thead><tr><th>Student</th><th>Class</th><th>Subject</th><th>Score</th><th>AI Tool</th><th>Study Hrs</th><th>Date</th></tr></thead>
+    <tbody>${d.records.map(r=>`<tr><td>${r.student_id}</td><td>${r.class_name||'—'}</td><td>${r.subject}</td>
+      <td><strong>${r.score}</strong></td>
+      <td>${r.ai_tool_used?'<span class="badge ai">✓ Yes</span>':'<span class="badge nonai">No</span>'}</td>
+      <td>${r.study_hours??'—'}</td><td>${r.record_date}</td></tr>`).join('')}</tbody></table>`;
+}
+function clearRecordFilters(){['rSubject','rClass','rAI'].forEach(id=>document.getElementById(id).value='');loadRecords();}
 
-
-// ─────────────────────────────────────────────────────
-// Comparison Mode
-// ─────────────────────────────────────────────────────
+// ── Comparison ──
+let cmpOpts={class:[],subject:[]};
 async function updateCmpOptions(){
-  if(!cmpOptions.class.length){
-    const res = await fetch('/api/filter-options',{credentials:'include'});
-    const d   = await res.json();
-    cmpOptions.class   = d.classes;
-    cmpOptions.subject = d.subjects;
+  if(!cmpOpts.class.length){
+    const r=await fetch('/api/filter-options',{credentials:'include'});const d=await r.json();
+    cmpOpts.class=d.classes;cmpOpts.subject=d.subjects;
   }
-  const type = document.getElementById('cmpType').value;
-  const opts = cmpOptions[type];
-  ['cmpA','cmpB'].forEach(id => {
-    const sel = document.getElementById(id);
-    sel.innerHTML = '<option value="">Select...</option>' +
-      opts.map(o=>`<option value="${o}">${o}</option>`).join('');
+  const type=document.getElementById('cmpType').value,opts=cmpOpts[type];
+  ['cmpA','cmpB'].forEach(id=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML='<option value="">Select...</option>'+opts.map(o=>`<option value="${o}">${o}</option>`).join('');
   });
 }
-
 async function runComparison(){
-  const type = document.getElementById('cmpType').value;
-  const a    = document.getElementById('cmpA').value;
-  const b    = document.getElementById('cmpB').value;
-  const res_el = document.getElementById('cmpResult');
-
-  if(!a || !b){ res_el.innerHTML='<div class="empty">Please select both groups.</div>'; return; }
-  if(a === b){ res_el.innerHTML='<div class="empty">Please select two different groups.</div>'; return; }
-
-  const res = await fetch(`/api/comparison?type=${type}&group_a=${encodeURIComponent(a)}&group_b=${encodeURIComponent(b)}`,
-    {credentials:'include'});
-  const d = await res.json();
-  if(!res.ok){ res_el.innerHTML=`<div class="empty">${d.error}</div>`; return; }
-
-  const ga = d.group_a, gb = d.group_b;
-
-  res_el.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      ${[ga,gb].map(g=>`
-        <div style="padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
-          <div style="font-size:1rem;font-weight:700;color:var(--blue);margin-bottom:10px">${g.name}</div>
-          <table style="font-size:.82rem;width:100%">
-            <tr><td style="color:var(--muted)">Records</td><td style="font-weight:700">${g.total_records}</td></tr>
-            <tr><td style="color:var(--muted)">Avg Score</td><td style="font-weight:700">${g.avg_score}</td></tr>
-            <tr><td style="color:var(--muted)">Pass Rate</td><td style="font-weight:700">${g.pass_rate}%</td></tr>
-            <tr><td style="color:var(--muted)">AI Adoption</td><td style="font-weight:700">${g.ai_adoption}%</td></tr>
-            <tr><td style="color:var(--muted)">AI Avg</td><td style="font-weight:700;color:#27ae60">${g.ai_avg}</td></tr>
-            <tr><td style="color:var(--muted)">Non-AI Avg</td><td style="font-weight:700;color:#c0392b">${g.non_ai_avg}</td></tr>
-          </table>
-        </div>`).join('')}
-    </div>`;
-
-  document.getElementById('cmpCharts').style.display = 'grid';
-
+  const type=document.getElementById('cmpType').value,a=document.getElementById('cmpA').value,b=document.getElementById('cmpB').value;
+  const resEl=document.getElementById('cmpResult');
+  if(!a||!b){resEl.innerHTML='<div class="empty">Select both groups.</div>';return;}
+  if(a===b){resEl.innerHTML='<div class="empty">Select two different groups.</div>';return;}
+  const r=await fetch(`/api/comparison?type=${type}&group_a=${encodeURIComponent(a)}&group_b=${encodeURIComponent(b)}`,{credentials:'include'});
+  const d=await r.json();if(!r.ok){resEl.innerHTML=`<div class="empty">${d.error}</div>`;return;}
+  const ga=d.group_a,gb=d.group_b;
+  resEl.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    ${[ga,gb].map(g=>`<div style="padding:14px;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+      <div style="font-size:.95rem;font-weight:700;color:var(--blue);margin-bottom:9px">${g.name}</div>
+      <table style="font-size:.8rem"><tr><td style="color:var(--muted)">Records</td><td><strong>${g.total_records}</strong></td></tr>
+      <tr><td style="color:var(--muted)">Avg Score</td><td><strong>${g.avg_score}</strong></td></tr>
+      <tr><td style="color:var(--muted)">Pass Rate</td><td><strong>${g.pass_rate}%</strong></td></tr>
+      <tr><td style="color:var(--muted)">AI Adoption</td><td><strong>${g.ai_adoption}%</strong></td></tr>
+      <tr><td style="color:var(--muted)">AI Avg</td><td><strong style="color:var(--green)">${g.ai_avg}</strong></td></tr>
+      <tr><td style="color:var(--muted)">Non-AI Avg</td><td><strong style="color:var(--red)">${g.non_ai_avg}</strong></td></tr></table>
+    </div>`).join('')}</div>`;
+  document.getElementById('cmpCharts').style.display='grid';
   destroyChart('cmpScoreChart');
-  const ctx1 = document.getElementById('cmpScoreChart').getContext('2d');
-  charts['cmpScoreChart'] = new Chart(ctx1,{
-    type:'bar',
-    data:{labels:['Avg Score','AI Avg','Non-AI Avg','Pass Rate'],
-      datasets:[
-        {label:ga.name,data:[ga.avg_score,ga.ai_avg,ga.non_ai_avg,ga.pass_rate],
-          backgroundColor:'#2F549688',borderColor:'#2F5496',borderWidth:2,borderRadius:4},
-        {label:gb.name,data:[gb.avg_score,gb.ai_avg,gb.non_ai_avg,gb.pass_rate],
-          backgroundColor:'#27ae6088',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
-      ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top'},tooltip:TOOLTIP},
-      scales:{y:{beginAtZero:false}}}
-  });
-
+  charts['cmpScoreChart']=new Chart(document.getElementById('cmpScoreChart').getContext('2d'),{type:'bar',
+    data:{labels:['Avg Score','AI Avg','Non-AI Avg','Pass Rate'],datasets:[
+      {label:ga.name,data:[ga.avg_score,ga.ai_avg,ga.non_ai_avg,ga.pass_rate],backgroundColor:'#2F549688',borderColor:'#2F5496',borderWidth:2,borderRadius:4},
+      {label:gb.name,data:[gb.avg_score,gb.ai_avg,gb.non_ai_avg,gb.pass_rate],backgroundColor:'#27ae6088',borderColor:'#27ae60',borderWidth:2,borderRadius:4},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:TOOLTIP},scales:{y:{beginAtZero:false}}}});
   destroyChart('cmpAIChart');
-  const ctx2 = document.getElementById('cmpAIChart').getContext('2d');
-  charts['cmpAIChart'] = new Chart(ctx2,{
-    type:'bar',
-    data:{labels:[ga.name,gb.name],
-      datasets:[
-        {label:'AI Adoption %',data:[ga.ai_adoption,gb.ai_adoption],
-          backgroundColor:['#8e44ad88','#e67e2288'],borderColor:['#8e44ad','#e67e22'],borderWidth:2,borderRadius:4},
-      ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:TOOLTIP},
-      scales:{y:{beginAtZero:true,max:100}}}
-  });
+  charts['cmpAIChart']=new Chart(document.getElementById('cmpAIChart').getContext('2d'),{type:'bar',
+    data:{labels:[ga.name,gb.name],datasets:[{label:'AI Adoption %',data:[ga.ai_adoption,gb.ai_adoption],
+      backgroundColor:['#8e44ad88','#e67e2288'],borderColor:['#8e44ad','#e67e22'],borderWidth:2,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TOOLTIP},scales:{y:{beginAtZero:true,max:100}}}});
 }
 
-// ─────────────────────────────────────────────────────
-// Student Search
-// ─────────────────────────────────────────────────────
+// ── Student Search ──
 async function searchStudent(){
-  const sid  = document.getElementById('searchId').value.trim().toUpperCase();
-  const resEl = document.getElementById('searchResult');
-  const chartsEl = document.getElementById('studentCharts');
-  if(!sid){ resEl.innerHTML='<div class="empty">Enter a student ID.</div>'; return; }
-
-  resEl.innerHTML='<div class="empty">Searching...</div>';
-  chartsEl.style.display='none';
-
-  const res = await fetch(`/api/student/${sid}`,{credentials:'include'});
-  const d   = await res.json();
-
-  if(!res.ok){
-    resEl.innerHTML=`<div class="empty">${d.error}</div>`; return;
-  }
-
-  const aiIcon = d.ai_usage_pct > 50 ?
-    '<span class="badge ai">✓ AI User</span>' :
-    '<span class="badge nonai">Non-AI</span>';
-
-  resEl.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px">
-      <div class="kpi-card blue"><div class="kpi-icon">👤</div><div class="kpi-value" style="font-size:1.2rem">${d.student_id}</div><div class="kpi-label">Student ID</div></div>
+  const sid=document.getElementById('searchId').value.trim().toUpperCase();
+  const resEl=document.getElementById('searchResult'),chartsEl=document.getElementById('studentCharts');
+  if(!sid){resEl.innerHTML='<div class="empty">Enter a student ID.</div>';return;}
+  resEl.innerHTML='<div class="empty">Searching...</div>';chartsEl.style.display='none';
+  const r=await fetch(`/api/student/${sid}`,{credentials:'include'});const d=await r.json();
+  if(!r.ok){resEl.innerHTML=`<div class="empty">${d.error}</div>`;return;}
+  resEl.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:11px;margin-bottom:14px">
+      <div class="kpi-card blue"><div class="kpi-icon">👤</div><div class="kpi-value" style="font-size:1.1rem">${d.student_id}</div><div class="kpi-label">Student ID</div></div>
       <div class="kpi-card green"><div class="kpi-icon">🎯</div><div class="kpi-value">${d.avg_score}</div><div class="kpi-label">Avg Score</div></div>
       <div class="kpi-card blue"><div class="kpi-icon">🏆</div><div class="kpi-value">${d.best_score}</div><div class="kpi-label">Best Score</div></div>
       <div class="kpi-card red"><div class="kpi-icon">📉</div><div class="kpi-value">${d.worst_score}</div><div class="kpi-label">Worst Score</div></div>
       <div class="kpi-card orange"><div class="kpi-icon">✅</div><div class="kpi-value">${d.pass_rate}%</div><div class="kpi-label">Pass Rate</div></div>
-      <div class="kpi-card purple"><div class="kpi-icon">📚</div><div class="kpi-value">${d.avg_study_hrs}h</div><div class="kpi-label">Avg Study Hrs</div></div>
+      <div class="kpi-card purple"><div class="kpi-icon">📚</div><div class="kpi-value">${d.avg_study_hrs}h</div><div class="kpi-label">Study Hrs</div></div>
     </div>
-    <div style="font-size:.83rem;color:var(--muted);margin-bottom:14px">
-      ${d.total_records} records &nbsp;·&nbsp; Subjects: ${d.subjects.join(', ')} &nbsp;·&nbsp; ${aiIcon}
-    </div>
-    <table>
-      <thead><tr><th>Date</th><th>Subject</th><th>Score</th><th>AI Tool</th></tr></thead>
-      <tbody>${d.score_trend.map(r=>`<tr>
-        <td>${r.record_date}</td><td>${r.subject}</td>
-        <td><strong>${r.score}</strong></td>
-        <td>${r.ai_tool_used?'<span class="badge ai">✓ Yes</span>':'<span class="badge nonai">No</span>'}</td>
-      </tr>`).join('')}</tbody>
-    </table>`;
-
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:12px">${d.total_records} records · Subjects: ${d.subjects.join(', ')}</div>
+    <table><thead><tr><th>Date</th><th>Subject</th><th>Score</th><th>AI Tool</th></tr></thead>
+    <tbody>${d.score_trend.map(r=>`<tr><td>${r.record_date}</td><td>${r.subject}</td>
+      <td><strong>${r.score}</strong></td>
+      <td>${r.ai_tool_used?'<span class="badge ai">✓ Yes</span>':'<span class="badge nonai">No</span>'}</td></tr>`).join('')}</tbody></table>`;
   chartsEl.style.display='grid';
-
   destroyChart('studentTrendChart');
-  const ctx1 = document.getElementById('studentTrendChart').getContext('2d');
-  charts['studentTrendChart'] = new Chart(ctx1,{
-    type:'line',
-    data:{
-      labels: d.score_trend.map(r=>r.record_date),
-      datasets:[{
-        label:'Score',
-        data: d.score_trend.map(r=>r.score),
-        borderColor:'#2F5496',backgroundColor:'#2F549620',
-        tension:.3,fill:true,pointRadius:5,
-        pointBackgroundColor: d.score_trend.map(r=>r.ai_tool_used?'#27ae60':'#c0392b'),
-      }]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TOOLTIP,
-        callbacks:{label:ctx=>`Score: ${ctx.parsed.y} (${d.score_trend[ctx.dataIndex].subject})`}}},
-      scales:{y:{beginAtZero:false,min:0,max:100}}}
-  });
-
-  const subjectScores = {};
-  d.score_trend.forEach(r=>{
-    if(!subjectScores[r.subject]) subjectScores[r.subject]=[];
-    subjectScores[r.subject].push(r.score);
-  });
-  const subjs = Object.keys(subjectScores);
-  const avgs  = subjs.map(s=>round2(subjectScores[s].reduce((a,b)=>a+b,0)/subjectScores[s].length));
-  function round2(n){return Math.round(n*100)/100;}
-
+  charts['studentTrendChart']=new Chart(document.getElementById('studentTrendChart').getContext('2d'),{type:'line',
+    data:{labels:d.score_trend.map(r=>r.record_date),datasets:[{label:'Score',
+      data:d.score_trend.map(r=>r.score),borderColor:'#2F5496',backgroundColor:'#2F549620',
+      tension:.3,fill:true,pointRadius:5,
+      pointBackgroundColor:d.score_trend.map(r=>r.ai_tool_used?'#27ae60':'#c0392b')}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TOOLTIP},
+      scales:{y:{beginAtZero:false,min:0,max:100}}}});
+  const subScores={};d.score_trend.forEach(r=>{if(!subScores[r.subject])subScores[r.subject]=[];subScores[r.subject].push(r.score);});
+  const subjs=Object.keys(subScores),avgs=subjs.map(s=>Math.round(subScores[s].reduce((a,b)=>a+b,0)/subScores[s].length*100)/100);
   destroyChart('studentSubjectChart');
-  const ctx2 = document.getElementById('studentSubjectChart').getContext('2d');
-  charts['studentSubjectChart'] = new Chart(ctx2,{
-    type:'bar',
-    data:{labels:subjs,
-      datasets:[{label:'Avg Score',data:avgs,
-        backgroundColor:'#2F549688',borderColor:'#2F5496',borderWidth:2,borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:TOOLTIP},
-      scales:{y:{beginAtZero:false,min:0}}}
-  });
+  charts['studentSubjectChart']=new Chart(document.getElementById('studentSubjectChart').getContext('2d'),{type:'bar',
+    data:{labels:subjs,datasets:[{label:'Avg Score',data:avgs,backgroundColor:'#2F549688',borderColor:'#2F5496',borderWidth:2,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TOOLTIP},scales:{y:{beginAtZero:false,min:0}}}});
 }
 
-// ─────────────────────────────────────────────────────
-// Notifications
-// ─────────────────────────────────────────────────────
+// ── Notifications ──
 async function loadNotifications(){
-  const listEl = document.getElementById('notifList');
-  const badgeEl = document.getElementById('alertBadge');
-  try{
-    const res   = await fetch('/api/notifications',{credentials:'include'});
-    const notes = await res.json();
-    const warnings = notes.filter(n=>n.level==='danger'||n.level==='warning').length;
-    badgeEl.textContent = warnings || notes.length;
-    badgeEl.style.background = warnings > 0 ? '#c0392b' : '#27ae60';
-
-    listEl.innerHTML = notes.map(n=>`
-      <div class="notif-item ${n.level}">
-        ${n.message}
-      </div>`).join('') || '<div class="empty">No alerts.</div>';
-  }catch(e){
-    listEl.innerHTML='<div class="empty">Could not load alerts.</div>';
-  }
+  const listEl=document.getElementById('notifList'),badgeEl=document.getElementById('alertBadge');
+  try{const r=await fetch('/api/notifications',{credentials:'include'});const data=await r.json();
+    const alerts=Array.isArray(data)?data:(data.alerts||[]);
+    const warns=alerts.filter(n=>n.level==='danger'||n.level==='warning').length;
+    badgeEl.textContent=warns||alerts.length;
+    badgeEl.style.background=warns>0?'#c0392b':'#27ae60';
+    listEl.innerHTML=alerts.map(n=>`<div class="notif-item ${n.level||n.type||'info'}">
+      ${n.icon?`<strong>${n.icon} ${n.title||''}</strong><br>`:''}${n.message}</div>`).join('')||'<div class="empty">No alerts.</div>';
+  }catch(e){listEl.innerHTML='<div class="empty">Could not load alerts.</div>';}
 }
 
-// ─────────────────────────────────────────────────────
-// Authentication
-// ─────────────────────────────────────────────────────
+// ── AI Predictor ──
+async function checkModelStatus(){
+  try{const r=await fetch('/api/model/status',{credentials:'include'});const d=await r.json();
+    const statusEl=document.getElementById('modelStatus'),metrics=document.getElementById('metricsCard'),widget=document.getElementById('predictWidget');
+    if(!d.trained){statusEl.innerHTML='<span style="color:#e67e22">⚠️ No model trained yet.</span> Click Train Model below.';metrics.style.display='none';widget.style.display='none';}
+    else{const m=d.meta;statusEl.innerHTML=`<span style="color:#27ae60">✅ Model trained</span> on <strong>${m.trained_on} records</strong> · R²=<strong>${m.r2}</strong> · MAE=<strong>${m.mae} pts</strong>`;
+      renderMetrics(m);metrics.style.display='block';widget.style.display='block';
+      if(m.subjects){const sel=document.getElementById('pSubject');sel.innerHTML=m.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');}}
+  }catch(e){}
+}
+function renderMetrics(m){
+  const coefRows=Object.entries(m.coefficients||{}).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]))
+    .map(([k,v])=>`<tr><td>${k}</td><td><strong style="color:${v>=0?'#27ae60':'#c0392b'}">${v>=0?'+':''}${v}</strong></td></tr>`).join('');
+  document.getElementById('metricsContent').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:15px">
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div style="font-size:1.5rem;font-weight:700;color:var(--blue)">${m.r2}</div><div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-top:2px">R² Score</div></div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div style="font-size:1.5rem;font-weight:700;color:var(--green)">${m.mae}</div><div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-top:2px">MAE (pts)</div></div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div style="font-size:1.5rem;font-weight:700;color:var(--orange)">${m.rmse}</div><div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-top:2px">RMSE (pts)</div></div>
+    </div>
+    <table><thead><tr><th>Feature</th><th>Coefficient</th></tr></thead><tbody>${coefRows}</tbody></table>`;
+}
+async function trainModel(){
+  const btn=document.getElementById('trainBtn'),resEl=document.getElementById('trainResult');
+  btn.disabled=true;btn.textContent='⏳ Training...';resEl.innerHTML='';
+  try{const r=await fetch('/api/model/train',{method:'POST',credentials:'include'});const d=await r.json();
+    if(r.ok){resEl.innerHTML=`<div class="result-box success" style="display:block">✅ Model trained! R²=${d.metrics.r2} · MAE=${d.metrics.mae}pts</div>`;checkModelStatus();}
+    else{resEl.innerHTML=`<div class="result-box error" style="display:block">❌ ${d.error}</div>`;}
+  }catch(e){resEl.innerHTML=`<div class="result-box error" style="display:block">Network error</div>`;}
+  btn.disabled=false;btn.textContent='🔄 Train Model on Current Data';
+}
+async function runPrediction(){
+  const hours=parseFloat(document.getElementById('pStudyHours').value)||0;
+  const subject=document.getElementById('pSubject').value,aiUsed=document.getElementById('pAIUsed').value==='true';
+  const resEl=document.getElementById('predResult');resEl.style.display='none';
+  try{const r=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+    body:JSON.stringify({study_hours:hours,ai_tool_used:aiUsed,subject})});
+    const d=await r.json();if(!r.ok){alert(d.error||'Prediction failed');return;}
+    document.getElementById('predScore').textContent=d.predicted_score;
+    document.getElementById('predBand').textContent=`Range: ${d.confidence_band.low} – ${d.confidence_band.high} (±MAE)`;
+    document.getElementById('predInputSummary').textContent=`${hours}h study · ${subject} · AI: ${aiUsed?'Yes':'No'}`;
+    const alt=await (await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({study_hours:hours,ai_tool_used:!aiUsed,subject})})).json();
+    document.getElementById('predComparison').innerHTML=`
+      <div style="padding:13px;background:#e8f5e9;border-radius:8px;text-align:center"><div style="font-size:.7rem;color:#888;text-transform:uppercase;font-weight:700">With AI Tool</div><div style="font-size:1.5rem;font-weight:700;color:var(--green)">${aiUsed?d.predicted_score:alt.predicted_score}</div></div>
+      <div style="padding:13px;background:#fdecea;border-radius:8px;text-align:center"><div style="font-size:.7rem;color:#888;text-transform:uppercase;font-weight:700">Without AI Tool</div><div style="font-size:1.5rem;font-weight:700;color:var(--red)">${aiUsed?alt.predicted_score:d.predicted_score}</div></div>`;
+    resEl.style.display='block';resEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(e){alert('Network error: '+e.message);}
+}
+
+// ── Checkpoint ──
+async function loadCheckpoint(){
+  try{const r=await fetch('/api/pipeline/summary',{credentials:'include'});const d=await r.json();
+    const card=document.getElementById('checkpointCard');
+    const checks=[
+      {label:'Data uploaded',pass:d.total_records>0},
+      {label:'300+ records',pass:d.total_records>=300},
+      {label:'Pipeline running',pass:!d.error},
+      {label:'4 subjects',pass:d.subjects&&d.subjects.length>=4},
+      {label:'AI adoption >30%',pass:d.ai_tool_usage&&d.ai_tool_usage.adoption_pct>=30},
+      {label:'Dashboard charts',pass:true},{label:'Filters working',pass:true},{label:'Export CSV',pass:true},
+    ];
+    const allPass=checks.every(c=>c.pass);
+    card.style.border=`2px solid ${allPass?'#27ae60':'#e67e22'}`;card.style.background=allPass?'#f0fff4':'#fffbeb';
+    document.getElementById('checkpointTitle').textContent=allPass?'✅ All checks passed!':'⚠️ Some checks pending';
+    document.getElementById('checkpointMsg').textContent=allPass?'Dashboard is fully operational.':'Complete pending items to proceed.';
+    document.getElementById('checkpointItems').innerHTML=checks.map(c=>`<span style="padding:5px 11px;border-radius:18px;font-size:.78rem;font-weight:600;background:${c.pass?'#e8f5e9':'#fdecea'};color:${c.pass?'#27ae60':'#c0392b'}">${c.pass?'✅':'❌'} ${c.label}</span>`).join('');
+    document.getElementById('day9Details').style.display='block';
+  }catch(e){}
+}
+
+// ── Users ──
+async function loadUsers(){
+  const cont=document.getElementById('usersTableContainer');
+  try{const r=await fetch('/auth/api/users',{credentials:'include'});
+    if(!r.ok){cont.innerHTML='<div class="empty">Admin access required.</div>';return;}
+    const users=await r.json();
+    if(!users.length){cont.innerHTML='<div class="empty">No users found.</div>';return;}
+    cont.innerHTML=`<table><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody>${users.map(u=>`<tr><td>#${u.id}</td><td><strong>${u.username}</strong></td><td>${u.email}</td>
+        <td><span class="badge ${u.role==='admin'?'ai':'nonai'}">${u.role}</span></td>
+        <td><span class="badge ${u.is_active?'success':'failed'}">${u.is_active?'Active':'Inactive'}</span></td>
+        <td style="font-size:.76rem">${new Date(u.created_at).toLocaleDateString()}</td>
+        <td style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="btn btn-secondary" style="padding:3px 8px;font-size:.74rem" onclick="toggleUser(${u.id},'${u.username}')">${u.is_active?'Deactivate':'Activate'}</button>
+          <button class="btn btn-secondary" style="padding:3px 8px;font-size:.74rem" onclick="changeRole(${u.id},'${u.username}','${u.role}')">Make ${u.role==='admin'?'Teacher':'Admin'}</button>
+        </td></tr>`).join('')}</tbody></table>`;
+  }catch(e){cont.innerHTML='<div class="empty">Error loading users.</div>';}
+}
+async function toggleUser(id,username){
+  if(!confirm(`${username}: toggle active/inactive?`))return;
+  const r=await fetch(`/auth/api/users/${id}/toggle`,{method:'POST',credentials:'include'});
+  alert((await r.json()).message);loadUsers();
+}
+async function changeRole(id,username,cur){
+  const nr=cur==='admin'?'teacher':'admin';
+  if(!confirm(`Change ${username} to ${nr}?`))return;
+  const r=await fetch(`/auth/api/users/${id}/role`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:nr})});
+  alert((await r.json()).message);loadUsers();
+}
+async function changePassword(){
+  const old=document.getElementById('oldPassword').value,np=document.getElementById('newPassword').value,conf=document.getElementById('confirmPassword').value;
+  const resEl=document.getElementById('passwordResult');
+  if(!old||!np||!conf){resEl.innerHTML='<div style="color:var(--red);font-size:.83rem">All fields are required.</div>';return;}
+  if(np!==conf){resEl.innerHTML='<div style="color:var(--red);font-size:.83rem">New passwords do not match.</div>';return;}
+  if(np.length<6){resEl.innerHTML='<div style="color:var(--red);font-size:.83rem">Password must be at least 6 characters.</div>';return;}
+  const r=await fetch('/auth/api/change-password',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_password:old,new_password:np})});
+  const d=await r.json();
+  if(r.ok){resEl.innerHTML=`<div style="color:var(--green);font-size:.83rem">✅ ${d.message}</div>`;
+    document.getElementById('oldPassword').value='';document.getElementById('newPassword').value='';document.getElementById('confirmPassword').value='';}
+  else{resEl.innerHTML=`<div style="color:var(--red);font-size:.83rem">❌ ${d.error}</div>`;}
+}
+
+// ── Auth ──
 async function checkAuth(){
-  try{
-    const res = await fetch('/auth/api/me', {credentials:'include'});
-    const d   = await res.json();
-    if(!d.authenticated){
-      window.location.href = '/auth/login'; return false;
-    }
-    document.getElementById('userLabel').textContent = d.user.username;
-    document.getElementById('userInfo').innerHTML =
-      `<strong>${d.user.username}</strong><br>${d.user.email}<br>
-       <span style="font-size:.75rem;background:${d.user.role==='admin'?'#e8f0fb':'#e8f5e9'};padding:1px 7px;border-radius:10px;color:#2F5496">${d.user.role}</span>`;
-    if(d.user.role === 'admin'){
-      document.getElementById('adminLink').style.display = 'block';
-      document.getElementById('usersNavBtn').style.display = 'block';
-      document.getElementById('adminUsersCard').style.display = 'block';
-    }
-    return true;
-  }catch(e){ console.error(e); return false; }
+  try{const r=await fetch('/auth/api/me',{credentials:'include'});const d=await r.json();
+    if(!d.authenticated){window.location.href='/auth/login';return;}
+    document.getElementById('userLabel').textContent=d.user.username;
+    document.getElementById('userInfo').innerHTML=`<strong>${d.user.username}</strong><br>${d.user.email}<br><span style="font-size:.72rem;background:#e8f0fb;padding:1px 7px;border-radius:10px;color:var(--blue)">${d.user.role}</span>`;
+    if(d.user.role==='admin'){document.getElementById('adminLink').style.display='block';document.getElementById('usersNavBtn').style.display='flex';}
+  }catch(e){}
 }
+function toggleUserMenu(){const dd=document.getElementById('userDropdown');dd.style.display=dd.style.display==='none'?'block':'none';}
+document.addEventListener('click',e=>{const wrap=document.getElementById('userMenuWrap');if(wrap&&!wrap.contains(e.target))document.getElementById('userDropdown').style.display='none';});
+async function doLogout(){await fetch('/auth/api/logout',{method:'POST',credentials:'include'});window.location.href='/auth/login';}
 
-function toggleUserMenu(){
-  const dd = document.getElementById('userDropdown');
-  dd.style.display = dd.style.display==='none' ? 'block' : 'none';
-}
-document.addEventListener('click', e => {
-  if(!document.getElementById('userMenu').contains(e.target))
-    document.getElementById('userDropdown').style.display='none';
-});
-
-async function doLogout(){
-  await fetch('/auth/api/logout', {method:'POST', credentials:'include'});
-  window.location.href = '/auth/login';
-}
-
-// ─────────────────────────────────────────────────────
-// Init
-// ─────────────────────────────────────────────────────
-(async function initDashboard(){
-  const authed = await checkAuth();
-  if(!authed) return;
-  loadFilterOptions();
-  loadNotifications();
-  loadDashboard();
-  loadPipelinePanel();
-})();
+// ── Init ──
+checkAuth();
+loadFilterOptions();
+loadDashboard();
+loadPipelinePanel();
+loadNotifications();
 </script>
 </body>
 </html>

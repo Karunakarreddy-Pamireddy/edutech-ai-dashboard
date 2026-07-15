@@ -17,3 +17,9 @@ def test_default_admin_password_is_not_hardcoded():
 
     assert "admin123" not in init_file
     assert "Default admin created" not in init_file
+
+
+def test_password_update_ui_uses_single_handler():
+    index = (ROOT / "app" / "templates" / "index.html").read_text(encoding="utf-8")
+
+    assert index.count("async function changePassword()") == 1
