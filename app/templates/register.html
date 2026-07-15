@@ -119,22 +119,23 @@
     btn.disabled = true; btn.textContent = 'Creating account...';
 
     try{
-      const res  = await fetch('/auth/api/register', {
+      const res = await fetch('/auth/api/register', {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        headers: {'Content-Type': 'application/json'},
         credentials: 'include',
         body: JSON.stringify({username, email, password})
       });
 
+      const text = await res.text();
       let data = null;
-      try { data = await res.json(); } catch (e) { data = null; }
+      try { data = text ? JSON.parse(text) : null; } catch (e) { data = null; }
 
       if(res.ok){
         okBox.textContent = (data && data.message ? data.message : 'Account created successfully.') + ' Redirecting...';
         okBox.style.display = 'block';
         setTimeout(() => window.location.href = '/', 1000);
       } else {
-        errBox.textContent = (data && data.error) ? data.error : 'Registration failed. Please try again.';
+        errBox.textContent = (data && data.error) ? data.error : (text || 'Registration failed. Please try again.');
         errBox.style.display = 'block';
         btn.disabled = false; btn.textContent = 'Create Account';
       }
