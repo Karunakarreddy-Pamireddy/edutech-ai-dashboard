@@ -125,19 +125,21 @@
         credentials: 'include',
         body: JSON.stringify({username, email, password})
       });
-      const data = await res.json();
+
+      let data = null;
+      try { data = await res.json(); } catch (e) { data = null; }
 
       if(res.ok){
-        okBox.textContent = data.message + ' Redirecting...';
+        okBox.textContent = (data && data.message ? data.message : 'Account created successfully.') + ' Redirecting...';
         okBox.style.display = 'block';
         setTimeout(() => window.location.href = '/', 1000);
       } else {
-        errBox.textContent = data.error;
+        errBox.textContent = (data && data.error) ? data.error : 'Registration failed. Please try again.';
         errBox.style.display = 'block';
         btn.disabled = false; btn.textContent = 'Create Account';
       }
     } catch(e){
-      errBox.textContent = 'Network error. Please try again.';
+      errBox.textContent = 'Unable to reach the server right now. Please try again in a moment.';
       errBox.style.display = 'block';
       btn.disabled = false; btn.textContent = 'Create Account';
     }
