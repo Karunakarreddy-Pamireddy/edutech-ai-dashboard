@@ -53,7 +53,7 @@ def create_app():
 
 
 def _create_default_admin():
-    """Create a default admin account on first run."""
+    """Create a default admin account on first run when none exists."""
     from app.models import User
     if User.query.count() == 0:
         admin = User(
@@ -61,10 +61,10 @@ def _create_default_admin():
             email="admin@edutech.com",
             role="admin"
         )
-        admin.set_password("admin123")
+        admin.set_password(os.environ.get("DEFAULT_ADMIN_PASSWORD", "change-me-please"))
         db.session.add(admin)
         db.session.commit()
-        print("[AUTH] Default admin created — username: admin / password: admin123")
+        print("[AUTH] Default admin created")
 
 
 def _seed_if_empty(basedir):
