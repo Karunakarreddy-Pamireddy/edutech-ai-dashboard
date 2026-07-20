@@ -19,29 +19,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_absolute_error, r2_score
 
-_basedir = os.path.dirname(os.path.dirname(__file__))
-
-# Write paths: on Vercel, write to /tmp. Otherwise write to the project's data/ folder.
-if os.environ.get("VERCEL") == "1":
-    MODEL_PATH_WRITE = os.path.join("/tmp", "model.pkl")
-    META_PATH_WRITE = os.path.join("/tmp", "model_meta.json")
-else:
-    MODEL_PATH_WRITE = os.path.join(_basedir, "data", "model.pkl")
-    META_PATH_WRITE = os.path.join(_basedir, "data", "model_meta.json")
-
-# Default read paths (pre-packaged files in the deployment bundle)
-MODEL_PATH_READ = os.path.join(_basedir, "data", "model.pkl")
-META_PATH_READ = os.path.join(_basedir, "data", "model_meta.json")
-
-def get_model_path_for_reading():
-    if os.path.exists(MODEL_PATH_WRITE):
-        return MODEL_PATH_WRITE
-    return MODEL_PATH_READ
-
-def get_meta_path_for_reading():
-    if os.path.exists(META_PATH_WRITE):
-        return META_PATH_WRITE
-    return META_PATH_READ
+MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "model.pkl")
+META_PATH  = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "model_meta.json")
 
 FEATURES   = ["study_hours", "ai_tool_used", "subject"]
 TARGET     = "score"
@@ -106,8 +85,7 @@ def train_model(clean_df: pd.DataFrame) -> dict:
     coefs     = dict(zip(feat_names, [round(c, 4) for c in reg.coef_]))
 
     # Save model
-    os.makedirs(os.path.dirname(MODEL_PATH_WRITE), exist_ok=True)
-    joblib.dump(model, MODEL_PATH_WRITE)
+    joblib.dump(model, MODEL_PATH)
 
     # Save metadata
     meta = {
@@ -131,8 +109,7 @@ def train_model(clean_df: pd.DataFrame) -> dict:
             "for real academic assessment or decision-making."
         ),
     }
-    os.makedirs(os.path.dirname(META_PATH_WRITE), exist_ok=True)
-    with open(META_PATH_WRITE, "w") as f:
+    with open(META_PATH, "w") as f:
         json.dump(meta, f, indent=2)
 
     return {"status": "trained", "metrics": meta}
@@ -144,11 +121,10 @@ def predict_score(study_hours: float, ai_tool_used: bool, subject: str) -> dict:
     Load saved model and return a predicted score.
     Also returns a confidence band (±MAE from training).
     """
-    model_path = get_model_path_for_reading()
-    if not os.path.exists(model_path):
+    if not os.path.exists(MODEL_PATH):
         return {"error": "Model not trained yet. Call /api/model/train first."}
 
-    model = joblib.load(model_path)
+    model = joblib.load(MODEL_PATH)
 
     input_df = pd.DataFrame([{
         "study_hours":  float(study_hours),
@@ -161,9 +137,8 @@ def predict_score(study_hours: float, ai_tool_used: bool, subject: str) -> dict:
 
     # Load MAE for confidence band
     mae = 5.0  # fallback
-    meta_path = get_meta_path_for_reading()
-    if os.path.exists(meta_path):
-        with open(meta_path) as f:
+    if os.path.exists(META_PATH):
+        with open(META_PATH) as f:
             meta = json.load(f)
         mae = meta.get("mae", 5.0)
 
@@ -185,12 +160,10 @@ def predict_score(study_hours: float, ai_tool_used: bool, subject: str) -> dict:
 # ── Model status ──────────────────────────────────────────────────────────────
 def model_status() -> dict:
     """Check if a trained model exists and return its metadata."""
-    model_path = get_model_path_for_reading()
-    meta_path = get_meta_path_for_reading()
-    if not os.path.exists(model_path):
+    if not os.path.exists(MODEL_PATH):
         return {"trained": False, "message": "No trained model found. POST /api/model/train to train."}
-    if not os.path.exists(meta_path):
+    if not os.path.exists(META_PATH):
         return {"trained": True, "message": "Model file exists but metadata missing."}
-    with open(meta_path) as f:
+    with open(META_PATH) as f:
         meta = json.load(f)
     return {"trained": True, "meta": meta}

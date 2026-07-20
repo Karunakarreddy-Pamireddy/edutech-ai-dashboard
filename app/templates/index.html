@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduTech Impact on AI</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -230,6 +236,9 @@
     <button class="btn btn-primary" onclick="loadDashboard()">Apply</button>
     <button class="btn btn-secondary" onclick="clearFilters()">Clear</button>
     <button class="btn btn-success" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn btn-primary" onclick="downloadStructuredPDF(event)" title="Professional report with KPI tables, insights and model results" style="background:#8e44ad">📄 Report PDF</button>
+    <button class="btn btn-primary" onclick="captureVisualPDF(event)" title="Capture dashboard charts as PDF" style="background:#e67e22">📸 Visual PDF</button>
+    <button class="btn btn-primary" onclick="downloadVisualPDF(event)" style="background:#c0392b">📸 Snapshot PDF</button>
     <span class="filter-indicator" id="filterIndicator">⚡ Filtered</span>
   </div>
 
@@ -473,6 +482,9 @@
       <tr><td>Day 10</td><td>Deployment</td><td><span class="badge success">✅ Done</span></td></tr>
       <tr><td>Day 11</td><td>User Authentication</td><td><span class="badge success">✅ Done</span></td></tr>
       <tr><td>Day 12</td><td>Advanced Features</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 13</td><td>PDF Report Generation</td><td><span class="badge success">✅ Done</span></td></tr>
+      <tr><td>Day 14</td><td>Advanced ML Models (Random Forest)</td><td><span class="badge" style="background:#e8edf3;color:#666">⬜ Pending</span></td></tr>
+      <tr><td>Day 15</td><td>Final Polish, Portfolio & Presentation</td><td><span class="badge" style="background:#e8edf3;color:#666">⬜ Pending</span></td></tr>
     </tbody></table>
   </div>
  </div>
@@ -986,6 +998,114 @@ async function checkAuth(){
 function toggleUserMenu(){const dd=document.getElementById('userDropdown');dd.style.display=dd.style.display==='none'?'block':'none';}
 document.addEventListener('click',e=>{const wrap=document.getElementById('userMenuWrap');if(wrap&&!wrap.contains(e.target))document.getElementById('userDropdown').style.display='none';});
 async function doLogout(){await fetch('/auth/api/logout',{method:'POST',credentials:'include'});window.location.href='/auth/login';}
+
+// ── PDF Generation ──
+async function downloadStructuredPDF(event){
+  const btn = event ? (event.target || event.currentTarget) : null;
+  const origText = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ Generating...'; }
+  try{
+    const params = getFilters();
+    const res = await fetch(`/api/report/pdf?${params}`, {credentials:'include'});
+    if(!res.ok){
+      let msg = 'Failed to generate PDF';
+      try{ const d = await res.json(); msg = d.error || msg; }catch(e){}
+      alert('PDF Error: ' + msg);
+      return;
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `edutech_report_${new Date().toISOString().slice(0,10)}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){
+    alert('Network error: ' + e.message);
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = origText; }
+  }
+}
+
+async function downloadVisualPDF(event){
+  const btn = event ? (event.target || event.currentTarget) : null;
+  const origText = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = '📸 Capturing...'; }
+  try{
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageW = 210, pageH = 297, margin = 10;
+
+    pdf.setFillColor(26, 58, 110);
+    pdf.rect(0, 0, pageW, 40, 'F');
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(18); pdf.setFont('helvetica', 'bold');
+    pdf.text('EduTech Impact on AI', pageW / 2, 18, {align: 'center'});
+    pdf.setFontSize(10); pdf.setFont('helvetica', 'normal');
+    pdf.text('Student Performance Analytics Dashboard', pageW / 2, 26, {align: 'center'});
+    pdf.text('Generated: ' + new Date().toLocaleString(), pageW / 2, 33, {align: 'center'});
+    pdf.setTextColor(0, 0, 0);
+
+    const kTotal = document.getElementById('kTotal')?.textContent || '—';
+    const kStudents = document.getElementById('kStudents')?.textContent || '—';
+    const kAvgScore = document.getElementById('kAvgScore')?.textContent || '—';
+    const kPassRate = document.getElementById('kPassRate')?.textContent || '—';
+    const kAIAdopt = document.getElementById('kAIAdopt')?.textContent || '—';
+    const kAIBoost = document.getElementById('kAIBoost')?.textContent || '—';
+
+    pdf.setFontSize(11); pdf.setFont('helvetica', 'bold');
+    pdf.setFillColor(232, 240, 251); pdf.rect(margin, 45, pageW - 2 * margin, 30, 'F');
+    pdf.setTextColor(26, 58, 110);
+    pdf.text('Key Performance Indicators', margin + 4, 53);
+    pdf.setFontSize(9); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(60, 60, 60);
+    pdf.text(`Records: ${kTotal}  |  Students: ${kStudents}  |  Avg Score: ${kAvgScore}`, margin + 4, 61);
+    pdf.text(`Pass Rate: ${kPassRate}  |  AI Adoption: ${kAIAdopt}  |  AI Score Boost: ${kAIBoost}`, margin + 4, 68);
+
+    const chartCards = document.querySelectorAll('#dashboard .chart-card');
+    let yPos = 82;
+
+    for(let i = 0; i < chartCards.length; i++){
+      const card = chartCards[i];
+      const canvas = card.querySelector('canvas');
+      if(!canvas) continue;
+
+      const imgData = canvas.toDataURL('image/png', 0.85);
+      const cw = canvas.width, ch = canvas.height;
+      const ratio = ch / cw;
+      const imgW = (pageW - 2 * margin) / 2 - 3;
+      const imgH = imgW * ratio;
+      const xPos = margin + (i % 2) * (imgW + 6);
+
+      if(i % 2 === 0 && i > 0){ yPos += imgH + 8; }
+      if(yPos + imgH > pageH - margin){
+        pdf.addPage(); yPos = margin;
+        pdf.setFillColor(26, 58, 110); pdf.rect(0, 0, pageW, 12, 'F');
+        pdf.setTextColor(255, 255, 255); pdf.setFontSize(8);
+        pdf.text('EduTech Impact on AI — Dashboard Report', pageW / 2, 8, {align: 'center'});
+        pdf.setTextColor(0, 0, 0); yPos = 18;
+      }
+
+      const titleEl = card.querySelector('h3');
+      const title = titleEl ? titleEl.textContent.trim() : '';
+      pdf.setFontSize(7); pdf.setFont('helvetica', 'bold'); pdf.setTextColor(47, 84, 150);
+      pdf.text(title, xPos, yPos - 1);
+      pdf.addImage(imgData, 'PNG', xPos, yPos, imgW, imgH);
+
+      if(i % 2 === 1) yPos += imgH + 12;
+    }
+
+    pdf.setFontSize(7); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(150, 150, 150);
+    pdf.text('EduTech Impact on AI · github.com/Karunakarreddy-Pamireddy/edutech-ai-dashboard', pageW / 2, pageH - 6, {align: 'center'});
+
+    pdf.save(`edutech_snapshot_${new Date().toISOString().slice(0,10)}.pdf`);
+  }catch(e){
+    alert('Snapshot error: ' + e.message);
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = origText; }
+  }
+}
 
 // ── Init ──
 checkAuth();

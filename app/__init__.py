@@ -53,21 +53,18 @@ def create_app():
 
 
 def _create_default_admin():
-    """Ensure an admin account exists and uses the configured default password."""
+    """Create a default admin account on first run."""
     from app.models import User
-
-    admin = User.query.filter_by(username="admin").first()
-    default_password = os.environ.get("DEFAULT_ADMIN_PASSWORD", "change-me-please")
-
-    if admin is None:
-        admin = User(username="admin", email="admin@edutech.com", role="admin")
+    if User.query.count() == 0:
+        default_pass = os.environ.get("ADMIN_DEFAULT_PASSWORD", "AdminPass2026!")
+        admin = User(
+            username="admin",
+            email="admin@edutech.com",
+            role="admin"
+        )
+        admin.set_password(default_pass)
         db.session.add(admin)
-
-    if not admin.password_hash or not admin.check_password(default_password):
-        admin.set_password(default_password)
-
-    db.session.commit()
-    print("[AUTH] Admin account ready")
+        db.session.commit()
 
 
 def _seed_if_empty(basedir):
