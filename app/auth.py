@@ -26,6 +26,13 @@ def register_page():
     return render_template("register.html")
 
 
+@auth_bp.route("/logout")
+def logout_page():
+    if current_user.is_authenticated:
+        logout_user()
+    return redirect(url_for("main.index"))
+
+
 # ── API Auth endpoints ────────────────────────────────────────────────────────
 
 @auth_bp.route("/api/login", methods=["POST"])

@@ -997,7 +997,7 @@ async function checkAuth(){
 }
 function toggleUserMenu(){const dd=document.getElementById('userDropdown');dd.style.display=dd.style.display==='none'?'block':'none';}
 document.addEventListener('click',e=>{const wrap=document.getElementById('userMenuWrap');if(wrap&&!wrap.contains(e.target))document.getElementById('userDropdown').style.display='none';});
-async function doLogout(){await fetch('/auth/api/logout',{method:'POST',credentials:'include'});window.location.href='/auth/login';}
+async function doLogout(){await fetch('/auth/api/logout',{method:'POST',credentials:'include'});window.location.href='/';}
 
 // ── PDF Generation ──
 async function downloadStructuredPDF(event){
