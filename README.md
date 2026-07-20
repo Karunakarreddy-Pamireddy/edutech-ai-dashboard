@@ -182,14 +182,15 @@ Response:
 
 ## Dashboard Features
 
-- 3 tabs: Dashboard, Upload, Records, Day 9 Checkpoint, AI Predictor
-- Animated KPI counters on load and filter change
-- Live filter bar — all charts update without page reload
-- Export CSV — download filtered/enriched data
-- Auto-refresh toggle — polls every 30s for new uploads
-- Predict My Score widget — enter study hours, subject, AI usage, get predicted score
-- Day 9 Checkpoint tab — 8 readiness checks before ML model
-- Responsive layout for mobile and desktop
+- **Interactive Dashboard & Multi-Tab Layout**: Dashboard, Upload, Records, Compare, Student Search, Alerts, AI Predictor, Status & User Management.
+- **PDF Report Generation**:
+  - **Structured PDF Report (`Report PDF`)**: Backend ReportLab generation with styled tables, KPIs, and executive insights.
+  - **Visual PDF Snapshot (`Visual PDF`)**: Client-side canvas capture using `html2canvas` and `jsPDF` for instant PDF export of live charts and dashboard state.
+- **Live Filtering**: Filter all charts & KPIs simultaneously by Subject, Class, AI tool usage, and Date range.
+- **Export CSV**: Download filtered and pipeline-enriched data as CSV.
+- **Predictive AI Model**: Linear Regression model predicting student scores based on study hours, subject, and AI tool usage.
+- **Auto-Refresh Toggle**: Silently updates metrics when new upload batches arrive.
+- **Responsive & Dark Mode UI**: Full dark mode support with tailored color schemes and mobile responsiveness.
 
 ---
 

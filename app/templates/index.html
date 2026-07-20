@@ -1029,82 +1029,85 @@ async function downloadStructuredPDF(event){
   }
 }
 
-async function downloadVisualPDF(event){
+async function captureVisualPDF(event){
   const btn = event ? (event.target || event.currentTarget) : null;
   const origText = btn ? btn.textContent : '';
   if(btn){ btn.disabled = true; btn.textContent = '📸 Capturing...'; }
   try{
+    if(typeof html2canvas === 'undefined' || !window.jspdf){
+      alert('PDF capture libraries are loading. Please try again in a moment.');
+      return;
+    }
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pageW = 210, pageH = 297, margin = 10;
+    const pdf = new jsPDF('l', 'mm', 'a4');
+    const pageW = 297, pageH = 210, margin = 10;
+    const nowStr = new Date().toLocaleString();
 
     pdf.setFillColor(26, 58, 110);
-    pdf.rect(0, 0, pageW, 40, 'F');
+    pdf.rect(0, 0, pageW, 16, 'F');
     pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(18); pdf.setFont('helvetica', 'bold');
-    pdf.text('EduTech Impact on AI', pageW / 2, 18, {align: 'center'});
-    pdf.setFontSize(10); pdf.setFont('helvetica', 'normal');
-    pdf.text('Student Performance Analytics Dashboard', pageW / 2, 26, {align: 'center'});
-    pdf.text('Generated: ' + new Date().toLocaleString(), pageW / 2, 33, {align: 'center'});
-    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(13); pdf.setFont('helvetica', 'bold');
+    pdf.text('EduTech Impact on AI — Visual Dashboard Snapshot', margin, 11);
+    pdf.setFontSize(8); pdf.setFont('helvetica', 'normal');
+    pdf.text(`Generated: ${nowStr}`, pageW - margin, 11, {align: 'right'});
 
-    const kTotal = document.getElementById('kTotal')?.textContent || '—';
-    const kStudents = document.getElementById('kStudents')?.textContent || '—';
-    const kAvgScore = document.getElementById('kAvgScore')?.textContent || '—';
-    const kPassRate = document.getElementById('kPassRate')?.textContent || '—';
-    const kAIAdopt = document.getElementById('kAIAdopt')?.textContent || '—';
-    const kAIBoost = document.getElementById('kAIBoost')?.textContent || '—';
-
-    pdf.setFontSize(11); pdf.setFont('helvetica', 'bold');
-    pdf.setFillColor(232, 240, 251); pdf.rect(margin, 45, pageW - 2 * margin, 30, 'F');
-    pdf.setTextColor(26, 58, 110);
-    pdf.text('Key Performance Indicators', margin + 4, 53);
-    pdf.setFontSize(9); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(60, 60, 60);
-    pdf.text(`Records: ${kTotal}  |  Students: ${kStudents}  |  Avg Score: ${kAvgScore}`, margin + 4, 61);
-    pdf.text(`Pass Rate: ${kPassRate}  |  AI Adoption: ${kAIAdopt}  |  AI Score Boost: ${kAIBoost}`, margin + 4, 68);
-
-    const chartCards = document.querySelectorAll('#dashboard .chart-card');
-    let yPos = 82;
-
-    for(let i = 0; i < chartCards.length; i++){
-      const card = chartCards[i];
-      const canvas = card.querySelector('canvas');
-      if(!canvas) continue;
-
-      const imgData = canvas.toDataURL('image/png', 0.85);
-      const cw = canvas.width, ch = canvas.height;
-      const ratio = ch / cw;
-      const imgW = (pageW - 2 * margin) / 2 - 3;
-      const imgH = imgW * ratio;
-      const xPos = margin + (i % 2) * (imgW + 6);
-
-      if(i % 2 === 0 && i > 0){ yPos += imgH + 8; }
-      if(yPos + imgH > pageH - margin){
-        pdf.addPage(); yPos = margin;
-        pdf.setFillColor(26, 58, 110); pdf.rect(0, 0, pageW, 12, 'F');
-        pdf.setTextColor(255, 255, 255); pdf.setFontSize(8);
-        pdf.text('EduTech Impact on AI — Dashboard Report', pageW / 2, 8, {align: 'center'});
-        pdf.setTextColor(0, 0, 0); yPos = 18;
-      }
-
-      const titleEl = card.querySelector('h3');
-      const title = titleEl ? titleEl.textContent.trim() : '';
-      pdf.setFontSize(7); pdf.setFont('helvetica', 'bold'); pdf.setTextColor(47, 84, 150);
-      pdf.text(title, xPos, yPos - 1);
-      pdf.addImage(imgData, 'PNG', xPos, yPos, imgW, imgH);
-
-      if(i % 2 === 1) yPos += imgH + 12;
+    const dashboardEl = document.getElementById('dashboard');
+    if(!dashboardEl){
+      throw new Error('Dashboard container element not found.');
     }
 
-    pdf.setFontSize(7); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(150, 150, 150);
-    pdf.text('EduTech Impact on AI · github.com/Karunakarreddy-Pamireddy/edutech-ai-dashboard', pageW / 2, pageH - 6, {align: 'center'});
+    const canvas = await html2canvas(dashboardEl, {
+      scale: 1.5,
+      useCORS: true,
+      backgroundColor: '#f0f4f8',
+      logging: false,
+      ignoreElements: (el) => el.classList.contains('filter-bar')
+    });
 
-    pdf.save(`edutech_snapshot_${new Date().toISOString().slice(0,10)}.pdf`);
-  }catch(e){
-    alert('Snapshot error: ' + e.message);
-  }finally{
+    const imgData = canvas.toDataURL('image/png', 0.9);
+    const imgW = pageW - margin * 2;
+    const imgH = (canvas.height * imgW) / canvas.width;
+
+    let heightLeft = imgH;
+    let yPos = 20;
+
+    pdf.addImage(imgData, 'PNG', margin, yPos, imgW, Math.min(imgH, pageH - yPos - 12));
+    heightLeft -= (pageH - yPos - 12);
+
+    while (heightLeft > 0) {
+      pdf.addPage();
+      pdf.setFillColor(26, 58, 110);
+      pdf.rect(0, 0, pageW, 12, 'F');
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(9); pdf.setFont('helvetica', 'bold');
+      pdf.text('EduTech Impact on AI — Visual Dashboard Snapshot', margin, 8);
+      pdf.setFontSize(8); pdf.setFont('helvetica', 'normal');
+      pdf.text(`Generated: ${nowStr}`, pageW - margin, 8, {align: 'right'});
+
+      yPos = 16;
+      pdf.addImage(imgData, 'PNG', margin, yPos - (imgH - heightLeft), imgW, imgH);
+      heightLeft -= (pageH - margin * 2);
+    }
+
+    const pageCount = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(120, 120, 120);
+      pdf.text(`EduTech Impact on AI · Page ${i} of ${pageCount} · ${nowStr}`, pageW / 2, pageH - 4, {align: 'center'});
+    }
+
+    pdf.save(`edutech_visual_${new Date().toISOString().slice(0, 10)}.pdf`);
+  } catch(e) {
+    console.error('Visual PDF Error:', e);
+    alert('Visual PDF Capture Error: ' + e.message);
+  } finally {
     if(btn){ btn.disabled = false; btn.textContent = origText; }
   }
+}
+
+async function downloadVisualPDF(event){
+  return captureVisualPDF(event);
 }
 
 // ── Init ──
